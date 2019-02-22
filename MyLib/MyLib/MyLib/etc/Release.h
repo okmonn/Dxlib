@@ -4,7 +4,7 @@
 #include <tchar.h>
 #include <dxgi1_6.h>
 
-#define Dev Device::Get().GetDev();
-#define Factory Device::Get().GetFactory();
+#define Dev Device::Get().GetDev()
+#define Factory Device::Get().GetFactory()
 
 #define Release(X) { if((X) != nullptr) (X)->Release(); }

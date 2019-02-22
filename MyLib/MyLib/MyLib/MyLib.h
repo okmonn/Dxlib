@@ -3,6 +3,8 @@
 #include <memory>
 
 class Window;
+class Queue;
+class List;
 
 class MyLib
 {
@@ -25,4 +27,10 @@ private:
 
 	// ウィンドウ
 	std::shared_ptr<Window>win;
+
+	// キュー
+	std::shared_ptr<Queue>queue;
+
+	// リスト
+	std::shared_ptr<List>list;
 };

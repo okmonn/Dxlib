@@ -31,6 +31,12 @@
     <Filter Include="Device">
       <UniqueIdentifier>{92a9c3d2-562c-41c6-b0f1-232864da2124}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Queue">
+      <UniqueIdentifier>{bf3273e0-e793-4a66-a4df-0afe9d9a5e69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="List">
+      <UniqueIdentifier>{57de2fb2-05cb-4ee6-b4a7-e57dae812bb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -44,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="MyLib\Device\Device.cpp">
       <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Queue\Queue.cpp">
+      <Filter>Queue</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\List\List.cpp">
+      <Filter>List</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +79,15 @@
     </ClInclude>
     <ClInclude Include="MyLib\Device\Device.h">
       <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Vector\Vector3.h">
+      <Filter>Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Queue\Queue.h">
+      <Filter>Queue</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\List\List.h">
+      <Filter>List</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

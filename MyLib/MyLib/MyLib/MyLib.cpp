@@ -1,5 +1,7 @@
 #include "MyLib.h"
 #include "Window/Window.h"
+#include "Queue/Queue.h"
+#include "List/List.h"
 #include "etc/Release.h"
 #include <Windows.h>
 
@@ -20,7 +22,9 @@ MyLib::~MyLib()
 // クラスのインスタンス化
 void MyLib::Instance(const Vec2& size, const Vec2& pos)
 {
-	win = std::make_shared<Window>(pos, size);
+	win   = std::make_shared<Window>(pos, size);
+	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list  = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
 }
 
 // メッセージの確認
