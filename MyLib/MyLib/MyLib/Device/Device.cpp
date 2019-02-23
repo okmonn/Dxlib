@@ -97,5 +97,5 @@ ID3D12Device * Device::GetDev(void) const
 // ファクトリー取得
 IDXGIFactory4 * Device::GetFactory(void) const
 {
-	return nullptr;
+	return factory;
 }

@@ -37,6 +37,45 @@
     <Filter Include="List">
       <UniqueIdentifier>{57de2fb2-05cb-4ee6-b4a7-e57dae812bb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fence">
+      <UniqueIdentifier>{d8372eeb-6202-4ef9-b073-9068b265d8c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Swap">
+      <UniqueIdentifier>{fe60f45e-a7fc-45e4-92da-1a3e95a975b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{6d14614c-4592-4d1a-b6d3-e3020e8ec81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Descriptor">
+      <UniqueIdentifier>{e5c363f7-dfd6-4738-8d88-f91d0a9ebcf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Depth">
+      <UniqueIdentifier>{11d27a96-a61d-42b1-826f-29d60d943db6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root">
+      <UniqueIdentifier>{e19824f2-3343-4029-b579-5f895f90d558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\Func">
+      <UniqueIdentifier>{a93969cf-cc75-421d-aa2b-1cc5aaf9f0bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root\Mane">
+      <UniqueIdentifier>{b86d2364-ba76-49e0-b1c9-fca3811da9a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe">
+      <UniqueIdentifier>{4451b7ac-1514-4ca5-8f21-9509bbe99177}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pipe\Mane">
+      <UniqueIdentifier>{f4408695-dd12-4cc8-a798-912d10da1f53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{04d8eb17-28d6-4863-a796-5ac9fcd33d02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\WIC">
+      <UniqueIdentifier>{35e8af81-b310-4aa2-974e-92e773e54ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Primitive">
+      <UniqueIdentifier>{f147fe23-5eac-40fa-8441-45d42d9d7f7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -56,6 +95,42 @@
     </ClCompile>
     <ClCompile Include="MyLib\List\List.cpp">
       <Filter>List</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Fence\Fence.cpp">
+      <Filter>Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Swap\Swap.cpp">
+      <Filter>Swap</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Render\Render.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Descriptor\Descriptor.cpp">
+      <Filter>Descriptor</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Depth\Depth.cpp">
+      <Filter>Depth</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Root\Root.cpp">
+      <Filter>Root</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\etc\Func.cpp">
+      <Filter>etc\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Root\RootMane.cpp">
+      <Filter>Root\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Pipe\Pipie.cpp">
+      <Filter>Pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Pipe\PipeMane.cpp">
+      <Filter>Pipe\Mane</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp">
+      <Filter>Texture\WIC</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Primitive\Primitive.cpp">
+      <Filter>Primitive</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +163,42 @@
     </ClInclude>
     <ClInclude Include="MyLib\List\List.h">
       <Filter>List</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Fence\Fence.h">
+      <Filter>Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Swap\Swap.h">
+      <Filter>Swap</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Render\Render.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Descriptor\Descriptor.h">
+      <Filter>Descriptor</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Depth\Depth.h">
+      <Filter>Depth</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Root\Root.h">
+      <Filter>Root</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\etc\Func.h">
+      <Filter>etc\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Root\RootMane.h">
+      <Filter>Root\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Pipe\Pipie.h">
+      <Filter>Pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Pipe\PipeMane.h">
+      <Filter>Pipe\Mane</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Texture\WICTextureLoader12.h">
+      <Filter>Texture\WIC</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Primitive\Primitive.h">
+      <Filter>Primitive</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,8 @@ int main()
 	MyLib lib(winSize);
 	while (lib.CheckMsg())
 	{
-
+		lib.Clear();
+		lib.Execution();
 	}
 
 	return 0;

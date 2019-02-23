@@ -13,7 +13,7 @@ public:
 	void Execution(ID3D12CommandList ** list, const size_t & num);
 
 	// キュー取得
-	inline ID3D12CommandQueue* Get(void) const;
+	ID3D12CommandQueue* Get(void) const;
 
 private:
 	// キュー生成

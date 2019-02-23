@@ -105,7 +105,7 @@ int Window::CreateWnd(const Vec2& pos, const Vec2& size, void* parent)
 }
 
 // ƒnƒ“ƒhƒ‹‚ÌŽæ“¾
-inline void * Window::Get(void) const
+void * Window::Get(void) const
 {
 	return handle;;
 }

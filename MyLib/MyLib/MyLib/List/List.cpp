@@ -174,13 +174,13 @@ void List::Init(const D3D12_COMMAND_LIST_TYPE & type)
 }
 
 // アロケータ取得
-inline ID3D12CommandAllocator * List::GetAllo(void) const
+ID3D12CommandAllocator * List::GetAllo(void) const
 {
 	return allo;
 }
 
 // リスト取得
-inline ID3D12GraphicsCommandList * List::GetList(void) const
+ID3D12GraphicsCommandList * List::GetList(void) const
 {
 	return list;
 }

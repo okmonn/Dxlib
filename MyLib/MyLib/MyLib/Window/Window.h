@@ -12,8 +12,7 @@ public:
 	~Window();
 
 	// ハンドル取得
-	inline void* Get(void) const;
-
+	void* Get(void) const;
 	// ドロップファイル取得
 	std::optional<std::tstring> GetDrop(void);
 

@@ -2,16 +2,27 @@
 #include "Window/Window.h"
 #include "Queue/Queue.h"
 #include "List/List.h"
+#include "Fence/Fence.h"
+#include "Swap/Swap.h"
+#include "Render/Render.h"
+#include "Depth/Depth.h"
 #include "etc/Release.h"
 #include <Windows.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 
 // コンストラクタ
-MyLib::MyLib(const Vec2& size, const Vec2& pos)
+MyLib::MyLib(const Vec2& size, const Vec2& pos) : winSize(size)
 {
-	Instance(size, pos);
+#ifdef _DEBUG
+	ID3D12Debug* debug = nullptr;
+	D3D12GetDebugInterface(IID_PPV_ARGS(&debug));
+	debug->EnableDebugLayer();
+#endif
+
+	Instance(pos);
 }
 
 // デストラクタ
@@ -20,15 +31,19 @@ MyLib::~MyLib()
 }
 
 // クラスのインスタンス化
-void MyLib::Instance(const Vec2& size, const Vec2& pos)
+void MyLib::Instance(const Vec2& pos)
 {
-	win   = std::make_shared<Window>(pos, size);
-	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list  = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	win    = std::make_shared<Window>(pos, winSize);
+	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	fence  = std::make_unique<Fence>(queue);
+	swap   = std::make_shared<Swap>(win, queue, winSize);
+	render = std::make_unique<Render>(swap);
+	depth  = std::make_unique<Depth>(winSize);
 }
 
 // メッセージの確認
-bool MyLib::CheckMsg(void)
+bool MyLib::CheckMsg(void) const
 {
 	static MSG msg{};
 
@@ -47,4 +62,37 @@ bool MyLib::CheckMsg(void)
 	}
 
 	return true;
+}
+
+// クリア
+void MyLib::Clear(void) const
+{
+	list->Reset();
+
+	list->Viewport(winSize);
+	list->Scissor(winSize);
+
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->Get());
+
+	render->Clear(list, depth->Get());
+
+	depth->Clear(list);
+}
+
+// 実行
+void MyLib::Execution(void) const
+{
+	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, render->Get());
+
+	list->Close();
+
+	ID3D12CommandList* com[] = {
+		list->GetList()
+	};
+
+	queue->Execution(com, _countof(com));
+
+	swap->Present();
+
+	fence->Wait();
 }

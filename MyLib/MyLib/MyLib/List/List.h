@@ -62,10 +62,9 @@ public:
 	void Close(void) const;
 
 	// アロケータ取得
-	inline ID3D12CommandAllocator* GetAllo(void) const;
-
+	ID3D12CommandAllocator* GetAllo(void) const;
 	// リスト取得
-	inline ID3D12GraphicsCommandList* GetList(void) const;
+	ID3D12GraphicsCommandList* GetList(void) const;
 
 private:
 	// アロケータ生成

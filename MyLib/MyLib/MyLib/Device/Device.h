@@ -12,7 +12,6 @@ public:
 
 	// デバイス取得
 	ID3D12Device* GetDev(void) const;
-
 	// ファクトリー取得
 	IDXGIFactory4* GetFactory(void) const;
 
