@@ -3,7 +3,7 @@
 #include <Windows.h>
 #include <tchar.h>
 
-std::optional<std::tstring> Window::dropFile = std::nullopt;
+std::optional<std::string> Window::dropFile = std::nullopt;
 
 // コンストラクタ
 Window::Window(const Vec2& pos, const Vec2& size, void* parent) : 
@@ -44,17 +44,20 @@ long __stdcall Window::WindowProc(void * hWnd, uint message, uint wParam, long l
 		PostQuitMessage(0);
 		return 0;
 	case WM_DROPFILES:
-		fileNum = DragQueryFile(reinterpret_cast<HDROP>(wParam), -1, nullptr, 0);
+		//ファイル数取得
+		fileNum = DragQueryFileA(HDROP(wParam), -1, nullptr, 0);
 		if (fileNum > 1)
 		{
 			break;
 		}
 
-		size = DragQueryFile(HDROP(wParam), 0, nullptr, 0);
+		size = DragQueryFileA(HDROP(wParam), 0, nullptr, 0);
 		drop = HDROP(wParam);
 		dropFile->resize(size);
+
 		//ファイルパス取得
-		DragQueryFile(drop, 0, &dropFile->at(0), sizeof(dropFile->at(0)) * size);
+		DragQueryFileA(drop, 0, &dropFile->at(0), sizeof(dropFile->at(0)) * size);
+
 		//ウィンドウをアクティブにする
 		SetForegroundWindow(HWND(hWnd));
 		break;
@@ -111,7 +114,7 @@ void * Window::Get(void) const
 }
 
 // ドロップファイル取得
-std::optional<std::tstring> Window::GetDrop(void)
+std::optional<std::string> Window::GetDrop(void)
 {
 	auto tmp = dropFile;
 	tmp = std::nullopt;

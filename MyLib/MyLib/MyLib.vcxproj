@@ -131,13 +131,11 @@
     <ClCompile Include="MyLib\Fence\Fence.cpp" />
     <ClCompile Include="MyLib\List\List.cpp" />
     <ClCompile Include="MyLib\MyLib.cpp" />
-    <ClCompile Include="MyLib\Pipe\PipeMane.cpp" />
     <ClCompile Include="MyLib\Pipe\Pipie.cpp" />
     <ClCompile Include="MyLib\Primitive\Primitive.cpp" />
     <ClCompile Include="MyLib\Queue\Queue.cpp" />
     <ClCompile Include="MyLib\Render\Render.cpp" />
     <ClCompile Include="MyLib\Root\Root.cpp" />
-    <ClCompile Include="MyLib\Root\RootMane.cpp" />
     <ClCompile Include="MyLib\Swap\Swap.cpp" />
     <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp" />
     <ClCompile Include="MyLib\Window\Window.cpp" />
@@ -152,13 +150,11 @@
     <ClInclude Include="MyLib\Fence\Fence.h" />
     <ClInclude Include="MyLib\List\List.h" />
     <ClInclude Include="MyLib\MyLib.h" />
-    <ClInclude Include="MyLib\Pipe\PipeMane.h" />
     <ClInclude Include="MyLib\Pipe\Pipie.h" />
     <ClInclude Include="MyLib\Primitive\Primitive.h" />
     <ClInclude Include="MyLib\Queue\Queue.h" />
     <ClInclude Include="MyLib\Render\Render.h" />
     <ClInclude Include="MyLib\Root\Root.h" />
-    <ClInclude Include="MyLib\Root\RootMane.h" />
     <ClInclude Include="MyLib\Swap\Swap.h" />
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h" />
     <ClInclude Include="MyLib\Vector\Vector2.h" />

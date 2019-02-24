@@ -136,7 +136,6 @@ public:
 	inline constexpr Vector2<T> operator-(void) const {
 		return Vector2<T>(-x, -y);
 	}
-
 	inline constexpr Vector2<T> operator+(const T& i) const {
 		return Vector2<T>(x + i, y + i);
 	}

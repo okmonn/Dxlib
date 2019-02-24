@@ -67,6 +67,38 @@ void Descriptor::DSV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint
 	Dev->CreateDepthStencilView(rsc, &desc, handle);
 }
 
+// CBV生成
+void Descriptor::CBV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const uint & index)
+{
+	D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
+	desc.BufferLocation = rsc->GetGPUVirtualAddress();
+	desc.SizeInBytes    = uint(rsc->GetDesc().Width);
+
+	auto handle = heap->GetCPUDescriptorHandleForHeapStart(); 
+	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index;
+	Dev->CreateConstantBufferView(&desc, handle);
+}
+
+// マップ
+long Descriptor::Map(ID3D12Resource * rsc, void ** data)
+{
+	D3D12_RANGE range = { 0, 1 };
+	auto hr = rsc->Map(0, &range, *(&data));
+	if (FAILED(hr))
+	{
+		OutputDebugString(_T("\nマップ：失敗\n"));
+	}
+
+	return hr;
+}
+
+// アンマップ
+void Descriptor::UnMap(ID3D12Resource * rsc)
+{
+	D3D12_RANGE range = { 0, 1 };
+	rsc->Unmap(0, &range);
+}
+
 // インスタンス変数取得
 Descriptor & Descriptor::Get(void)
 {

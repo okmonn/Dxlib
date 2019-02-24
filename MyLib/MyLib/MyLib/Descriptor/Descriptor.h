@@ -20,6 +20,15 @@ public:
 	// DSV生成
 	void DSV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index = 0);
 
+	// CBV生成
+	void CBV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index = 0);
+
+	// マップ
+	long Map(ID3D12Resource* rsc, void** data);
+
+	// アンマップ
+	void UnMap(ID3D12Resource* rsc);
+
 	// インスタンス変数取得
 	static Descriptor& Get(void);
 

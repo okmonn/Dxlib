@@ -1,11 +1,12 @@
 #pragma once
 #include "../etc/Define.h"
+#include <string>
 
 class Root
 {
 public:
 	// コンストラクタ
-	Root(const std::wstring& fileName);
+	Root(const std::string& fileName);
 	// デストラクタ
 	~Root();
 
@@ -34,7 +35,7 @@ private:
 	long CreateRoot(void);
 
 	// 初期化
-	void Init(const std::wstring& fileName);
+	void Init(const std::string& fileName);
 
 
 	// ルート

@@ -58,14 +58,8 @@
     <Filter Include="etc\Func">
       <UniqueIdentifier>{a93969cf-cc75-421d-aa2b-1cc5aaf9f0bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Root\Mane">
-      <UniqueIdentifier>{b86d2364-ba76-49e0-b1c9-fca3811da9a2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pipe">
       <UniqueIdentifier>{4451b7ac-1514-4ca5-8f21-9509bbe99177}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pipe\Mane">
-      <UniqueIdentifier>{f4408695-dd12-4cc8-a798-912d10da1f53}</UniqueIdentifier>
     </Filter>
     <Filter Include="Texture">
       <UniqueIdentifier>{04d8eb17-28d6-4863-a796-5ac9fcd33d02}</UniqueIdentifier>
@@ -117,14 +111,8 @@
     <ClCompile Include="MyLib\etc\Func.cpp">
       <Filter>etc\Func</Filter>
     </ClCompile>
-    <ClCompile Include="MyLib\Root\RootMane.cpp">
-      <Filter>Root\Mane</Filter>
-    </ClCompile>
     <ClCompile Include="MyLib\Pipe\Pipie.cpp">
       <Filter>Pipe</Filter>
-    </ClCompile>
-    <ClCompile Include="MyLib\Pipe\PipeMane.cpp">
-      <Filter>Pipe\Mane</Filter>
     </ClCompile>
     <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp">
       <Filter>Texture\WIC</Filter>
@@ -185,14 +173,8 @@
     <ClInclude Include="MyLib\etc\Func.h">
       <Filter>etc\Func</Filter>
     </ClInclude>
-    <ClInclude Include="MyLib\Root\RootMane.h">
-      <Filter>Root\Mane</Filter>
-    </ClInclude>
     <ClInclude Include="MyLib\Pipe\Pipie.h">
       <Filter>Pipe</Filter>
-    </ClInclude>
-    <ClInclude Include="MyLib\Pipe\PipeMane.h">
-      <Filter>Pipe\Mane</Filter>
     </ClInclude>
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h">
       <Filter>Texture\WIC</Filter>

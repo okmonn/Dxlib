@@ -6,9 +6,17 @@
 #define BACK_BUFFER 2
 
 // コンストラクタ
+Pipe::Pipe(std::weak_ptr<Root>root, const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const bool& depth) : 
+	pipe(nullptr)
+{
+	Graphic(input, num, type, depth);
+}
+
+// コンストラクタ
 Pipe::Pipe(std::weak_ptr<Root>root) : root(root),
 	pipe(nullptr)
 {
+	Compute();
 }
 
 // デストラクタ

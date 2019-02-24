@@ -1,6 +1,7 @@
 #pragma once
 #include "../Vector/Vector2.h"
 #include "../etc/Define.h"
+#include <string>
 #include <optional>
 
 class Window
@@ -14,7 +15,7 @@ public:
 	// ハンドル取得
 	void* Get(void) const;
 	// ドロップファイル取得
-	std::optional<std::tstring> GetDrop(void);
+	std::optional<std::string> GetDrop(void);
 
 private:
 	// ウィンドウコールバック
@@ -38,5 +39,5 @@ private:
 	const wchar_t* name;
 
 	// ドロップファイル名
-	static std::optional<std::tstring>dropFile;
+	static std::optional<std::string>dropFile;
 };

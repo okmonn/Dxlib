@@ -1,9 +1,10 @@
 #include <d3dcompiler.h>
 #include "Root.h"
 #include "../etc/Release.h"
+#include "../etc/Func.h"
 
 // コンストラクタ
-Root::Root(const std::wstring & fileName) : 
+Root::Root(const std::string & fileName) : 
 	root(nullptr), sig(nullptr), vertex(nullptr), geometry(nullptr), pixel(nullptr), compute(nullptr)
 {
 	Init(fileName);
@@ -86,9 +87,10 @@ long Root::CreateRoot(void)
 }
 
 // 初期化
-void Root::Init(const std::wstring & fileName)
+void Root::Init(const std::string & fileName)
 {
-	Compile(fileName);
+	auto pass = func::ChangeCode(fileName);
+	Compile(pass);
 	RootInfo();
 	CreateRoot();
 }
