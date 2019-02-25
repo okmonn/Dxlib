@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{30E0A98F-72C5-485C-802D-9F46FF86EBAF}</ProjectGuid>
     <RootNamespace>MyLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -78,6 +78,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -88,6 +89,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -100,6 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -116,6 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -131,14 +135,17 @@
     <ClCompile Include="MyLib\Fence\Fence.cpp" />
     <ClCompile Include="MyLib\List\List.cpp" />
     <ClCompile Include="MyLib\MyLib.cpp" />
-    <ClCompile Include="MyLib\Pipe\Pipie.cpp" />
+    <ClCompile Include="MyLib\Pipe\Pipe.cpp" />
     <ClCompile Include="MyLib\Primitive\Primitive.cpp" />
     <ClCompile Include="MyLib\Queue\Queue.cpp" />
     <ClCompile Include="MyLib\Render\Render.cpp" />
     <ClCompile Include="MyLib\Root\Root.cpp" />
     <ClCompile Include="MyLib\Swap\Swap.cpp" />
+    <ClCompile Include="MyLib\Texture\TexLoader.cpp" />
+    <ClCompile Include="MyLib\Texture\Texture.cpp" />
     <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp" />
     <ClCompile Include="MyLib\Window\Window.cpp" />
+    <ClCompile Include="MyLib\WVP\WVP.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyLib\Depth\Depth.h" />
@@ -150,20 +157,69 @@
     <ClInclude Include="MyLib\Fence\Fence.h" />
     <ClInclude Include="MyLib\List\List.h" />
     <ClInclude Include="MyLib\MyLib.h" />
-    <ClInclude Include="MyLib\Pipe\Pipie.h" />
+    <ClInclude Include="MyLib\Pipe\Pipe.h" />
     <ClInclude Include="MyLib\Primitive\Primitive.h" />
     <ClInclude Include="MyLib\Queue\Queue.h" />
     <ClInclude Include="MyLib\Render\Render.h" />
     <ClInclude Include="MyLib\Root\Root.h" />
     <ClInclude Include="MyLib\Swap\Swap.h" />
+    <ClInclude Include="MyLib\Texture\TexLoader.h" />
+    <ClInclude Include="MyLib\Texture\Texture.h" />
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h" />
     <ClInclude Include="MyLib\Vector\Vector2.h" />
     <ClInclude Include="MyLib\Vector\Vector3.h" />
     <ClInclude Include="MyLib\Window\Icon.h" />
     <ClInclude Include="MyLib\Window\Window.h" />
+    <ClInclude Include="MyLib\WVP\WVP.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyLib\Window\Icon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MyLib\Shader\Primitive.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\Texture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -32,6 +32,11 @@ public:
 		this->y = y;
 		this->z = z;
 	}
+	inline constexpr Vector3(const Vector2<T>& vec) {
+		x = vec.x;
+		y = vec.y;
+		z = T(0);
+	}
 	inline constexpr Vector3(const Vector2<T>& vec, const T& i) {
 		x = vec.x;
 		y = vec.y;

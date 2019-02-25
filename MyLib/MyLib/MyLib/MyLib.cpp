@@ -7,8 +7,9 @@
 #include "Swap/Swap.h"
 #include "Render/Render.h"
 #include "Depth/Depth.h"
+#include "WVP/WVP.h"
 #include "Root/Root.h"
-#include "Pipe/Pipie.h"
+#include "Pipe/Pipe.h"
 #include "etc/Release.h"
 #include <Windows.h>
 
@@ -57,6 +58,30 @@ MyLib::~MyLib()
 	Release(heap)
 }
 
+// カメラセット
+void MyLib::Camera(const Vec3f & pos, const Vec3f & target, const Vec3f & upper, const float & fov)
+{
+	wvp->SetCamera(pos, target, upper, constant->winSize, func::Rad(fov));
+}
+
+// X軸回転
+void MyLib::RotateX(const float & angle)
+{
+	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationX(angle));
+}
+
+// Y軸回転
+void MyLib::RotateY(const float & angle)
+{
+	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationY(angle));
+}
+
+// Z軸回転
+void MyLib::RotateZ(const float & angle)
+{
+	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationZ(angle));
+}
+
 // 初期化
 void MyLib::Init(void)
 {
@@ -83,8 +108,6 @@ void MyLib::Init(void)
 	Desc.CBV(heap, rsc);
 
 	Desc.Map(rsc, (void**)(&constant));
-
-	int n = 0;
 }
 
 // ルートのインスタンス
@@ -126,6 +149,15 @@ void MyLib::Instance(const Vec2& pos)
 	swap   = std::make_shared<Swap>(win, queue, Vec2(int(constant->winSize.x), int(constant->winSize.y)));
 	render = std::make_unique<Render>(swap);
 	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
+	wvp    = std::make_unique<WVP>();
+
+	RootSignature("primitive", "MyLib/Shader/Primitive.hlsl");
+	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
+	PipeLine("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0 }, false);
+	PipeLine("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0 }, false);
+
+	RootSignature("texture", "MyLib/Shader/Texture.hlsl");
+	PipeLine("texture", "texture", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 }
 
 // メッセージの確認
@@ -163,6 +195,89 @@ void MyLib::Clear(void) const
 	render->Clear(list, depth->Get());
 
 	depth->Clear(list);
+}
+
+// プリミティブ描画
+void MyLib::Draw(Primitive& primitive, const Vec3f& color, const float& alpha, const bool& change3D)
+{
+	if (change3D == false)
+	{
+		DirectX::XMStoreFloat4x4(&wvp->constant->world,      DirectX::XMMatrixIdentity());
+		DirectX::XMStoreFloat4x4(&wvp->constant->view,       DirectX::XMMatrixIdentity());
+		DirectX::XMStoreFloat4x4(&wvp->constant->projection, DirectX::XMMatrixIdentity());
+	}
+	else
+	{
+		wvp->SetCamera();
+	}
+
+	primitive.UpData();
+
+	constant->color = color;
+	constant->alpha = alpha;
+
+	list->GraphicRoot(root["primitive"]->Get());
+	switch (primitive.type)
+	{
+	case 0:
+		break;
+	case 1:
+		list->Pipeline(pipe["point"]->Get());
+		break;
+	case 2:
+		list->Pipeline(pipe["line"]->Get());
+		break;
+	default:
+		list->Pipeline(pipe["triangle"]->Get());
+		break;
+	}
+
+	D3D12_VERTEX_BUFFER_VIEW view{};
+	view.BufferLocation = primitive.rsc->GetGPUVirtualAddress();
+	view.SizeInBytes    = uint(primitive.rsc->GetDesc().Width);
+	view.StrideInBytes  = sizeof(primitive.pos[0]);
+	list->VertexView(view);
+
+	list->Heap(&heap, 1);
+	list->GraphicTable(0, heap);
+
+	list->Heap(&wvp->heap, 1);
+	list->GraphicTable(1, wvp->heap);
+
+	list->Topology(D3D12_PRIMITIVE_TOPOLOGY(primitive.type));
+
+	list->DrawVertex(primitive.pos.size());
+}
+
+// 画像描画
+void MyLib::Draw(Texture& tex, const float& alpha)
+{
+	tex.vertex[0] = { Vec3f(0.0f),                             Vec2f(0.0f) };
+	tex.vertex[1] = { Vec3f(Vec2f(constant->winSize.x, 0.0f)), Vec2f(1.0f, 0.0f) };
+	tex.vertex[2] = { Vec3f(Vec2f(0.0f, constant->winSize.y)), Vec2f(0.0f, 1.0f) };
+	tex.vertex[3] = { Vec3f(constant->winSize),                Vec2f(1.0f) };
+	memcpy(tex.data, tex.vertex.data(), sizeof(tex.vertex[0]) * tex.vertex.size());
+	
+	constant->alpha = alpha;
+
+	list->GraphicRoot(root["texture"]->Get());
+	list->Pipeline(pipe["texture"]->Get());
+
+	DirectX::XMStoreFloat4x4(&tex.constant->matrix, DirectX::XMMatrixAffineTransformation(
+		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / constant->winSize.x, tex.size.y / constant->winSize.y)),
+		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / 2.0f, tex.size.y / 2.0f)),
+		DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(tex.rotate.x, tex.rotate.y, tex.rotate.z, 1.0f)),
+		DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(tex.pos.x, tex.pos.y, tex.pos.z))
+	));
+
+	auto index = tex.SetDraw(list);
+
+	list->Heap(&heap, 1);
+	list->GraphicTable(index, heap);
+
+	list->Topology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	list->DrawVertex(tex.GetVertexNum());
 }
 
 // 実行

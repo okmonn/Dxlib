@@ -23,6 +23,9 @@ public:
 	// CBVê∂ê¨
 	void CBV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index = 0);
 
+	// SRVê∂ê¨
+	void SRV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index = 0);
+
 	// É}ÉbÉv
 	long Map(ID3D12Resource* rsc, void** data);
 

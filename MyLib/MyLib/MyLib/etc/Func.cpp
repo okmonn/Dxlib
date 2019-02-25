@@ -1,6 +1,18 @@
 #include "Func.h"
 #include <Windows.h>
 
+// 円周率取得
+constexpr float func::PI(void)
+{
+	return 3.14159265358979323846f;
+}
+
+// ラジアン変換
+float func::Rad(const float & angle)
+{
+	return angle * PI() / 180.0f;
+}
+
 // 文字コード変換
 std::wstring func::ChangeCode(const std::string & code)
 {

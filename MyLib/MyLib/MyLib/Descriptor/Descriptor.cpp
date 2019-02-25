@@ -79,6 +79,20 @@ void Descriptor::CBV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const ui
 	Dev->CreateConstantBufferView(&desc, handle);
 }
 
+// SRV¶¬
+void Descriptor::SRV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const uint & index)
+{
+	D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
+	desc.Format                  = rsc->GetDesc().Format;
+	desc.ViewDimension           = D3D12_SRV_DIMENSION::D3D12_SRV_DIMENSION_TEXTURE2D;
+	desc.Texture2D.MipLevels     = 1;
+	desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index;
+	Dev->CreateShaderResourceView(rsc, &desc, handle);
+}
+
 // ƒ}ƒbƒv
 long Descriptor::Map(ID3D12Resource * rsc, void ** data)
 {

@@ -1,9 +1,7 @@
 #pragma once
-#include "Vector/Vector2.h"
-#include "Vector/Vector3.h"
-#include "etc/Define.h"
-#include <string>
-#include <memory>
+#include "Primitive/Primitive.h"
+#include "Texture/Texture.h"
+#include "etc/Func.h"
 #include <unordered_map>
 
 class Window;
@@ -13,6 +11,7 @@ class Fence;
 class Swap;
 class Render;
 class Depth;
+class WVP;
 class Root;
 class Pipe;
 
@@ -20,12 +19,12 @@ class MyLib
 {
 	// 定数
 	struct Constant {
-		//ウィンドウサイズ
-		Vec2f winSize;
 		//カラー
 		Vec3f color;
 		//アルファ値
 		float alpha;
+		//ウィンドウサイズ
+		Vec2f winSize;
 	};
 
 public:
@@ -34,17 +33,29 @@ public:
 	// デストラクタ
 	~MyLib();
 
-	// カラー変更
-	void ChangeColor(const Vec3f& color);
+	// カメラセット
+	void Camera(const Vec3f& pos, const Vec3f& target, const Vec3f& upper = { 0.0f, 1.0f, 0.0f }, const float& fov = 90.0f);
 
-	// アルファ値変更
-	void ChangeAlpha(const float& alpha);
+	// X軸回転
+	void RotateX(const float& angle);
+
+	// Y軸回転
+	void RotateY(const float& angle);
+
+	// Z軸回転
+	void RotateZ(const float& angle);
 
 	// メッセージの確認
 	bool CheckMsg(void) const;
 
 	// クリア
 	void Clear(void) const;
+
+	// プリミティブ描画
+	void Draw(Primitive& primitive, const Vec3f& color, const float& alpha = 1.0f, const bool& change3D = false);
+
+	// 画像描画
+	void Draw(Texture& tex, const float& alpha = 1.0f);
 
 	// 実行
 	void Execution(void) const;
@@ -96,6 +107,9 @@ private:
 
 	// デプス
 	std::unique_ptr<Depth>depth;
+
+	// カメラ
+	std::unique_ptr<WVP>wvp;
 
 	// ルート
 	static std::unordered_map<std::string, std::shared_ptr<Root>>root;

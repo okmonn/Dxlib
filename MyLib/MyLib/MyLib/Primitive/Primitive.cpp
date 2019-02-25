@@ -1,16 +1,56 @@
 #include "Primitive.h"
-#include "../Descriptor/Descriptor.h"
 #include "../etc/Release.h"
 
 // コンストラクタ
 Primitive::Primitive() : 
-	rsc(nullptr), type(0)
+	rsc(nullptr), data(nullptr), type(0)
 {
+}
+
+// コンストラクタ
+Primitive::Primitive(const PrimitiveType & type) : 
+	rsc(nullptr), data(nullptr), type(0)
+{
+	Init(type, uint(type) + 1);
+}
+
+// コンストラクタ
+Primitive::Primitive(const PrimitiveType& type, const uint& num) : 
+	rsc(nullptr), data(nullptr), type(0)
+{
+	Init(type, num);
+}
+
+// コピーコンストラクタ
+Primitive::Primitive(const Primitive & prim)
+{
+	pos = prim.pos;
+
+	PrimitiveType type = PrimitiveType::point;
+	switch (prim.type)
+	{
+	case 1:
+		type = PrimitiveType::point;
+		break;
+	case 2:
+		type = PrimitiveType::line;
+		break;
+	case 4:
+		type = PrimitiveType::triangle;
+		break;
+	case 5:
+		type = PrimitiveType::box;
+		break;
+	default:
+		break;
+	}
+	Init(type, pos.size());
 }
 
 // デストラクタ
 Primitive::~Primitive()
 {
+	Desc.UnMap(rsc);
 	Release(rsc);
 }
 
@@ -56,7 +96,36 @@ void Primitive::Init(const PrimitiveType& type, const uint & num)
 
 	Desc.CreateRsc(&rsc, prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ);
 
-	void* data = nullptr;
 	Desc.Map(rsc, &data);
-	Desc.UnMap(rsc);
+}
+
+// データ更新
+void Primitive::UpData(void) const
+{
+	memcpy(data, pos.data(), sizeof(pos[0]) * pos.size());
+}
+
+void Primitive::operator=(const Primitive & prim)
+{
+	pos = prim.pos;
+
+	PrimitiveType type = PrimitiveType::point;
+	switch (prim.type)
+	{
+	case 1:
+		type = PrimitiveType::point;
+		break;
+	case 2:
+		type = PrimitiveType::line;
+		break;
+	case 4:
+		type = PrimitiveType::triangle;
+		break;
+	case 5:
+		type = PrimitiveType::box;
+		break;
+	default:
+		break;
+	}
+	Init(type, pos.size());
 }

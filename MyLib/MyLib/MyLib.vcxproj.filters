@@ -70,6 +70,12 @@
     <Filter Include="Primitive">
       <UniqueIdentifier>{f147fe23-5eac-40fa-8441-45d42d9d7f7b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture\Loader">
+      <UniqueIdentifier>{9ecbe8a7-8d9b-4a73-95aa-25f40fc7fe10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WVP">
+      <UniqueIdentifier>{952ce269-3ac8-43ac-9a97-dded899bc2c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -111,14 +117,23 @@
     <ClCompile Include="MyLib\etc\Func.cpp">
       <Filter>etc\Func</Filter>
     </ClCompile>
-    <ClCompile Include="MyLib\Pipe\Pipie.cpp">
-      <Filter>Pipe</Filter>
-    </ClCompile>
     <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp">
       <Filter>Texture\WIC</Filter>
     </ClCompile>
     <ClCompile Include="MyLib\Primitive\Primitive.cpp">
       <Filter>Primitive</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Texture\Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Texture\TexLoader.cpp">
+      <Filter>Texture\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\WVP\WVP.cpp">
+      <Filter>WVP</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Pipe\Pipe.cpp">
+      <Filter>Pipe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,19 +188,36 @@
     <ClInclude Include="MyLib\etc\Func.h">
       <Filter>etc\Func</Filter>
     </ClInclude>
-    <ClInclude Include="MyLib\Pipe\Pipie.h">
-      <Filter>Pipe</Filter>
-    </ClInclude>
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h">
       <Filter>Texture\WIC</Filter>
     </ClInclude>
     <ClInclude Include="MyLib\Primitive\Primitive.h">
       <Filter>Primitive</Filter>
     </ClInclude>
+    <ClInclude Include="MyLib\Texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Texture\TexLoader.h">
+      <Filter>Texture\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\WVP\WVP.h">
+      <Filter>WVP</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Pipe\Pipe.h">
+      <Filter>Pipe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyLib\Window\Icon.rc">
       <Filter>Window\Icon</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MyLib\Shader\Primitive.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\Texture.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
