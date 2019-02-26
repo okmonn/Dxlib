@@ -26,6 +26,9 @@ public:
 	// SRVê∂ê¨
 	void SRV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index = 0);
 
+	// UAVê∂ê¨
+	void UAV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const size_t& stride, const size_t& num, const uint& index = 0);
+
 	// É}ÉbÉv
 	long Map(ID3D12Resource* rsc, void** data);
 

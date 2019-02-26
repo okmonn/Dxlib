@@ -7,7 +7,6 @@
 #include "Swap/Swap.h"
 #include "Render/Render.h"
 #include "Depth/Depth.h"
-#include "WVP/WVP.h"
 #include "Root/Root.h"
 #include "Pipe/Pipe.h"
 #include "etc/Release.h"
@@ -16,6 +15,7 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "xaudio2.lib")
 
 std::unordered_map<std::string, std::shared_ptr<Root>> MyLib::root;
 std::unordered_map<std::string, std::shared_ptr<Pipe>> MyLib::pipe;
@@ -56,30 +56,6 @@ MyLib::~MyLib()
 	Desc.UnMap(rsc);
 	Release(rsc);
 	Release(heap)
-}
-
-// カメラセット
-void MyLib::Camera(const Vec3f & pos, const Vec3f & target, const Vec3f & upper, const float & fov)
-{
-	wvp->SetCamera(pos, target, upper, constant->winSize, func::Rad(fov));
-}
-
-// X軸回転
-void MyLib::RotateX(const float & angle)
-{
-	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationX(angle));
-}
-
-// Y軸回転
-void MyLib::RotateY(const float & angle)
-{
-	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationY(angle));
-}
-
-// Z軸回転
-void MyLib::RotateZ(const float & angle)
-{
-	DirectX::XMStoreFloat4x4(&wvp->constant->world, DirectX::XMMatrixRotationZ(angle));
 }
 
 // 初期化
@@ -149,7 +125,6 @@ void MyLib::Instance(const Vec2& pos)
 	swap   = std::make_shared<Swap>(win, queue, Vec2(int(constant->winSize.x), int(constant->winSize.y)));
 	render = std::make_unique<Render>(swap);
 	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
-	wvp    = std::make_unique<WVP>();
 
 	RootSignature("primitive", "MyLib/Shader/Primitive.hlsl");
 	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
@@ -198,19 +173,8 @@ void MyLib::Clear(void) const
 }
 
 // プリミティブ描画
-void MyLib::Draw(Primitive& primitive, const Vec3f& color, const float& alpha, const bool& change3D)
+void MyLib::Draw(Primitive& primitive, const Vec3f& color, const float& alpha)
 {
-	if (change3D == false)
-	{
-		DirectX::XMStoreFloat4x4(&wvp->constant->world,      DirectX::XMMatrixIdentity());
-		DirectX::XMStoreFloat4x4(&wvp->constant->view,       DirectX::XMMatrixIdentity());
-		DirectX::XMStoreFloat4x4(&wvp->constant->projection, DirectX::XMMatrixIdentity());
-	}
-	else
-	{
-		wvp->SetCamera();
-	}
-
 	primitive.UpData();
 
 	constant->color = color;
@@ -241,9 +205,6 @@ void MyLib::Draw(Primitive& primitive, const Vec3f& color, const float& alpha, c
 	list->Heap(&heap, 1);
 	list->GraphicTable(0, heap);
 
-	list->Heap(&wvp->heap, 1);
-	list->GraphicTable(1, wvp->heap);
-
 	list->Topology(D3D12_PRIMITIVE_TOPOLOGY(primitive.type));
 
 	list->DrawVertex(primitive.pos.size());
@@ -263,10 +224,10 @@ void MyLib::Draw(Texture& tex, const float& alpha)
 	list->GraphicRoot(root["texture"]->Get());
 	list->Pipeline(pipe["texture"]->Get());
 
-	DirectX::XMStoreFloat4x4(&tex.constant->matrix, DirectX::XMMatrixAffineTransformation(
+	DirectX::XMStoreFloat4x4(&tex.constant->matrix, DirectX::XMMatrixAffineTransformation2D(
 		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / constant->winSize.x, tex.size.y / constant->winSize.y)),
 		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / 2.0f, tex.size.y / 2.0f)),
-		DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(tex.rotate.x, tex.rotate.y, tex.rotate.z, 1.0f)),
+		tex.rotate,
 		DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(tex.pos.x, tex.pos.y, tex.pos.z))
 	));
 

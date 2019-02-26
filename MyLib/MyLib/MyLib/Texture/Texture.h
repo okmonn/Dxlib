@@ -46,7 +46,7 @@ public:
 	Vec2f uvSize;
 
 	// ‰ñ“]
-	Vec3f rotate;
+	float rotate;
 
 	// ”½“]ƒtƒ‰ƒO
 	Vec2 reverse;

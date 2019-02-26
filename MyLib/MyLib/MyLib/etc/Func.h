@@ -12,4 +12,8 @@ namespace func
 	// •¶šƒR[ƒh•ÏŠ·
 	std::wstring ChangeCode(const std::string& code);
 	std::string ChangeCode(const std::wstring& code);
+
+	// •¶š—ñŒŸõ
+	bool FindChara(const char* input, const std::string& find);
+	bool FindChara(const unsigned char* input, const std::string& find);
 }

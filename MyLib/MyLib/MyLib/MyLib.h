@@ -11,7 +11,6 @@ class Fence;
 class Swap;
 class Render;
 class Depth;
-class WVP;
 class Root;
 class Pipe;
 
@@ -33,18 +32,6 @@ public:
 	// デストラクタ
 	~MyLib();
 
-	// カメラセット
-	void Camera(const Vec3f& pos, const Vec3f& target, const Vec3f& upper = { 0.0f, 1.0f, 0.0f }, const float& fov = 90.0f);
-
-	// X軸回転
-	void RotateX(const float& angle);
-
-	// Y軸回転
-	void RotateY(const float& angle);
-
-	// Z軸回転
-	void RotateZ(const float& angle);
-
 	// メッセージの確認
 	bool CheckMsg(void) const;
 
@@ -52,7 +39,7 @@ public:
 	void Clear(void) const;
 
 	// プリミティブ描画
-	void Draw(Primitive& primitive, const Vec3f& color, const float& alpha = 1.0f, const bool& change3D = false);
+	void Draw(Primitive& primitive, const Vec3f& color, const float& alpha = 1.0f);
 
 	// 画像描画
 	void Draw(Texture& tex, const float& alpha = 1.0f);
@@ -107,9 +94,6 @@ private:
 
 	// デプス
 	std::unique_ptr<Depth>depth;
-
-	// カメラ
-	std::unique_ptr<WVP>wvp;
 
 	// ルート
 	static std::unordered_map<std::string, std::shared_ptr<Root>>root;

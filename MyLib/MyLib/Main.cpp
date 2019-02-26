@@ -1,22 +1,25 @@
 #include "MyLib/MyLib.h"
+#include <minmax.h>
 
 int main()
 {
 	const Vec2 winSize = { 640, 480 };
 	MyLib lib(winSize);
-	lib.Camera({ 0.0f, 0.0f, -1.0f }, {0.0f, 0.0f, 0.0f});
 
 	Texture tex;
 	tex.Load("äÆê¨.png");
-	float angle = 0.0f;
+
+	Primitive prim(PrimitiveType::box);
+	prim.pos[0] = 0.0f;
+	prim.pos[1] = Vec2f(640.0f, 0.0f);
+	prim.pos[2] = Vec2f(0.0f, 480.0f);
+	prim.pos[3] = Vec2f(640.0f, 480.0f);
 	
 	while (lib.CheckMsg())
 	{
-		tex.rotate.z = angle;
 		lib.Clear();
-		lib.Draw(tex);
+		lib.Draw(prim, 1.0f);
 		lib.Execution();
-		angle += 0.01f;
 	}
 
 	return 0;

@@ -68,7 +68,7 @@ void Descriptor::DSV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint
 }
 
 // CBV¶¬
-void Descriptor::CBV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const uint & index)
+void Descriptor::CBV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index)
 {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC desc{};
 	desc.BufferLocation = rsc->GetGPUVirtualAddress();
@@ -80,7 +80,7 @@ void Descriptor::CBV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const ui
 }
 
 // SRV¶¬
-void Descriptor::SRV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const uint & index)
+void Descriptor::SRV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const uint& index)
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc{};
 	desc.Format                  = rsc->GetDesc().Format;
@@ -91,6 +91,20 @@ void Descriptor::SRV(ID3D12DescriptorHeap * heap, ID3D12Resource * rsc, const ui
 	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index;
 	Dev->CreateShaderResourceView(rsc, &desc, handle);
+}
+
+// UAV¶¬
+void Descriptor::UAV(ID3D12DescriptorHeap* heap, ID3D12Resource* rsc, const size_t& stride, const size_t& num, const uint& index)
+{
+	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
+	desc.ViewDimension              = D3D12_UAV_DIMENSION::D3D12_UAV_DIMENSION_BUFFER;
+	desc.Format                     = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
+	desc.Buffer.NumElements         = uint(num);
+	desc.Buffer.StructureByteStride = uint(stride);
+
+	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += Dev->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index;
+	Dev->CreateUnorderedAccessView(rsc, nullptr, &desc, handle);
 }
 
 // ƒ}ƒbƒv

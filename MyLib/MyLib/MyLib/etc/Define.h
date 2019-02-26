@@ -37,3 +37,6 @@ struct ID3D10Blob;
 typedef ID3D10Blob ID3DBlob;
 struct D3D12_INPUT_ELEMENT_DESC;
 struct D3D12_SUBRESOURCE_DATA;
+struct IXAudio2;
+struct IXAudio2MasteringVoice;
+struct IXAudio2SourceVoice;

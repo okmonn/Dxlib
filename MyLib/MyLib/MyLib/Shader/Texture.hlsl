@@ -84,5 +84,5 @@ float4 PS(Out o) : SV_TARGET
         discard;
     }
 
-    return float4(tex.Sample(smp, o.uv).xyz, 1.0f);
+    return float4(tex.Sample(smp, o.uv).xyz, a);
 }

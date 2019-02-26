@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{30E0A98F-72C5-485C-802D-9F46FF86EBAF}</ProjectGuid>
     <RootNamespace>MyLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -80,6 +80,7 @@
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -91,6 +92,7 @@
       <AdditionalOptions>-std:c++17 %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -128,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MyLib\Compute\Compute.cpp" />
     <ClCompile Include="MyLib\Depth\Depth.cpp" />
     <ClCompile Include="MyLib\Descriptor\Descriptor.cpp" />
     <ClCompile Include="MyLib\Device\Device.cpp" />
@@ -140,14 +143,18 @@
     <ClCompile Include="MyLib\Queue\Queue.cpp" />
     <ClCompile Include="MyLib\Render\Render.cpp" />
     <ClCompile Include="MyLib\Root\Root.cpp" />
+    <ClCompile Include="MyLib\Sound\SndFunc.cpp" />
+    <ClCompile Include="MyLib\Sound\SndLoader.cpp" />
+    <ClCompile Include="MyLib\Sound\Sound.cpp" />
+    <ClCompile Include="MyLib\Sound\XAudio2.cpp" />
     <ClCompile Include="MyLib\Swap\Swap.cpp" />
     <ClCompile Include="MyLib\Texture\TexLoader.cpp" />
     <ClCompile Include="MyLib\Texture\Texture.cpp" />
     <ClCompile Include="MyLib\Texture\WICTextureLoader12.cpp" />
     <ClCompile Include="MyLib\Window\Window.cpp" />
-    <ClCompile Include="MyLib\WVP\WVP.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MyLib\Compute\Compute.h" />
     <ClInclude Include="MyLib\Depth\Depth.h" />
     <ClInclude Include="MyLib\Descriptor\Descriptor.h" />
     <ClInclude Include="MyLib\Device\Device.h" />
@@ -162,6 +169,11 @@
     <ClInclude Include="MyLib\Queue\Queue.h" />
     <ClInclude Include="MyLib\Render\Render.h" />
     <ClInclude Include="MyLib\Root\Root.h" />
+    <ClInclude Include="MyLib\Sound\SndFunc.h" />
+    <ClInclude Include="MyLib\Sound\SndLoader.h" />
+    <ClInclude Include="MyLib\Sound\Sound.h" />
+    <ClInclude Include="MyLib\Sound\VoiceCallback.h" />
+    <ClInclude Include="MyLib\Sound\XAudio2.h" />
     <ClInclude Include="MyLib\Swap\Swap.h" />
     <ClInclude Include="MyLib\Texture\TexLoader.h" />
     <ClInclude Include="MyLib\Texture\Texture.h" />
@@ -170,7 +182,6 @@
     <ClInclude Include="MyLib\Vector\Vector3.h" />
     <ClInclude Include="MyLib\Window\Icon.h" />
     <ClInclude Include="MyLib\Window\Window.h" />
-    <ClInclude Include="MyLib\WVP\WVP.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyLib\Window\Icon.rc" />

@@ -73,8 +73,20 @@
     <Filter Include="Texture\Loader">
       <UniqueIdentifier>{9ecbe8a7-8d9b-4a73-95aa-25f40fc7fe10}</UniqueIdentifier>
     </Filter>
-    <Filter Include="WVP">
-      <UniqueIdentifier>{952ce269-3ac8-43ac-9a97-dded899bc2c6}</UniqueIdentifier>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{4bb0b858-339e-4431-b54e-531a3241749b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\XAudio2">
+      <UniqueIdentifier>{2024b421-3d6c-45f7-867d-92d8b5faeb3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Loader">
+      <UniqueIdentifier>{b0a954cb-ce6d-4476-b1d7-cd4450483cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Func">
+      <UniqueIdentifier>{eef01117-e04c-4cbe-afef-cbaa11bddb88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compute">
+      <UniqueIdentifier>{f6c956d8-a792-4a3a-a982-a6e9cc5f04d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,11 +141,23 @@
     <ClCompile Include="MyLib\Texture\TexLoader.cpp">
       <Filter>Texture\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="MyLib\WVP\WVP.cpp">
-      <Filter>WVP</Filter>
-    </ClCompile>
     <ClCompile Include="MyLib\Pipe\Pipe.cpp">
       <Filter>Pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\XAudio2.cpp">
+      <Filter>Sound\XAudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\SndLoader.cpp">
+      <Filter>Sound\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\SndFunc.cpp">
+      <Filter>Sound\Func</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\Sound.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Compute\Compute.cpp">
+      <Filter>Compute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +224,26 @@
     <ClInclude Include="MyLib\Texture\TexLoader.h">
       <Filter>Texture\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="MyLib\WVP\WVP.h">
-      <Filter>WVP</Filter>
-    </ClInclude>
     <ClInclude Include="MyLib\Pipe\Pipe.h">
       <Filter>Pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\Sound.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\XAudio2.h">
+      <Filter>Sound\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\VoiceCallback.h">
+      <Filter>Sound\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\SndLoader.h">
+      <Filter>Sound\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\SndFunc.h">
+      <Filter>Sound\Func</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Compute\Compute.h">
+      <Filter>Compute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
