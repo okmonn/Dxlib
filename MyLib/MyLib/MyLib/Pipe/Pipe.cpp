@@ -1,5 +1,6 @@
 #include "Pipe.h"
 #include "../Root/Root.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // バックバッファの数
@@ -98,7 +99,7 @@ long Pipe::Graphic(const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, con
 	auto hr = Dev->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&pipe));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\n描画用パイプライン生成：失敗\n"));
+		func::DebugLog("描画用パイプライン生成：失敗");
 	}
 
 	return hr;
@@ -116,7 +117,7 @@ long Pipe::Compute(void)
 	auto hr = Dev->CreateComputePipelineState(&desc, IID_PPV_ARGS(&pipe));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\n計算用パイプライン生成：失敗\n"));
+		func::DebugLog("計算用パイプライン生成：失敗");
 	}
 
 	return hr;

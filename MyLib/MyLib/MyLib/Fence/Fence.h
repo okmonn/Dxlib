@@ -4,6 +4,7 @@
 
 class Queue;
 
+// フェンス
 class Fence
 {
 public:
@@ -16,6 +17,9 @@ public:
 	void Wait(void);
 
 private:
+	Fence(const Fence&) = delete;
+	void operator=(const Fence&) = delete;
+
 	// フェンス生成
 	long CreateFence(void);
 

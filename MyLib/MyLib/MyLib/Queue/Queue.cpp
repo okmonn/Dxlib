@@ -1,4 +1,5 @@
 #include "Queue.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // コンストラクタ
@@ -25,7 +26,7 @@ long Queue::CreateQueue(const D3D12_COMMAND_LIST_TYPE& type)
 	auto hr = Dev->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nキュー生成：失敗\n"));
+		func::DebugLog("キュー生成：失敗");
 	}
 	
 	return hr;

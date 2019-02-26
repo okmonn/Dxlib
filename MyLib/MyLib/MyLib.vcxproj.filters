@@ -22,9 +22,6 @@
     <Filter Include="Window\Icon">
       <UniqueIdentifier>{d2367287-ecb6-4af0-a9da-4cbe4170fae7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vector">
-      <UniqueIdentifier>{e3a9ae60-1382-407f-9bc8-44730e3beee4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="etc">
       <UniqueIdentifier>{c445565f-0012-4316-9ef6-ab3466c4602a}</UniqueIdentifier>
     </Filter>
@@ -87,6 +84,12 @@
     </Filter>
     <Filter Include="Compute">
       <UniqueIdentifier>{f6c956d8-a792-4a3a-a982-a6e9cc5f04d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{e65d1947-03a3-44ff-b61a-6157764c6f34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{0405cbec-fe6b-4e77-9ca8-35c3466e8ee3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +162,9 @@
     <ClCompile Include="MyLib\Compute\Compute.cpp">
       <Filter>Compute</Filter>
     </ClCompile>
+    <ClCompile Include="MyLib\Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyLib\MyLib.h">
@@ -170,9 +176,6 @@
     <ClInclude Include="MyLib\Window\Icon.h">
       <Filter>Window\Icon</Filter>
     </ClInclude>
-    <ClInclude Include="MyLib\Vector\Vector2.h">
-      <Filter>Vector</Filter>
-    </ClInclude>
     <ClInclude Include="MyLib\etc\Define.h">
       <Filter>etc</Filter>
     </ClInclude>
@@ -181,9 +184,6 @@
     </ClInclude>
     <ClInclude Include="MyLib\Device\Device.h">
       <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="MyLib\Vector\Vector3.h">
-      <Filter>Vector</Filter>
     </ClInclude>
     <ClInclude Include="MyLib\Queue\Queue.h">
       <Filter>Queue</Filter>
@@ -244,6 +244,18 @@
     </ClInclude>
     <ClInclude Include="MyLib\Compute\Compute.h">
       <Filter>Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Math\Vector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Math\Vector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Input\KeyCode.h">
+      <Filter>Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

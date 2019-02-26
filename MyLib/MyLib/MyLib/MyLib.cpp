@@ -61,7 +61,8 @@ MyLib::~MyLib()
 // ‰Šú‰»
 void MyLib::Init(void)
 {
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
 
 	D3D12_HEAP_PROPERTIES prop{};
 	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
@@ -225,10 +226,10 @@ void MyLib::Draw(Texture& tex, const float& alpha)
 	list->Pipeline(pipe["texture"]->Get());
 
 	DirectX::XMStoreFloat4x4(&tex.constant->matrix, DirectX::XMMatrixAffineTransformation2D(
-		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / constant->winSize.x, tex.size.y / constant->winSize.y)),
-		DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(tex.size.x / 2.0f, tex.size.y / 2.0f)),
+		DirectX::XMLoadFloat2(&Convert2(tex.size / constant->winSize)),
+		DirectX::XMLoadFloat2(&Convert2(tex.size / 2.0f)),
 		tex.rotate,
-		DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(tex.pos.x, tex.pos.y, tex.pos.z))
+		DirectX::XMLoadFloat3(&Convert3(tex.pos))
 	));
 
 	auto index = tex.SetDraw(list);

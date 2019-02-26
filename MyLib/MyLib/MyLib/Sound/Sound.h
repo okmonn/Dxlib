@@ -7,6 +7,7 @@
 
 class VoiceCallback;
 
+// ƒTƒEƒ“ƒh
 class Sound
 {
 public:

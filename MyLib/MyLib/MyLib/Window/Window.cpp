@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Icon.h"
+#include "../etc/Func.h"
 #include <Windows.h>
 #include <tchar.h>
 
@@ -95,7 +96,7 @@ int Window::CreateWnd(const Vec2& pos, const Vec2& size, void* parent)
 		(rect.right - rect.left), (rect.bottom - rect.top), HWND(parent), nullptr, wnd.hInstance, nullptr);
 	if (handle == nullptr)
 	{
-		OutputDebugString(_T("\nウィンドウの生成：失敗\n"));
+		func::DebugLog("ウィンドウ生成：失敗");
 		return -1;
 	}
 

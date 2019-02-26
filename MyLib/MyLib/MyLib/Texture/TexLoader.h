@@ -1,10 +1,10 @@
 #pragma once
-#include "../Vector/Vector2.h"
 #include "../etc/Define.h"
 #include <string>
 #include <memory>
 #include <unordered_map>
 
+// テクスチャローダー
 class TexLoader
 {
 public:
@@ -29,7 +29,6 @@ public:
 	Vec2f GetSize(const std::string& fileName);
 
 private:
-	// コンストラクタ
 	TexLoader();
 	TexLoader(const TexLoader&) = delete;
 	void operator=(const TexLoader&) = delete;

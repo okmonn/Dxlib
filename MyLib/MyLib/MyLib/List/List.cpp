@@ -1,4 +1,5 @@
 #include "List.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // コンストラクタ
@@ -21,7 +22,7 @@ long List::CreateAllo(const D3D12_COMMAND_LIST_TYPE& type)
 	auto hr = Dev->CreateCommandAllocator(type, IID_PPV_ARGS(&allo));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nアロケータ生成：失敗\n"));
+		func::DebugLog("アロケータ生成：失敗");
 	}
 
 	return hr;
@@ -33,7 +34,7 @@ long List::CreateList(const D3D12_COMMAND_LIST_TYPE& type)
 	auto hr = Dev->CreateCommandList(0, type, allo, nullptr, IID_PPV_ARGS(&list));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nリスト生成：失敗\n"));
+		func::DebugLog("リスト生成：失敗");
 		return hr;
 	}
 

@@ -4,6 +4,7 @@
 
 class Root;
 
+// パイプライン
 class Pipe
 {
 public:
@@ -17,6 +18,9 @@ public:
 	ID3D12PipelineState* Get(void) const;
 
 private:
+	Pipe(const Pipe&) = delete;
+	void operator=(const Pipe&) = delete;
+
 	// 描画用パイプライン生成
 	long Graphic(const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const bool& depth);
 

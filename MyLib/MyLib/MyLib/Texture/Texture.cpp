@@ -1,6 +1,7 @@
 #include "Texture.h"
 #include "TexLoader.h"
 #include "../List/List.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 #define RSC_MAX 2
@@ -15,6 +16,30 @@ Texture::Texture() :
 	rsc.resize(RSC_MAX + 1);
 }
 
+// コンストラクタ
+Texture::Texture(const std::string & fileName) :
+	heap(nullptr), constant(nullptr), data(nullptr)
+{
+	rsc.resize(RSC_MAX + 1);
+
+	Load(fileName);
+}
+
+// コピーコンストラクタ
+Texture::Texture(const Texture& tex)
+{
+	rsc.resize(RSC_MAX + 1);
+
+	pos              = tex.pos;
+	size             = tex.size;
+	uvPos            = tex.uvPos;
+	uvSize           = tex.uvSize;
+	fileName         = tex.fileName;
+	rsc[RSC_MAX - 1] = TexLoader::Get().GetRsc(fileName);
+
+	Init();
+}
+
 // デストラクタ
 Texture::~Texture()
 {
@@ -26,7 +51,7 @@ Texture::~Texture()
 }
 
 // 読み込み
-int Texture::Load(const std::string & fileName)
+int Texture::Load(const std::string& fileName)
 {
 	if (FAILED(TexLoader::Get().Load(fileName)))
 	{
@@ -41,12 +66,6 @@ int Texture::Load(const std::string & fileName)
 	Init();
 
 	return 0;
-}
-
-// テクスチャサイズ取得
-Vec2f Texture::GetTexSize(void) const
-{
-	return TexLoader::Get().GetSize(fileName);
 }
 
 // 定数リソース生成
@@ -101,10 +120,11 @@ long Texture::WriteSub(const uint& index)
 	box.bottom = rsc[index]->GetDesc().Height;
 	box.right  = uint(rsc[index]->GetDesc().Width);
 
-	auto hr = rsc[index]->WriteToSubresource(0, &box, &TexLoader::Get().GetDecode(fileName)[0], uint(TexLoader::Get().GetSub(fileName).RowPitch), uint(TexLoader::Get().GetSub(fileName).SlicePitch));
+	auto hr = rsc[index]->WriteToSubresource(0, &box, &TexLoader::Get().GetDecode(fileName)[0], 
+		uint(TexLoader::Get().GetSub(fileName).RowPitch), uint(TexLoader::Get().GetSub(fileName).SlicePitch));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nサブリソース書き込み：失敗\n"));
+		func::DebugLog("サブリソース書き込み：失敗");
 	}
 
 	return hr;
@@ -113,7 +133,8 @@ long Texture::WriteSub(const uint& index)
 // 初期化
 void Texture::Init(void)
 {
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, RSC_MAX);
+	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, RSC_MAX);
 
 	CreateConstant();
 	CreateVertex();
@@ -154,8 +175,27 @@ uint Texture::SetDraw(std::weak_ptr<List>list)
 	return ++index;
 }
 
+// テクスチャサイズ取得
+Vec2f Texture::GetTexSize(void) const
+{
+	return TexLoader::Get().GetSize(fileName);
+}
+
 // 頂点数取得
 uint Texture::GetVertexNum(void) const
 {
 	return uint(vertex.size());
+}
+
+// 演算子オーバーロード
+void Texture::operator=(const Texture & tex)
+{
+	pos              = tex.pos;
+	size             = tex.size;
+	uvPos            = tex.uvPos;
+	uvSize           = tex.uvSize;
+	fileName         = tex.fileName;
+	rsc[RSC_MAX - 1] = TexLoader::Get().GetRsc(fileName);
+
+	Init();
 }

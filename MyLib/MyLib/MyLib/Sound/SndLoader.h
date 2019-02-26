@@ -4,6 +4,7 @@
 #include <vector>
 #include <unordered_map>
 
+// サウンドローダー
 class SndLoader
 {
 public:

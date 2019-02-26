@@ -2,7 +2,6 @@
 #include "../Device/Device.h"
 #include "../Descriptor/Descriptor.h"
 #include <d3d12.h>
-#include <tchar.h>
 #include <dxgi1_6.h>
 
 #define Dev Device::Get().GetDev()

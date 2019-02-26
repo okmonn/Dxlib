@@ -1,25 +1,22 @@
 #include "MyLib/MyLib.h"
-#include <minmax.h>
 
 int main()
 {
 	const Vec2 winSize = { 640, 480 };
 	MyLib lib(winSize);
 
-	Texture tex;
-	tex.Load("äÆê¨.png");
-
-	Primitive prim(PrimitiveType::box);
-	prim.pos[0] = 0.0f;
-	prim.pos[1] = Vec2f(640.0f, 0.0f);
-	prim.pos[2] = Vec2f(0.0f, 480.0f);
-	prim.pos[3] = Vec2f(640.0f, 480.0f);
+	Texture tex("äÆê¨.png");
 	
-	while (lib.CheckMsg())
+	while (lib.CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
 	{
 		lib.Clear();
-		lib.Draw(prim, 1.0f);
+		lib.Draw(tex, 1.0f);
 		lib.Execution();
+
+		if (KEY.Trigger(KeyCode::Down))
+		{
+			tex.pos.y += 100.0f;
+		}
 	}
 
 	return 0;

@@ -136,6 +136,7 @@
     <ClCompile Include="MyLib\Device\Device.cpp" />
     <ClCompile Include="MyLib\etc\Func.cpp" />
     <ClCompile Include="MyLib\Fence\Fence.cpp" />
+    <ClCompile Include="MyLib\Input\Input.cpp" />
     <ClCompile Include="MyLib\List\List.cpp" />
     <ClCompile Include="MyLib\MyLib.cpp" />
     <ClCompile Include="MyLib\Pipe\Pipe.cpp" />
@@ -162,7 +163,11 @@
     <ClInclude Include="MyLib\etc\Func.h" />
     <ClInclude Include="MyLib\etc\Release.h" />
     <ClInclude Include="MyLib\Fence\Fence.h" />
+    <ClInclude Include="MyLib\Input\Input.h" />
+    <ClInclude Include="MyLib\Input\KeyCode.h" />
     <ClInclude Include="MyLib\List\List.h" />
+    <ClInclude Include="MyLib\Math\Vector2.h" />
+    <ClInclude Include="MyLib\Math\Vector3.h" />
     <ClInclude Include="MyLib\MyLib.h" />
     <ClInclude Include="MyLib\Pipe\Pipe.h" />
     <ClInclude Include="MyLib\Primitive\Primitive.h" />
@@ -178,8 +183,6 @@
     <ClInclude Include="MyLib\Texture\TexLoader.h" />
     <ClInclude Include="MyLib\Texture\Texture.h" />
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h" />
-    <ClInclude Include="MyLib\Vector\Vector2.h" />
-    <ClInclude Include="MyLib\Vector\Vector3.h" />
     <ClInclude Include="MyLib\Window\Icon.h" />
     <ClInclude Include="MyLib\Window\Window.h" />
   </ItemGroup>

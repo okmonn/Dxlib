@@ -1,4 +1,6 @@
 #pragma once
+#include "../Math/Vector2.h"
+#include "../Math/Vector3.h"
 
 typedef unsigned char uchar;
 typedef unsigned short ushort;

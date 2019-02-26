@@ -8,16 +8,16 @@ Primitive::Primitive() :
 }
 
 // コンストラクタ
-Primitive::Primitive(const PrimitiveType & type) : 
-	rsc(nullptr), data(nullptr), type(0)
+Primitive::Primitive(const PrimitiveType & type)
 {
+	Primitive();
 	Init(type, uint(type) + 1);
 }
 
 // コンストラクタ
-Primitive::Primitive(const PrimitiveType& type, const uint& num) : 
-	rsc(nullptr), data(nullptr), type(0)
+Primitive::Primitive(const PrimitiveType& type, const uint& num)
 {
+	Primitive();
 	Init(type, num);
 }
 
@@ -44,6 +44,7 @@ Primitive::Primitive(const Primitive & prim)
 	default:
 		break;
 	}
+
 	Init(type, pos.size());
 }
 

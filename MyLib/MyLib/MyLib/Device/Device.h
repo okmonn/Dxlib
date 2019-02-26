@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
 
+// デバイス
 class Device
 {
 public:
@@ -16,7 +17,6 @@ public:
 	IDXGIFactory4* GetFactory(void) const;
 
 private:
-	// コンストラクタ
 	Device();
 	Device(const Device&) = delete;
 	void operator=(const Device&) = delete;

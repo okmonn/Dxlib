@@ -1,8 +1,11 @@
 #pragma once
+#include "Input/Input.h"
 #include "Primitive/Primitive.h"
 #include "Texture/Texture.h"
 #include "etc/Func.h"
 #include <unordered_map>
+
+#define KEY Input::Get()
 
 class Window;
 class Queue;
@@ -14,6 +17,7 @@ class Depth;
 class Root;
 class Pipe;
 
+// ‚¨‚©‚à‚ñ©ìƒ‰ƒCƒuƒ‰ƒŠ
 class MyLib
 {
 	// ’è”
@@ -48,7 +52,7 @@ public:
 	void Execution(void) const;
 
 private:
-	//‘ã“ü‹Ö~
+	MyLib(const MyLib&) = delete;
 	void operator=(const MyLib&) = delete;
 
 	// ‰Šú‰»

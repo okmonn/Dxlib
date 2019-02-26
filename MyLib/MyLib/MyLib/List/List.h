@@ -1,7 +1,7 @@
 #pragma once
-#include "../Vector/Vector2.h"
 #include "../etc/Define.h"
 
+// コマンドリスト
 class List
 {
 public:
@@ -67,6 +67,9 @@ public:
 	ID3D12GraphicsCommandList* GetList(void) const;
 
 private:
+	List(const List&) = delete;
+	void operator=(const List&) = delete;
+
 	// アロケータ生成
 	long CreateAllo(const D3D12_COMMAND_LIST_TYPE& type);
 

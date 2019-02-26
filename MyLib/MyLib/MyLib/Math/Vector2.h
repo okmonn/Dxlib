@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <DirectXMath.h>
 
 template <typename T>
 class Vector2
@@ -181,3 +182,10 @@ inline constexpr Vector2<T> operator/(const T & i, const Vector2<T>& vec) {
 
 typedef Vector2<int> Vec2;
 typedef Vector2<float> Vec2f;
+
+inline DirectX::XMFLOAT2 Convert2(const Vec2f& vec) {
+	return DirectX::XMFLOAT2(vec.x, vec.y);
+}
+inline DirectX::XMFLOAT3 Convert3(const Vec2f& vec) {
+	return DirectX::XMFLOAT3(vec.x, vec.y, 0.0f);
+}

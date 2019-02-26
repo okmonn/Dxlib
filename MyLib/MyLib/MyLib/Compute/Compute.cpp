@@ -8,18 +8,8 @@
 #include "../etc/Release.h"
 
 // コンストラクタ
-Compute::Compute() : 
+Compute::Compute(const std::string& fileName, const uint& num) : 
 	heap(nullptr)
-{
-}
-
-// デストラクタ
-Compute::~Compute()
-{
-}
-
-// 初期化
-void Compute::Init(const std::string& fileName, const uint& num)
 {
 	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
 	list  = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
@@ -29,6 +19,17 @@ void Compute::Init(const std::string& fileName, const uint& num)
 
 	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
 		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
+}
+
+// デストラクタ
+Compute::~Compute()
+{
+	for (auto& i : rsc)
+	{
+		Desc.UnMap(i.second);
+		Release(i.second);
+	}
+	Release(heap);
 }
 
 // 定数リソース生成
@@ -114,6 +115,18 @@ void Compute::Copy(const std::string& name, const T& input)
 	memcpy(data[name], &input, sizeof(input));
 }
 
+// コピー
+template<typename T>
+void Compute::Copy(const std::string & name, const std::vector<T>& input)
+{
+	if (rsc.find(name) == rsc.end())
+	{
+		return;
+	}
+
+	memcpy(data[name], input.data(), sizeof(input[0]) * input.size());
+}
+
 // 実行
 void Compute::Execution(const uint& x, const uint& y, const uint& z)
 {
@@ -143,13 +156,15 @@ void Compute::Execution(const uint& x, const uint& y, const uint& z)
 	fence->Wait();
 }
 
-// 終了
-void Compute::End(void)
+// 反映
+template<typename T>
+void Compute::UpData(const std::string& name, std::vector<T>& output)
 {
-	for (auto& i : rsc)
+	if (rsc.find(name) == rsc.end())
 	{
-		Desc.UnMap(i.second);
-		Release(i.second);
+		return;
 	}
-	Release(heap);
+
+	uint size = uint(rsc[name]->GetDesc().Width / sizeof(T));
+	output.assign((T*)data[name], (T*)data[name] + size);
 }

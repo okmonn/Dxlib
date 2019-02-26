@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
 
+// ディスクリプター
 class Descriptor
 {
 public:
@@ -39,7 +40,6 @@ public:
 	static Descriptor& Get(void);
 
 private:
-	// コンストラクタ
 	Descriptor();
 	Descriptor(const Descriptor&) = delete;
 	void operator=(const Descriptor&) = delete;

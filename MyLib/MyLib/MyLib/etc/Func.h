@@ -3,6 +3,9 @@
 
 namespace func
 {
+	// デバッグログ出力
+	void DebugLog(const std::string& log);
+
 	// 円周率取得
 	inline constexpr float PI(void);
 

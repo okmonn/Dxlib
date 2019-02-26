@@ -32,7 +32,7 @@ long TexLoader::Load(const std::string & fileName)
 	auto hr = DirectX::LoadWICTextureFromFile(Dev, func::ChangeCode(fileName).c_str(), &rsc[fileName], decode[fileName], sub[fileName]);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\n‰æ‘œ“Ç‚İ‚İF¸”s\n"));
+		func::DebugLog("‰æ‘œ“Ç‚İ‚İF¸”s");
 	}
 
 	return hr;

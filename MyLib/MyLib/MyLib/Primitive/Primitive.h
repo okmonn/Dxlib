@@ -1,5 +1,4 @@
 #pragma once
-#include "../Vector/Vector3.h"
 #include "../etc/Define.h"
 #include <vector>
 
@@ -17,6 +16,7 @@ enum class PrimitiveType {
 	box
 };
 
+// プリミティブ
 class Primitive
 {
 	friend MyLib;

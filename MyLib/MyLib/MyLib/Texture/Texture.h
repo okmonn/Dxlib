@@ -1,5 +1,4 @@
 #pragma once
-#include "../Vector/Vector3.h"
 #include "../etc/Define.h"
 #include <string>
 #include <vector>
@@ -16,6 +15,7 @@ struct Vertex {
 	Vec2f uv;
 };
 
+// テクスチャ
 class Texture
 {
 	friend MyLib;
@@ -53,6 +53,9 @@ public:
 
 	// コンストラクタ
 	Texture();
+	Texture(const std::string& fileName);
+	// コピーコンストラクタ
+	Texture(const Texture& tex);
 	// デストラクタ
 	~Texture();
 
@@ -61,6 +64,9 @@ public:
 
 	// テクスチャサイズ取得
 	Vec2f GetTexSize(void) const;
+
+	// 演算子オーバーロード
+	void operator=(const Texture& tex);
 
 private:
 	// 定数リソース生成

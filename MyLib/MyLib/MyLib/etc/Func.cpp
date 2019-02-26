@@ -1,6 +1,15 @@
 #include "Func.h"
 #include <Windows.h>
 
+// デバッグログ出力
+void func::DebugLog(const std::string & log)
+{
+#ifdef _DEBUG
+	std::string tmp = "\n" + log + "\n";
+	OutputDebugStringA(tmp.c_str());
+#endif
+}
+
 // 円周率取得
 constexpr float func::PI(void)
 {

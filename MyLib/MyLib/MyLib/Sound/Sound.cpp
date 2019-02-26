@@ -2,6 +2,7 @@
 #include "XAudio2.h"
 #include "VoiceCallback.h"
 #include "SndLoader.h"
+#include "../etc/Func.h"
 #include <ks.h>
 #include <ksmedia.h>
 
@@ -64,7 +65,7 @@ long Sound::CreateVoice(void)
 	auto hr = XAudio2::Get().GetAudio()->CreateSourceVoice(&voice, (WAVEFORMATEX*)(&desc), 0, 1.0f, &(*back));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nソースボイス生成：失敗\n"));
+		func::DebugLog("ソースボイス生成：失敗");
 	}
 
 	return hr;
@@ -99,7 +100,7 @@ long Sound::Play(const bool & loop)
 	auto hr = voice->Start();
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\n再生：失敗\n"));
+		func::DebugLog("再生：失敗");
 		return hr;
 	}
 
@@ -114,7 +115,7 @@ long Sound::Stop(void)
 	auto hr = voice->Stop();
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\n停止：失敗\n"));
+		func::DebugLog("停止：失敗");
 	}
 
 	return hr;
@@ -123,7 +124,7 @@ long Sound::Stop(void)
 // ファイル読み込みデータ非同期
 void Sound::StreamFile(void)
 {
-	const uint bps = sample * (bit / 8) * channel / OFFSET;
+	const uint bps = (sample * channel) / OFFSET;
 	XAUDIO2_BUFFER buf{};
 	XAUDIO2_VOICE_STATE st{};
 	while (threadFlag)
@@ -147,7 +148,7 @@ void Sound::StreamFile(void)
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nサウンドデータ追加：失敗\n"));
+			func::DebugLog("サウンドデータ追加：失敗");
 			continue;
 		}
 

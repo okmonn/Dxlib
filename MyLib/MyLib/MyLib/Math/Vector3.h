@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector2.h"
-#include <DirectXMath.h>
 
 template <typename T>
 class Vector3
@@ -189,44 +188,6 @@ public:
 	inline constexpr Vector3<T> operator/(const Vector3<T>& vec) const {
 		return Vector3<T>(x / vec.x, y / vec.y, z / vec.z);
 	}
-
-	inline constexpr void operator=(const DirectX::XMFLOAT3& vec) {
-		x = T(vec.x);
-		y = T(vec.y);
-		z = T(vec.z);
-	}
-	inline constexpr void operator+=(const DirectX::XMFLOAT3& vec) {
-		x += T(vec.x);
-		y += T(vec.y);
-		z += T(vec.z);
-	}
-	inline constexpr void operator-=(const DirectX::XMFLOAT3& vec) {
-		x -= T(vec.x);
-		y -= T(vec.y);
-		z -= T(vec.z);
-	}
-	inline constexpr void operator*=(const DirectX::XMFLOAT3& vec) {
-		x *= T(vec.x);
-		y *= T(vec.y);
-		z *= T(vec.z);
-	}
-	inline constexpr void operator/=(const DirectX::XMFLOAT3& vec) {
-		x /= T(vec.x);
-		y /= T(vec.y);
-		z /= T(vec.z);
-	}
-	inline constexpr Vector3<T> operator+(const DirectX::XMFLOAT3& vec) const {
-		return Vector3<T>(x + T(vec.x), y + T(vec.y), z + T(vec.z));
-	}
-	inline constexpr Vector3<T> operator-(const DirectX::XMFLOAT3& vec) const {
-		return Vector3<T>(x - T(vec.x), y - T(vec.y), z - T(vec.z));
-	}
-	inline constexpr Vector3<T> operator*(const DirectX::XMFLOAT3& vec) const {
-		return Vector3<T>(x * T(vec.x), y * T(vec.y), z * T(vec.z));
-	}
-	inline constexpr Vector3<T> operator/(const DirectX::XMFLOAT3& vec) const {
-		return Vector3<T>(x / T(vec.x), y / T(vec.y), z / T(vec.z));
-	}
 };
 
 template<typename T>
@@ -249,15 +210,9 @@ inline constexpr Vector3<T> operator/(const T & i, const Vector3<T>& vec) {
 typedef Vector3<int> Vec3;
 typedef Vector3<float> Vec3f;
 
-inline constexpr DirectX::XMFLOAT3 operator+(const DirectX::XMFLOAT3& vec1, const Vec3f& vec2) {
-	return DirectX::XMFLOAT3(vec1.x + vec2.x, vec1.y + vec2.y, vec1.z + vec2.z);
+inline DirectX::XMFLOAT2 Convert2(const Vec3f& vec) {
+	return DirectX::XMFLOAT2(vec.x, vec.y);
 }
-inline constexpr DirectX::XMFLOAT3 operator-(const DirectX::XMFLOAT3& vec1, const Vec3f& vec2) {
-	return DirectX::XMFLOAT3(vec1.x - vec2.x, vec1.y - vec2.y, vec1.z - vec2.z);
-}
-inline constexpr DirectX::XMFLOAT3 operator*(const DirectX::XMFLOAT3& vec1, const Vec3f& vec2) {
-	return DirectX::XMFLOAT3(vec1.x * vec2.x, vec1.y * vec2.y, vec1.z * vec2.z);
-}
-inline constexpr DirectX::XMFLOAT3 operator/(const DirectX::XMFLOAT3& vec1, const Vec3f& vec2) {
-	return DirectX::XMFLOAT3(vec1.x / vec2.x, vec1.y / vec2.y, vec1.z / vec2.z);
+inline DirectX::XMFLOAT3 Convert3(const Vec3f& vec) {
+	return DirectX::XMFLOAT3(vec.x, vec.y, vec.z);
 }

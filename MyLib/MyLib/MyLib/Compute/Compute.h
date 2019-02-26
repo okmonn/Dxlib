@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
 #include <string>
+#include <vector>
 #include <memory>
 #include <unordered_map>
 
@@ -10,20 +11,14 @@ class Fence;
 class Root;
 class Pipe;
 
+// コンピュート
 class Compute
 {
 public:
 	// コンストラクタ
-	Compute();
+	Compute(const std::string& fileName, const uint& num);
 	// デストラクタ
-	virtual ~Compute();
-
-	// 実行
-	void Execution(const uint& x, const uint& y = 1, const uint& z = 1);
-
-protected:
-	// 初期化
-	void Init(const std::string& fileName, const uint& num);
+	~Compute();
 
 	// 定数リソース生成
 	long CBV(const std::string& name, const size_t& size, const uint& index = 0);
@@ -34,9 +29,19 @@ protected:
 	// コピー
 	template <typename T>
 	void Copy(const std::string& name, const T& input);
+	template <typename T>
+	void Copy(const std::string& name, const std::vector<T>& input);
 
-	// 終了
-	void End(void);
+	// 実行
+	void Execution(const uint& x = 1, const uint& y = 1, const uint& z = 1);
+
+	// 反映
+	template <typename T>
+	void UpData(const std::string& name, std::vector<T>& output);
+
+protected:
+	Compute(const Compute&) = delete;
+	void operator=(const Compute&) = delete;
 
 
 	// キュー

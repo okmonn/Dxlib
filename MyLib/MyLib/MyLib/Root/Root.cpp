@@ -1,7 +1,7 @@
 #include <d3dcompiler.h>
 #include "Root.h"
-#include "../etc/Release.h"
 #include "../etc/Func.h"
+#include "../etc/Release.h"
 
 // コンストラクタ
 Root::Root(const std::string & fileName) : 
@@ -30,24 +30,24 @@ long Root::Compile(const std::wstring & fileName)
 		hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "CS", "cs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &compute, nullptr);
 		if (hr == S_OK)
 		{
-			OutputDebugString(_T("\nコンピュートシェーダ読み込み：成功\n"));
+			func::DebugLog("コンピュートシェーダ読み込み：成功");
 			return hr;
 		}
-		OutputDebugString(_T("\n頂点シェーダ読み込み：失敗\n"));
+		func::DebugLog("頂点シェーダ読み込み：失敗");
 		return hr;
 	}
 
 	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &geometry, nullptr);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nジオメトリシェーダ読み込み：失敗\n"));
-		OutputDebugString(_T("ジオメトリシェーダを使用していない場合は無視してOK\n"));
+		func::DebugLog("ジオメトリシェーダ読み込み：失敗");
+		func::DebugLog("ジオメトリシェーダを使用していない場合は無視してOK：成功");
 	}
 
 	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixel, nullptr);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nピクセルシェーダ読み込み：失敗\n"));
+		func::DebugLog("ピクセルシェーダ読み込み：失敗");
 		return hr;
 	}
 
@@ -68,7 +68,7 @@ long Root::RootInfo(void)
 	}
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nルートシグネチャ情報取得：失敗\n"));
+		func::DebugLog("ルートシグネチャ情報取得：失敗");
 	}
 
 	return hr;
@@ -80,7 +80,7 @@ long Root::CreateRoot(void)
 	auto hr = Dev->CreateRootSignature(0, sig->GetBufferPointer(), sig->GetBufferSize(), IID_PPV_ARGS(&root));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nルートシグネチャ生成：失敗\n"));
+		func::DebugLog("ルートシグネチャ生成：失敗");
 	}
 
 	return hr;

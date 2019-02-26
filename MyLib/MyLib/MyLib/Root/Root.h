@@ -2,6 +2,7 @@
 #include "../etc/Define.h"
 #include <string>
 
+// ルートシグネチャ
 class Root
 {
 public:
@@ -23,8 +24,10 @@ public:
 	// コンピュートシェーダ取得
 	ID3DBlob* GetCompute(void) const;
 
-
 private:
+	Root(const Root&) = delete;
+	void operator=(const Root&) = delete;
+
 	// シェーダコンパイル
 	long Compile(const std::wstring& fileName);
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
 
+// XAudio2
 class XAudio2
 {
 public:

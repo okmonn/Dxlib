@@ -1,4 +1,5 @@
 #include "Descriptor.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // コンストラクタ
@@ -22,7 +23,7 @@ long Descriptor::CreateHeap(ID3D12DescriptorHeap ** heap, const D3D12_DESCRIPTOR
 	auto hr = Dev->CreateDescriptorHeap(&desc, IID_PPV_ARGS(*(&heap)));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nヒープ生成：失敗\n"));
+		func::DebugLog("ヒープ生成：失敗");
 	}
 
 	return hr;
@@ -35,7 +36,7 @@ long Descriptor::CreateRsc(ID3D12Resource ** rsc, const D3D12_HEAP_PROPERTIES & 
 	auto hr = Dev->CreateCommittedResource(&prop, flag, &desc, state, clear, IID_PPV_ARGS(*(&rsc)));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nリソース生成：失敗\n"));
+		func::DebugLog("リソース生成：失敗");
 	}
 
 	return hr;
@@ -114,7 +115,7 @@ long Descriptor::Map(ID3D12Resource * rsc, void ** data)
 	auto hr = rsc->Map(0, &range, *(&data));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nマップ：失敗\n"));
+		func::DebugLog("リソースマップ：失敗");
 	}
 
 	return hr;

@@ -1,10 +1,10 @@
 #pragma once
-#include "../Vector/Vector2.h"
 #include "../etc/Define.h"
 #include <memory>
 
 class List;
 
+// 深度ステンシル
 class Depth
 {
 public:
@@ -20,6 +20,9 @@ public:
 	ID3D12DescriptorHeap* Get(void) const;
 
 private:
+	Depth(const Depth&) = delete;
+	void operator=(const Depth&) = delete;
+
 	// 初期化
 	void Init(const Vec2& size);
 

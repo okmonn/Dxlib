@@ -1,5 +1,6 @@
 #include "XAudio2.h"
 #include "VoiceCallback.h"
+#include "../etc/Func.h"
 
 // コンストラクタ
 XAudio2::XAudio2() : 
@@ -22,7 +23,7 @@ long XAudio2::InitCom(void)
 	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nCOM初期化：失敗\n"));
+		func::DebugLog("COM初期化：失敗");
 	}
 
 	return hr;
@@ -34,7 +35,7 @@ long XAudio2::CreateAudio(void)
 	auto hr = XAudio2Create(&audio);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nオーディオ生成：失敗\n"));
+		func::DebugLog("オーディオ生成：失敗");
 	}
 
 	return hr;
@@ -46,7 +47,7 @@ long XAudio2::CreateMastering(void)
 	auto hr = audio->CreateMasteringVoice(&mastering);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nマスタリング生成：失敗\n"));
+		func::DebugLog("マスタリング生成：失敗");
 	}
 
 	return hr;

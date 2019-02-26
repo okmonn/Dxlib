@@ -6,6 +6,7 @@
 class List;
 class Swap;
 
+// レンダーターゲット
 class Render
 {
 public:
@@ -21,6 +22,9 @@ public:
 	ID3D12Resource* Get(void) const;
 
 private:
+	Render(const Render&) = delete;
+	void operator=(const Render&) = delete;
+
 	// 初期化
 	void Init(void);
 

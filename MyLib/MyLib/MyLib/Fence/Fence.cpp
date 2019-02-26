@@ -1,5 +1,6 @@
 #include "Fence.h"
 #include "../Queue/Queue.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // コンストラクタ
@@ -22,7 +23,7 @@ long Fence::CreateFence(void)
 	auto hr = Dev->CreateFence(cnt, D3D12_FENCE_FLAGS::D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("^nフェンス生成：失敗\n"));
+		func::DebugLog("フェンス生成：失敗");
 		return hr;
 	}
 
@@ -41,7 +42,7 @@ void Fence::Wait(void)
 	auto hr = queue.lock()->Get()->Signal(fence, cnt);
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nフェンス値更新：失敗\n"));
+		func::DebugLog("フェンス値更新：失敗");
 		return;
 	}
 
@@ -52,7 +53,7 @@ void Fence::Wait(void)
 		hr = fence->SetEventOnCompletion(cnt, handle);
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nフェンスイベントセット：失敗\n"));
+			func::DebugLog("フェンスイベントセット：失敗");
 			return;
 		}
 

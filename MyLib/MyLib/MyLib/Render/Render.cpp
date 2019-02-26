@@ -1,6 +1,7 @@
 #include "Render.h"
 #include "../List/List.h"
 #include "../Swap/Swap.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // クリア色
@@ -32,7 +33,8 @@ void Render::Init(void)
 	swap.lock()->Get()->GetDesc1(&tmp);
 	rsc.resize(tmp.BufferCount);
 
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, rsc.size());
+	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, rsc.size());
 
 	auto hr = S_OK;
 	for (uint i = 0; i < rsc.size(); ++i)
@@ -40,7 +42,7 @@ void Render::Init(void)
 		hr = swap.lock()->Get()->GetBuffer(i, IID_PPV_ARGS(&rsc[i]));
 		if (FAILED(hr))
 		{
-			OutputDebugString(_T("\nリソース生成：失敗\n"));
+			func::DebugLog("リソース生成：失敗");
 			break;
 		}
 

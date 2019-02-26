@@ -1,6 +1,7 @@
 #include "Swap.h"
 #include "../Window/Window.h"
 #include "../Queue/Queue.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 
 // バックバッファ数
@@ -36,7 +37,7 @@ long Swap::CreateSwap(std::weak_ptr<Window> win, std::weak_ptr<Queue> queue, con
 	auto hr = Factory->CreateSwapChainForHwnd(queue.lock()->Get(), HWND(win.lock()->Get()), &desc, nullptr, nullptr,(IDXGISwapChain1**)(&swap));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nスワップチェイン生成：失敗\n"));
+		func::DebugLog("スワップチェイン生成：失敗");
 	}
 
 	return hr;

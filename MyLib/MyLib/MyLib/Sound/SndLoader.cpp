@@ -1,7 +1,6 @@
 #include "SndLoader.h"
 #include "SndFunc.h"
-#include <Windows.h>
-#include <tchar.h>
+#include "../etc/Func.h"
 
 // コンストラクタ
 SndLoader::SndLoader()
@@ -24,7 +23,7 @@ int SndLoader::Load(const std::string & fileName)
 	FILE* file = nullptr;
 	if (fopen_s(&file, fileName.c_str(), "rb") != 0)
 	{
-		OutputDebugString(_T("\nサウンド読み込み：失敗\n"));
+		func::DebugLog("サウンド読み込み：失敗");
 		return -1;
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
 
+// コマンドキュー
 class Queue
 {
 public:
@@ -16,6 +17,9 @@ public:
 	ID3D12CommandQueue* Get(void) const;
 
 private:
+	Queue(const Queue&) = delete;
+	void operator=(const Queue&) = delete;
+
 	// キュー生成
 	long CreateQueue(const D3D12_COMMAND_LIST_TYPE& type);
 

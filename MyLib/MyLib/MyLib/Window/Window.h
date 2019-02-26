@@ -1,9 +1,9 @@
 #pragma once
-#include "../Vector/Vector2.h"
 #include "../etc/Define.h"
 #include <string>
 #include <optional>
 
+// ウィンドウ
 class Window
 {
 public:
@@ -18,6 +18,9 @@ public:
 	std::optional<std::string> GetDrop(void);
 
 private:
+	Window(const Window&) = delete;
+	void operator=(const Window&) = delete;
+
 	// ウィンドウコールバック
 #ifdef _WIN64
 	static __int64 __stdcall WindowProc(void* hWnd, uint message, uint64 wParam, int64 lParam);

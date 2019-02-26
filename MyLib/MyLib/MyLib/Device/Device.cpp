@@ -1,4 +1,5 @@
 #include "Device.h"
+#include "../etc/Func.h"
 #include "../etc/Release.h"
 #include <vector>
 
@@ -30,7 +31,7 @@ long Device::CreateFactory(void)
 	auto hr = CreateDXGIFactory(IID_PPV_ARGS(&factory));
 	if (FAILED(hr))
 	{
-		OutputDebugString(_T("\nファクトリー生成：失敗\n"));
+		func::DebugLog("ファクトリー生成：失敗");
 	}
 
 	return hr;
@@ -51,10 +52,14 @@ long Device::CreateDev(void)
 		DXGI_ADAPTER_DESC desc{};
 		i->GetDesc(&desc);
 		std::wstring name = desc.Description;
-		if (name.find(L"NVIDIA") != std::string::npos
-			|| name.find(L"AMD") != std::string::npos)
+		if (name.find(L"NVIDIA") != std::string::npos)
 		{
 			adapter = i;
+			break;
+		}
+		if (name.find(L"AMD") != std::string::npos)
+		{
+			adapter = adapters[0];
 			break;
 		}
 	}
@@ -65,7 +70,7 @@ long Device::CreateDev(void)
 		hr = D3D12CreateDevice(adapter, i, IID_PPV_ARGS(&dev));
 		if (hr == S_OK)
 		{
-			OutputDebugString(_T("\nデバイス生成：成功\n"));
+			func::DebugLog("デバイス生成：成功");
 			Release(adapter);
 			break;
 		}
