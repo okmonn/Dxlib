@@ -36,18 +36,18 @@ int SndLoader::Load(const std::string & fileName)
 	snd::DATA data{};
 	snd::LoadDATA(data, file);
 
-	sample[fileName]  = fmt.sample;
-	bit[fileName]     = fmt.bit;
-	channel[fileName] = fmt.channel;
+	info[fileName].sample  = fmt.sample;
+	info[fileName].bit     = fmt.bit;
+	info[fileName].channel = fmt.channel;
 
-	wave[fileName].resize(data.size / 8);
+	wave[fileName] = std::make_shared<std::vector<float>>(data.size / (fmt.bit / 8));
 	switch (fmt.bit)
 	{
 	case 8:
-		snd::LoadWave8(wave[fileName], file);
+		snd::LoadWave8(*wave[fileName], file);
 		break;
 	case 16:
-		snd::LoadWave16(wave[fileName], file);
+		snd::LoadWave16(*wave[fileName], file);
 		break;
 	default:
 		break;
@@ -63,9 +63,7 @@ void SndLoader::Delete(const std::string & fileName)
 {
 	if (wave.find(fileName) != wave.end())
 	{
-		sample.erase(sample.find(fileName));
-		bit.erase(bit.find(fileName));
-		channel.erase(channel.find(fileName));
+		info.erase(info.find(fileName));
 		wave.erase(wave.find(fileName));
 	}
 }
@@ -77,45 +75,23 @@ SndLoader & SndLoader::Get(void)
 	return instance;
 }
 
-// サンプリング周波数取得
-uint SndLoader::GetSample(const std::string & fileName)
+// サウンド情報取得
+snd::Info SndLoader::GetInfo(const std::string & fileName)
 {
-	if (sample.find(fileName) == sample.end())
+	if (info.find(fileName) == info.end())
 	{
-		return uint();
+		return snd::Info();
 	}
 
-	return  sample[fileName];
-}
-
-// 量子化ビット数取得
-uint SndLoader::GetBit(const std::string & fileName)
-{
-	if (bit.find(fileName) == bit.end())
-	{
-		return uint();
-	}
-
-	return bit[fileName];
-}
-
-// チャンネル数取得
-uint SndLoader::GetChannel(const std::string & fileName)
-{
-	if (channel.find(fileName) == channel.end())
-	{
-		return uint();
-	}
-
-	return channel[fileName];
+	return info[fileName];
 }
 
 // 波形データ取得
-std::vector<float> SndLoader::GetWave(const std::string & fileName)
+std::shared_ptr<std::vector<float>> SndLoader::GetWave(const std::string & fileName)
 {
 	if (wave.find(fileName) == wave.end())
 	{
-		return std::vector<float>();
+		return nullptr;
 	}
 
 	return wave[fileName];

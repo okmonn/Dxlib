@@ -50,12 +50,77 @@ MyLib::MyLib(const Vec2& size, const Vec2& pos) :
 	Instance(pos);
 }
 
+// コンストラクタ
+MyLib::MyLib(const MyLib& mylib, const Vec2& size, const Vec2& pos) :
+	heap(nullptr), rsc(nullptr), constant(nullptr)
+{
+	Init();
+
+	constant->winSize = Vec2f(float(size.x), float(size.y));
+
+	Instance(pos, mylib.win->Get());
+}
+
+// コンストラクタ
+MyLib::MyLib(std::weak_ptr<MyLib> mylib, const Vec2& size, const Vec2& pos) :
+	heap(nullptr), rsc(nullptr), constant(nullptr)
+{
+	Init();
+
+	constant->winSize = Vec2f(float(size.x), float(size.y));
+
+	Instance(pos, mylib.lock()->win->Get());
+}
+
 // デストラクタ
 MyLib::~MyLib()
 {
 	Desc.UnMap(rsc);
 	Release(rsc);
 	Release(heap)
+}
+
+// タイトル名変更
+inline void MyLib::ChangeTitle(const std::string & title)
+{
+	SetWindowTextA(HWND(win->Get()), title.c_str());
+}
+
+// ドロップされたファイルパス取得
+std::string MyLib::GetDropFilePass(void)
+{
+	if (win->GetDrop() == std::nullopt)
+	{
+		return std::string();
+	}
+
+	return win->GetDrop().value();
+}
+
+// ウィンドウ座標取得
+Vec2 MyLib::GetWinPos(void)
+{
+	RECT rect{};
+	GetWindowRect(HWND(win->Get()), &rect);
+	return Vec2(int(rect.left), int(rect.top));
+}
+
+// ウィンドウサイズ取得
+Vec2 MyLib::GetWinSize(void)
+{
+	RECT rect{};
+	GetWindowRect(HWND(win->Get()), &rect);
+	return Vec2(int(rect.right), int(rect.bottom));
+}
+
+// マウス座標取得
+Vec2 MyLib::GetMousePos(void)
+{
+	POINT point{};
+	GetCursorPos(&point);
+	ScreenToClient(HWND(win->Get()), &point);
+
+	return Vec2(int(point.x), int(point.y));
 }
 
 // 初期化
@@ -117,9 +182,9 @@ void MyLib::PipeLine(const std::string & name, const std::string & rootName,
 }
 
 // クラスのインスタンス化
-void MyLib::Instance(const Vec2& pos)
+void MyLib::Instance(const Vec2& pos, void* parent)
 {
-	win    = std::make_shared<Window>(pos, Vec2(int(constant->winSize.x), int(constant->winSize.y)));
+	win    = std::make_shared<Window>(pos, Vec2(int(constant->winSize.x), int(constant->winSize.y)), parent);
 	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
 	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
 	fence  = std::make_unique<Fence>(queue);

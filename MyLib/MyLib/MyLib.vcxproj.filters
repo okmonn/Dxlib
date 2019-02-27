@@ -91,6 +91,15 @@
     <Filter Include="Input">
       <UniqueIdentifier>{0405cbec-fe6b-4e77-9ca8-35c3466e8ee3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sound\Filter">
+      <UniqueIdentifier>{52457e56-ced2-4ad1-9163-da11d80a879d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Effector">
+      <UniqueIdentifier>{57bb4499-aa6d-43dc-bfe5-72745ee91959}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound\Delay">
+      <UniqueIdentifier>{4e8b885d-2974-48b7-82ed-80497df4a3a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -164,6 +173,15 @@
     </ClCompile>
     <ClCompile Include="MyLib\Input\Input.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\Filter.cpp">
+      <Filter>Sound\Filter</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\Effector.cpp">
+      <Filter>Sound\Effector</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Sound\Delay.cpp">
+      <Filter>Sound\Delay</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +275,15 @@
     <ClInclude Include="MyLib\Input\KeyCode.h">
       <Filter>Input</Filter>
     </ClInclude>
+    <ClInclude Include="MyLib\Sound\Filter.h">
+      <Filter>Sound\Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\Effector.h">
+      <Filter>Sound\Effector</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Sound\Delay.h">
+      <Filter>Sound\Delay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyLib\Window\Icon.rc">
@@ -268,6 +295,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="MyLib\Shader\Texture.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\Effector.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

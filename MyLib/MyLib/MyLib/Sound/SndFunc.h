@@ -1,4 +1,5 @@
 #pragma once
+#include "../etc/Define.h"
 #include <string>
 #include <vector>
 
@@ -40,6 +41,42 @@ namespace snd
 		std::string id;
 		//サイズ
 		long size;
+	};
+
+	// サウンド情報
+	struct Info {
+		//サンプリング周波数
+		uint sample;
+		//量子化ビット数
+		uint bit;
+		//チャンネル数
+		uint channel;
+	};
+	
+	// コンプレッサパラメータ
+	struct Compressor {
+		//閾値
+		float threshold;
+		//レシオ
+		float ratio;
+	};
+
+	// ディレイパラメータ
+	struct Delay {
+		//減衰率
+		float decay;
+		//遅延時間
+		float time;
+		//ループ回数
+		uint loop;
+	};
+
+	// フィルタパラメータ
+	struct FilterParam {
+		//カットオフ周波数
+		float cutoff;
+		//クオリティファクタ
+		float q;
 	};
 
 

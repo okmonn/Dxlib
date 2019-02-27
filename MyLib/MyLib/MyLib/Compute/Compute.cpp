@@ -104,29 +104,6 @@ long Compute::UAV(const std::string & name, const size_t& stride, const size_t& 
 	return S_OK;
 }
 
-template<typename T>
-void Compute::Copy(const std::string& name, const T& input)
-{
-	if (rsc.find(name) == rsc.end())
-	{
-		return;
-	}
-
-	memcpy(data[name], &input, sizeof(input));
-}
-
-// コピー
-template<typename T>
-void Compute::Copy(const std::string & name, const std::vector<T>& input)
-{
-	if (rsc.find(name) == rsc.end())
-	{
-		return;
-	}
-
-	memcpy(data[name], input.data(), sizeof(input[0]) * input.size());
-}
-
 // 実行
 void Compute::Execution(const uint& x, const uint& y, const uint& z)
 {
@@ -168,3 +145,5 @@ void Compute::UpData(const std::string& name, std::vector<T>& output)
 	uint size = uint(rsc[name]->GetDesc().Width / sizeof(T));
 	output.assign((T*)data[name], (T*)data[name] + size);
 }
+
+template void Compute::UpData<float>(const std::string&name, std::vector<float>& output);

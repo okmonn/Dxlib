@@ -2,6 +2,7 @@
 #include "Input/Input.h"
 #include "Primitive/Primitive.h"
 #include "Texture/Texture.h"
+#include "Sound/Sound.h"
 #include "etc/Func.h"
 #include <unordered_map>
 
@@ -33,8 +34,25 @@ class MyLib
 public:
 	// コンストラクタ
 	MyLib(const Vec2& size, const Vec2& pos = 0x80000000);
+	MyLib(const MyLib& mylib, const Vec2& size, const Vec2& pos = 0x80000000);
+	MyLib(std::weak_ptr<MyLib> mylib, const Vec2& size, const Vec2& pos = 0x80000000);
 	// デストラクタ
 	~MyLib();
+
+	// タイトル名変更
+	inline void ChangeTitle(const std::string& title);
+
+	// ドロップされたファイルパス取得
+	std::string GetDropFilePass(void);
+
+	// ウィンドウ座標取得
+	Vec2 GetWinPos(void);
+
+	// ウィンドウサイズ取得
+	Vec2 GetWinSize(void);
+
+	// マウス座標取得
+	Vec2 GetMousePos(void);
 
 	// メッセージの確認
 	bool CheckMsg(void) const;
@@ -66,7 +84,7 @@ private:
 		const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const std::initializer_list<uint>& index, const bool& depth);
 
 	// クラスのインスタンス化
-	void Instance(const Vec2& pos);
+	void Instance(const Vec2& pos, void* parent = nullptr);
 
 
 	// ヒープ

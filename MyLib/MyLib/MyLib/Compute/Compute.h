@@ -68,3 +68,27 @@ protected:
 	// 送信データ
 	std::unordered_map<std::string, void*>data;
 };
+
+// コピー
+template<typename T>
+void Compute::Copy(const std::string& name, const T& input)
+{
+	if (rsc.find(name) == rsc.end())
+	{
+		return;
+	}
+
+	memcpy(data[name], &input, sizeof(input));
+}
+
+// コピー
+template<typename T>
+void Compute::Copy(const std::string & name, const std::vector<T>& input)
+{
+	if (rsc.find(name) == rsc.end())
+	{
+		return;
+	}
+
+	memcpy(data[name], input.data(), sizeof(input[0]) * input.size());
+}

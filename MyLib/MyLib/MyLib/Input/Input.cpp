@@ -2,9 +2,10 @@
 #include <Windows.h>
 
 // コンストラクタ
-Input::Input() : 
-	key(std::nullopt)
+Input::Input()
 {
+	memset(&now[0], 0, sizeof(now));
+	memset(&old[0], 0, sizeof(old));
 }
 
 // デストラクタ
@@ -15,9 +16,10 @@ Input::~Input()
 // キー入力
 bool Input::CheckKey(const KeyCode & key)
 {
-	if (GetKeyState(int(key)) & 0x80)
+	old[uint(key)] = now[uint(key)];
+	now[uint(key)] = (GetKeyState(uint(key)) & 0x80);
+	if (now[uint(key)])
 	{
-		this->key = key;
 		return true;
 	}
 
@@ -27,11 +29,12 @@ bool Input::CheckKey(const KeyCode & key)
 // トリガー入力
 bool Input::Trigger(const KeyCode & key)
 {
-	if (this->key != key)
+	if (CheckKey(key) == true 
+		&& now[uint(key)] != old[uint(key)])
 	{
-		return CheckKey(key);
+		return true;
 	}
-	
+
 	return false;
 }
 

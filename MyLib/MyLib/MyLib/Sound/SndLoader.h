@@ -1,7 +1,6 @@
 #pragma once
-#include "../etc/Define.h"
-#include <string>
-#include <vector>
+#include "SndFunc.h"
+#include <memory>
 #include <unordered_map>
 
 // サウンドローダー
@@ -19,14 +18,10 @@ public:
 
 	// インスタンス変数取得
 	static SndLoader& Get(void);
-	// サンプリング周波数取得
-	uint GetSample(const std::string& fileName);
-	// 量子化ビット数取得
-	uint GetBit(const std::string& fileName);
-	// チャンネル数取得
-	uint GetChannel(const std::string& fileName);
+	// サウンド情報取得
+	snd::Info GetInfo(const std::string& fileName);
 	// 波形データ取得
-	std::vector<float> GetWave(const std::string& fileName);
+	std::shared_ptr<std::vector<float>> GetWave(const std::string& fileName);
 
 private:
 	// コンストラクタ
@@ -35,15 +30,9 @@ private:
 	void operator=(const SndLoader&) = delete;
 
 
-	// サンプリング周波数
-	std::unordered_map<std::string, uint>sample;
-
-	// 量子化ビット数
-	std::unordered_map<std::string, uint>bit;
-
-	// チャンネル
-	std::unordered_map<std::string, uint>channel;
+	// サウンド情報
+	std::unordered_map<std::string, snd::Info>info;
 
 	// 波形データ
-	std::unordered_map<std::string, std::vector<float>>wave;
+	std::unordered_map<std::string, std::shared_ptr<std::vector<float>>>wave;
 };

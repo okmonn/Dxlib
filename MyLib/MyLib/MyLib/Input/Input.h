@@ -1,6 +1,6 @@
 #pragma once
 #include "KeyCode.h"
-#include <optional>
+#include "../etc/Define.h"
 
 // インプット
 class Input
@@ -24,6 +24,9 @@ private:
 	void operator=(const Input&) = delete;
 
 
-	// 前の入力キーコード
-	std::optional<KeyCode>key;
+	// 現在の入力キーコード
+	uint now[256];
+
+	// 過去の入力キーコード
+	uint old[256];
 };

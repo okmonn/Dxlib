@@ -14,31 +14,58 @@ class VoiceCallback :
 public:
 	// コンストラクタ
 	VoiceCallback() {
-		handle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+		for (auto& i : handle)
+		{
+			i = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
+		}
 	}
 	// デストラクタ
 	~VoiceCallback() {
-		CloseHandle(handle);
+		for (auto& i : handle)
+		{
+			CloseHandle(i);
+		}
 	}
-
-	void STDMETHODCALLTYPE OnStreamEnd() {
+	
+	// 新しいバッファの処理開始時に呼び出し
+	void __stdcall OnBufferStart(void* pBufferContext) {
+		SetEvent(handle[0]);
 	}
-	void STDMETHODCALLTYPE OnVoiceProcessingPassEnd() {
+	// バッファの処理終了時に呼び出し
+	void __stdcall OnBufferEnd(void* pBufferContext) {
+		SetEvent(handle[1]);
 	}
-	void STDMETHODCALLTYPE OnVoiceProcessingPassStart(unsigned int SamplesRequired) {
+	// データ読み込み前に呼び出し
+	void __stdcall OnVoiceProcessingPassStart(unsigned int SamplesRequired) {
+		SetEvent(handle[2]);
 	}
-	void STDMETHODCALLTYPE OnBufferEnd(void * pBufferContext) {
-		SetEvent(handle);
+	// 音声の処理パス終了時に呼び出し
+	void __stdcall OnVoiceProcessingPassEnd() {
+		SetEvent(handle[3]);
 	}
-	void STDMETHODCALLTYPE OnBufferStart(void * pBufferContext) {
+	// 連続したストリーム再生終了時に呼び出し
+	void __stdcall OnStreamEnd() {
+		SetEvent(handle[4]);
 	}
-	void STDMETHODCALLTYPE OnLoopEnd(void * pBufferContext) {
+	// ループ終了位置到達時に呼び出し
+	void __stdcall OnLoopEnd(void* pBufferContext) {
+		SetEvent(handle[5]);
 	}
-	void STDMETHODCALLTYPE OnVoiceError(void * pBufferContext, long Error) {
+	// エラー発生時に呼び出し
+	void __stdcall OnVoiceError(void* pBufferContext, long Error) {
+		SetEvent(handle[6]);
 	}
-
 
 private:
+	// 終了
+	void End(void) {
+		for (auto& i : handle)
+		{
+			SetEvent(i);
+		}
+	}
+
+
 	// イベントハンドル
-	void* handle;
+	void* handle[7];
 };

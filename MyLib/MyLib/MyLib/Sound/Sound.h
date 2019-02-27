@@ -1,39 +1,70 @@
 #pragma once
-#include "../etc/Define.h"
-#include <string>
-#include <vector>
+#include "SndFunc.h"
 #include <memory>
 #include <thread>
 
 class VoiceCallback;
+class Effector;
+class Delay;
+class Filter;
 
 // サウンド
 class Sound
 {
 public:
-	// サンプリング周波数
-	uint sample;
+	// サウンド情報
+	snd::Info info;
 
-	// 量子化ビット数
-	uint bit;
+	// ディストーション（ハードクリッピング）
+	float distortion;
 
-	// チャンネル数
-	uint channel;
+	// ボリューム
+	float volume;
+
+	// ディレイパラメータ
+	snd::Delay delayParam;
+
+	// コンプレッサパラメータ
+	snd::Compressor compressor;
+
+	// フィルタパラメータ
+	snd::FilterParam filterParam;
+
+	// 波形データ
+	std::vector<float>wave;
 
 
 	// コンストラクタ
 	Sound();
+	Sound(const std::string& fileName);
+	// コピーコンストラクタ
+	Sound(const Sound& sound);
 	// デストラクタ
 	~Sound();
 
 	// 読み込み
 	int Load(const std::string& fileName);
 
+	// ローパスフィルタ
+	void LowPass(void);
+
+	// ハイパスフィルタ
+	void HighPass(void);
+
+	// バンドパス
+	void BandPass(void);
+
 	// 再生
 	long Play(const bool& loop = false);
 
 	// 停止
-	long Stop(void);
+	long Stop(void) const;
+
+	// 1回処理するデータ用オフセット
+	inline constexpr uint Offset(void) const;
+
+	// 演算子オーバーロード
+	void operator=(const Sound& sound);
 
 private:
 	// ソースボイス生成
@@ -46,11 +77,17 @@ private:
 	// ボイスコールバック
 	std::unique_ptr<VoiceCallback>back;
 
+	// エフェクター
+	std::unique_ptr<Effector>effe;
+
+	// ディレイ
+	std::unique_ptr<Delay>delay;
+
+	// フィルタ
+	std::unique_ptr<Filter>filter;
+
 	// ソースボイス
 	IXAudio2SourceVoice* voice;
-
-	// 配列切り替えインデックス
-	uint index;
 
 	// 読み込み位置
 	uint read;
@@ -66,7 +103,4 @@ private:
 
 	// スレッド
 	std::thread th;
-
-	// 波形データ
-	std::vector<std::vector<float>>wave;
 };

@@ -8,7 +8,7 @@ class Window
 {
 public:
 	// コンストラクタ
-	Window(const Vec2& pos, const Vec2& size, void* parent = nullptr);
+	Window(const Vec2& pos, const Vec2& size, void* parent);
 	// デストラクタ
 	~Window();
 
