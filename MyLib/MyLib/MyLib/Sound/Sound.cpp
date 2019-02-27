@@ -9,6 +9,9 @@
 #include <ks.h>
 #include <ksmedia.h>
 
+// バッファ数
+#define BUFFER 2
+
 // スピーカー設定用配列
 const ulong spk[] = {
 	KSAUDIO_SPEAKER_MONO,
@@ -23,7 +26,7 @@ const ulong spk[] = {
 
 // コンストラクタ
 Sound::Sound() :
-	voice(nullptr), read(0), loop(false), threadFlag(true)
+	voice(nullptr), index(0), read(0), loop(false), threadFlag(true)
 {
 	back        = std::make_unique<VoiceCallback>();
 	delay       = std::make_unique<Delay>(this);
@@ -31,14 +34,17 @@ Sound::Sound() :
 	info        = {};
 	distortion  = 1.0f;
 	compressor  = { 1.0f, 1.0f / 10.0f };
+	pan         = 0.0f;
 	volume      = 1.0f;
-	delayParam  = { 1.0f, 0.0f, 1 };
+	delayParam  = { 1.0f, 0.0f, 0 };
 	filterParam = {};
+
+	wave.resize(BUFFER);
 }
 
 // コンストラクタ
 Sound::Sound(const std::string& fileName) :
-	voice(nullptr), read(0), loop(false), threadFlag(true)
+	voice(nullptr), index(0), read(0), loop(false), threadFlag(true)
 {
 	back        = std::make_unique<VoiceCallback>();
 	delay       = std::make_unique<Delay>(this);
@@ -46,9 +52,12 @@ Sound::Sound(const std::string& fileName) :
 	info        = {};
 	distortion  = 1.0f;
 	compressor  = { 1.0f, 1.0f / 10.0f };
+	pan         = 0.0f;
 	volume      = 1.0f;
-	delayParam  = { 1.0f, 0.0f, 1 };
+	delayParam  = { 1.0f, 0.0f, 0 };
 	filterParam = {};
+
+	wave.resize(BUFFER);
 
 	Load(fileName);
 }
@@ -59,16 +68,20 @@ Sound::Sound(const Sound& sound)
 	back        = std::make_unique<VoiceCallback>();
 	delay       = std::make_unique<Delay>(this);
 	filter      = std::make_unique<Filter>(this);
+	index       = 0;
 	read        = 0;
 	loop        = false;
 	threadFlag  = true;
 	info        = sound.info;
 	distortion  = sound.distortion;
 	compressor  = sound.compressor;
+	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;
 	filterParam = sound.filterParam;
 	fileName    = sound.fileName;
+
+	wave.resize(BUFFER);
 
 	CreateVoice();
 
@@ -145,48 +158,18 @@ int Sound::Load(const std::string& fileName)
 // ローパスフィルタ
 void Sound::LowPass(void)
 {
-	const float max = func::Floor(float(info.sample / 2), 3);
-	const float min = 17.0f;
-	if (filterParam.cutoff > max)
-	{
-		filterParam.cutoff = max;
-	}
-	else if (filterParam.cutoff < min)
-	{
-		filterParam.cutoff = min;
-	}
 	filter->LowPass(filterParam, info);
 }
 
 // ハイパスフィルタ
 void Sound::HighPass(void)
 {
-	const float max = func::Floor(float(info.sample / 2), 3);
-	const float min = 17.0f;
-	if (filterParam.cutoff > max)
-	{
-		filterParam.cutoff = max;
-	}
-	else if (filterParam.cutoff < min)
-	{
-		filterParam.cutoff = min;
-	}
 	filter->HighPass(filterParam, info);
 }
 
 // バンドパス
 void Sound::BandPass(void)
 {
-	const float max = func::Floor(float(info.sample / 2), 3);
-	const float min = 17.0f;
-	if (filterParam.cutoff > max)
-	{
-		filterParam.cutoff = max;
-	}
-	else if (filterParam.cutoff < min)
-	{
-		filterParam.cutoff = min;
-	}
 	filter->BandPass(filterParam, info);
 }
 
@@ -225,34 +208,42 @@ void Sound::StreamFile(void)
 {
 	const uint bps = (info.sample * info.channel) / Offset();
 	XAUDIO2_BUFFER buf{};
+	XAUDIO2_VOICE_STATE st{};
 	while (threadFlag)
 	{
+		voice->GetState(&st);
+		if (st.BuffersQueued >= BUFFER)
+		{
+			continue;
+		}
+
 		//残りサイズ計算
 		uint size = (SndLoader::Get().GetWave(fileName)->size() - read > bps)
 			? bps
 			: uint((SndLoader::Get().GetWave(fileName)->size())) - read - 1;
 
-		wave.assign(&SndLoader::Get().GetWave(fileName)->at(read), &SndLoader::Get().GetWave(fileName)->at(read + size));
-		if (wave.size() % info.channel)
+		wave[index].assign(&SndLoader::Get().GetWave(fileName)->at(read), &SndLoader::Get().GetWave(fileName)->at(read + size));
+		if (wave[index].size() % info.channel)
 		{
-			wave.resize(wave.size() + wave.size() % info.channel);
+			wave[index].resize(wave[index].size() + wave[index].size() % info.channel);
 		}
-		effe->Execution();
-		delay->Execution(read);
-		filter->Execution();
 
-		buf.AudioBytes = uint(sizeof(float) * wave.size());
-		buf.pAudioData = (uchar*)(wave.data());
+		effe->Execution(wave[index]);
+		delay->Execution(wave[index], read);
+		filter->Execution(wave[index]);
+
+		buf.AudioBytes = uint(sizeof(float) * wave[index].size());
+		buf.pAudioData = (uchar*)(wave[index].data());
 		auto hr = voice->SubmitSourceBuffer(&buf);
 		if (FAILED(hr))
 		{
 			func::DebugLog("サウンドデータ追加：失敗");
 			continue;
 		}
+
+		index = (index + 1 >= 2) ? 0 : ++index;
 		read += size;
 
-		//バッファ処理開始まで待機
-		WaitForSingleObject(back->handle[0], INFINITE);
 		if (read + 1 >= SndLoader::Get().GetWave(fileName)->size())
 		{
 			if (loop == false)
@@ -271,22 +262,32 @@ inline constexpr uint Sound::Offset(void) const
 	return 100;
 }
 
+// 現在の波形データ取得
+inline std::vector<float> Sound::GetWave(void) const
+{
+	return wave[index];
+}
+
 // 演算子オーバーロード
 void Sound::operator=(const Sound & sound)
 {
 	back.reset(new VoiceCallback()); 
 	delay.reset(new Delay(this));
 	filter.reset(new Filter(this));
+	index       = 0;
 	read        = 0;
 	loop        = false;
 	threadFlag  = true;
 	info        = sound.info;
 	distortion  = sound.distortion;
 	compressor  = sound.compressor;
+	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;
 	filterParam = sound.filterParam;
 	fileName    = sound.fileName;
+
+	wave.resize(BUFFER);
 
 	CreateVoice();
 

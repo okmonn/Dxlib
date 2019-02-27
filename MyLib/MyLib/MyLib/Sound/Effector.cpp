@@ -30,18 +30,18 @@ void Effector::Init(void)
 }
 
 // 実行
-void Effector::Execution(void)
+void Effector::Execution(std::vector<float>& input)
 {
-	param = { sound->distortion, sound->compressor, sound->volume };
+	param = { sound->distortion, sound->compressor, sound->pan, sound->volume };
 
 	//コピー
 	compute->Copy("param",  param);
-	compute->Copy("input",  sound->wave);
-	compute->Copy("output", sound->wave);
+	compute->Copy("input",  input);
+	compute->Copy("output", input);
 
 	//実行
-	compute->Execution(sound->wave.size());
+	compute->Execution(input.size());
 
 	//反映
-	compute->UpData("output", sound->wave);
+	compute->UpData("output", input);
 }

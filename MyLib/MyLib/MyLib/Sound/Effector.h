@@ -14,6 +14,8 @@ class Effector
 		float distortion;
 		//コンプレッサ
 		snd::Compressor compressor;
+		//パン
+		float pan;
 		//音量
 		float volume;
 	};
@@ -25,7 +27,7 @@ public:
 	~Effector();
 
 	// 実行
-	void Execution(void);
+	void Execution(std::vector<float>& input);
 
 private:
 	Effector(const Effector&) = delete;

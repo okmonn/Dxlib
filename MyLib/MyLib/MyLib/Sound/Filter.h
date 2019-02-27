@@ -27,7 +27,7 @@ private:
 	void BandPass(const snd::FilterParam& param, const snd::Info& info);
 
 	// 実行
-	void Execution(void);
+	void Execution(std::vector<float>& input);
 
 
 	// サウンド

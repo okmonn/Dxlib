@@ -13,7 +13,7 @@ public:
 	~Delay();
 
 	// 実行
-	void Execution(const uint& offset);
+	void Execution(std::vector<float>& input, const uint& offset);
 
 	// 過去データクリア
 	void Clear(void);
@@ -27,6 +27,5 @@ private:
 	Sound* sound;
 
 	// 過去データ
-	//std::vector<float>old;
-	std::vector<std::vector<float>>old;
+	std::vector<float>old;
 };

@@ -67,22 +67,20 @@ void Filter::BandPass(const snd::FilterParam & param, const snd::Info & info)
 }
 
 // é¿çs
-void Filter::Execution(void)
+void Filter::Execution(std::vector<float>& input)
 {
-	std::vector<float>adap(sound->wave.size());
-	uint index = 0;
-	for (uint i = 0; i < sound->wave.size(); ++i)
+	for (auto& i : input)
 	{
-		input[1] = input[0];
-		input[0] = sound->wave[i];
+		this->input[1] = this->input[0];
+		this->input[0] = i;
 
-		sound->wave[i] = b[0] / a[0] * input[0]
-			           + b[1] / a[0] * input[0]
-			           + b[2] / a[0] * input[1]
-			           - a[1] / a[0] * out[0]
-			           - a[2] / a[0] * out[1];
+		i = b[0] / a[0] * this->input[0]
+		  + b[1] / a[0] * this->input[0]
+		  + b[2] / a[0] * this->input[1]
+		  - a[1] / a[0] * out[0]
+		  - a[2] / a[0] * out[1];
 
 		out[1] = out[0];
-		out[0] = sound->wave[i];
+		out[0] = i;
 	}
 }

@@ -18,20 +18,20 @@ public:
 	// ディストーション（ハードクリッピング）
 	float distortion;
 
+	// コンプレッサパラメータ
+	snd::Compressor compressor;
+
+	// パン
+	float pan;
+
 	// ボリューム
 	float volume;
 
 	// ディレイパラメータ
 	snd::Delay delayParam;
 
-	// コンプレッサパラメータ
-	snd::Compressor compressor;
-
 	// フィルタパラメータ
 	snd::FilterParam filterParam;
-
-	// 波形データ
-	std::vector<float>wave;
 
 
 	// コンストラクタ
@@ -63,6 +63,9 @@ public:
 	// 1回処理するデータ用オフセット
 	inline constexpr uint Offset(void) const;
 
+	// 現在の波形データ取得
+	inline std::vector<float> GetWave(void) const;
+
 	// 演算子オーバーロード
 	void operator=(const Sound& sound);
 
@@ -89,6 +92,9 @@ private:
 	// ソースボイス
 	IXAudio2SourceVoice* voice;
 
+	// 配列用インデックス
+	uint index;
+
 	// 読み込み位置
 	uint read;
 
@@ -103,4 +109,7 @@ private:
 
 	// スレッド
 	std::thread th;
+
+	// 波形データ
+	std::vector<std::vector<float>>wave;
 };

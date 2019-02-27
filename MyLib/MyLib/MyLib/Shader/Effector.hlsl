@@ -37,6 +37,8 @@ cbuffer Param : register(b0)
 	float threshold;
 	//レシオ
 	float ratio;
+    //パン
+    float pan;
 	//音量
 	float volume;
 };
@@ -65,7 +67,7 @@ void Compressor(uint id)
 	if (output[id] > threshold)
 	{
 		output[id] = threshold + (output[id] - threshold) * ratio;
-	}
+    }
 	else if (output[id] < -threshold)
 	{
 		output[id] = -threshold + (input[id] + threshold) * ratio;
@@ -73,6 +75,23 @@ void Compressor(uint id)
 
 	//増幅
 	output[id] *= gain;
+}
+
+// パンニング
+void Panning(uint id)
+{
+    float tmp = (180.0f - pan) / 90.0f;
+
+    if(id % 2 == 0)
+    {
+        //左
+        output[id] *= 1.0f + tmp;
+    }
+    else
+    {
+        //右
+        output[id + 1] *= 1.0f - tmp;
+    }
 }
 
 // 音量調節
@@ -89,6 +108,7 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
 
 	Distortion(gID.x);
 	Compressor(gID.x);
+    Panning(gID.x);
 	Volume(gID.x);
 
 	AllMemoryBarrierWithGroupSync();

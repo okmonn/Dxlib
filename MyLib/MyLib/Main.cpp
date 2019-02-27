@@ -10,10 +10,8 @@ int main()
 
 	Texture tex("Š®¬.png");
 	
-	Sound sound("‚¦‚ê‚­‚Æ‚è‚Á‚­‚¦‚ñ‚¶‚¥‚¤.wav");
-	auto s = sound;
-	s.delayParam.time = 0.5f;
-	s.Play(false);
+	Sound sound("mtgx.wav");
+	sound.Play(true);
 	
 	bool stop = false;
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
@@ -24,18 +22,32 @@ int main()
 
 		if (KEY.Trigger(KeyCode::Space))
 		{
-			sound.Play(true);
-		}
-		if (KEY.CheckKey(KeyCode::Up))
-		{
-			sound.volume += 1.0f;
-		}
-		else if (KEY.CheckKey(KeyCode::Down))
-		{
-			sound.volume -= 1.0f;
-			if (sound.volume < 0.0f)
+			if (stop == false)
 			{
-				sound.volume = 0.0f;
+				sound.Stop();
+				stop = true;
+			}
+			else
+			{
+				sound.Play(true);
+				stop = false;
+			}
+		}
+
+		if (KEY.CheckKey(KeyCode::Right))
+		{
+			sound.pan += 1.0f;
+			if (sound.pan >= 360.0f)
+			{
+				sound.pan = 0.0f;
+			}
+		}
+		else if (KEY.CheckKey(KeyCode::Left))
+		{
+			sound.pan -= 1.0f;
+			if (sound.pan < 0.0f)
+			{
+				sound.pan = 0.0f;
 			}
 		}
 	}
