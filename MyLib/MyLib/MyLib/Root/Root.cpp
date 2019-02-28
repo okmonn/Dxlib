@@ -4,10 +4,9 @@
 #include "../etc/Release.h"
 
 // コンストラクタ
-Root::Root(const std::string & fileName) : 
+Root::Root() : 
 	root(nullptr), sig(nullptr), vertex(nullptr), geometry(nullptr), pixel(nullptr), compute(nullptr)
 {
-	Init(fileName);
 }
 
 // デストラクタ
@@ -21,51 +20,72 @@ Root::~Root()
 	Release(root);
 }
 
-// シェーダコンパイル
-long Root::Compile(const std::wstring & fileName)
+// 頂点シェーダコンパイル
+void Root::Vertex(const std::string& fileName, const std::string& func, const std::string& ver)
 {
-	auto hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VS", "vs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &vertex, nullptr);
-	if (FAILED(hr))
-	{
-		hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "CS", "cs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &compute, nullptr);
-		if (hr == S_OK)
-		{
-			func::DebugLog("コンピュートシェーダ読み込み：成功");
-			return hr;
-		}
-		func::DebugLog("頂点シェーダ読み込み：失敗");
-		return hr;
-	}
+	Compile(fileName, func, ver, &vertex);
+	RootInfo(vertex);
+	CreateRoot();
+}
 
-	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "GS", "gs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &geometry, nullptr);
-	if (FAILED(hr))
-	{
-		func::DebugLog("ジオメトリシェーダ読み込み：失敗");
-		func::DebugLog("ジオメトリシェーダを使用していない場合は無視してOK：成功");
-	}
+// ジオメトリーシェーダコンパイル
+void Root::Geometry(const std::string & fileName, const std::string & func, const std::string & ver)
+{
+	Compile(fileName, func, ver, &geometry);
+}
 
-	hr = D3DCompileFromFile(fileName.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PS", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, &pixel, nullptr);
+// ピクセルシェーダコンパイル
+void Root::Pixel(const std::string & fileName, const std::string & func, const std::string & ver)
+{
+	Compile(fileName, func, ver, &pixel);
+}
+
+// コンピュートシェーダコンパイル
+void Root::Compute(const std::string & fileName, const std::string & func, const std::string & ver)
+{
+	Compile(fileName, func, ver, &compute);
+	RootInfo(compute);
+	CreateRoot();
+}
+
+// シェーダコンパイル
+long Root::Compile(const std::string& fileName, const std::string& func, const std::string& ver, ID3DBlob** blob)
+{
+	auto pass = func::ChangeCode(fileName);
+	auto hr = D3DCompileFromFile(pass.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, func.c_str(), ver.c_str(),
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, *(&blob), nullptr);
 	if (FAILED(hr))
 	{
-		func::DebugLog("ピクセルシェーダ読み込み：失敗");
-		return hr;
+		func::DebugLog("シェーダコンパイル：失敗");
 	}
 
 	return hr;
 }
 
-// ルート情報取得
-long Root::RootInfo(void)
+// .cso読み込み
+int Root::Load(const std::string & fileName)
 {
-	auto hr = S_OK;
-	if (vertex != nullptr)
+	FILE* file = nullptr;
+	if (fopen_s(&file, fileName.c_str(), "rb") != 0)
 	{
-		hr = D3DGetBlobPart(vertex->GetBufferPointer(), vertex->GetBufferSize(), D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
+		func::DebugLog(".cso読み込み：失敗");
+		return -1;
 	}
-	else
+	std::vector<uchar>data;
+	while (std::feof(file) == 0)
 	{
-		hr = D3DGetBlobPart(compute->GetBufferPointer(), compute->GetBufferSize(), D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
+		uchar tmp = 0;
+		fread(&tmp, sizeof(tmp), 1, file);
+		data.push_back(tmp);
 	}
+
+	return 0;
+}
+
+// ルート情報取得
+long Root::RootInfo(ID3DBlob* blob)
+{
+	auto hr = D3DGetBlobPart(blob->GetBufferPointer(), blob->GetBufferSize(), D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
 	if (FAILED(hr))
 	{
 		func::DebugLog("ルートシグネチャ情報取得：失敗");
@@ -84,15 +104,6 @@ long Root::CreateRoot(void)
 	}
 
 	return hr;
-}
-
-// 初期化
-void Root::Init(const std::string & fileName)
-{
-	auto pass = func::ChangeCode(fileName);
-	Compile(pass);
-	RootInfo();
-	CreateRoot();
 }
 
 // ルートシグネチャ取得

@@ -26,38 +26,14 @@ cbuffer Info : register(b0)
 }
 
 // 入力
-    struct Input
-    {
-        float4 pos : POSITION;
-    };
+struct Input
+{
+    float4 pos : POSITION;
+};
 
 // 出力
-    struct Out
-    {
-        float4 svpos : SV_POSITION;
-        float4 pos   : POSITION;
-    };
-
-// 頂点シェーダ
-[RootSignature(RS)]
-Out VS(Input input)
+struct Out
 {
-	input.pos.xy = float2(-1.0f, 1.0f) + (input.pos.xy / float2((window.x / 2.0f), -(window.y / 2.0f)));
-   
-    Out o;
-    o.pos   = input.pos;
-    o.svpos = input.pos;
-
-        return o;
-    }
-
-// ピクセルシェーダ
-float4 PS(Out o) : SV_TARGET
-{
-    if (color.a <= 0.0f)
-    {
-		discard;
-    }
-
-	return color;
-}
+    float4 svpos : SV_POSITION;
+    float4 pos   : POSITION;
+};

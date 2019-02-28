@@ -7,9 +7,18 @@ class Root
 {
 public:
 	// コンストラクタ
-	Root(const std::string& fileName);
+	Root();
 	// デストラクタ
 	~Root();
+
+	// 頂点シェーダコンパイル
+	void Vertex(const std::string& fileName, const std::string& func = "VS", const std::string& ver = "vs_5_1");
+	// ジオメトリーシェーダコンパイル
+	void Geometry(const std::string& fileName, const std::string& func = "GS", const std::string& ver = "gs_5_1");
+	// ピクセルシェーダコンパイル
+	void Pixel(const std::string& fileName, const std::string& func = "PS", const std::string& ver = "ps_5_1");
+	// コンピュートシェーダコンパイル
+	void Compute(const std::string& fileName, const std::string& func = "CS", const std::string& ver = "cs_5_1");
 
 	// ルートシグネチャ取得
 	ID3D12RootSignature* Get(void) const;
@@ -29,10 +38,13 @@ private:
 	void operator=(const Root&) = delete;
 
 	// シェーダコンパイル
-	long Compile(const std::wstring& fileName);
+	long Compile(const std::string& fileName, const std::string& func, const std::string& ver, ID3DBlob** blob);
+
+	// .cso読み込み
+	int Load(const std::string& fileName);
 
 	// ルート情報取得
-	long RootInfo(void);
+	long RootInfo(ID3DBlob* blob);
 
 	// ルートシグネチャ生成
 	long CreateRoot(void);

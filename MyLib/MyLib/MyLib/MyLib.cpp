@@ -153,14 +153,22 @@ void MyLib::Init(void)
 }
 
 // ルートのインスタンス
-void MyLib::RootSignature(const std::string& name, const std::string& fileName)
+void MyLib::RootSignature(const std::string& name, const std::initializer_list<std::string>& fileName)
 {
 	if (root.find(name) != root.end())
 	{
 		return;
 	}
 
-	root[name] = std::make_shared<Root>(fileName);
+	root[name] = std::make_shared<Root>();
+	auto itr = fileName.begin();
+	while (itr != fileName.end())
+	{
+		root[name]->Vertex(*itr);
+		++itr;
+		root[name]->Pixel(*itr);
+		++itr;
+	}
 }
 
 // パイプのインスタンス
@@ -192,12 +200,12 @@ void MyLib::Instance(const Vec2& pos, void* parent)
 	render = std::make_unique<Render>(swap);
 	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
 
-	RootSignature("primitive", "MyLib/Shader/Primitive.hlsl");
+	RootSignature("primitive", { "Mylib/Shader/PrimVS.hlsl", "Mylib/Shader/PrimPS.hlsl" });
 	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
 	PipeLine("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0 }, false);
 	PipeLine("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0 }, false);
 
-	RootSignature("texture", "MyLib/Shader/Texture.hlsl");
+	RootSignature("texture", { "MyLib/Shader/TexVS.hlsl", "MyLib/Shader/TexPS.hlsl" });
 	PipeLine("texture", "texture", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 }
 

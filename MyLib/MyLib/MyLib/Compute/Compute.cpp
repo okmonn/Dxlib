@@ -14,7 +14,8 @@ Compute::Compute(const std::string& fileName, const uint& num) :
 	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
 	list  = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
 	fence = std::make_unique<Fence>(queue);
-	root  = std::make_shared<Root>(fileName);
+	root  = std::make_shared<Root>();
+	root->Compute(fileName);
 	pipe  = std::make_unique<Pipe>(root);
 
 	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,

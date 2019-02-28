@@ -100,6 +100,12 @@
     <Filter Include="Sound\Delay">
       <UniqueIdentifier>{4e8b885d-2974-48b7-82ed-80497df4a3a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\Texture">
+      <UniqueIdentifier>{7f98bdab-4927-4cdf-99fd-c1940aecdd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Primitive">
+      <UniqueIdentifier>{ef27bffc-6c52-465b-95a7-e7d8002f2e68}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -291,14 +297,26 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="MyLib\Shader\Primitive.hlsl">
+    <FxCompile Include="MyLib\Shader\Effector.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="MyLib\Shader\Texture.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\Texture</Filter>
     </FxCompile>
-    <FxCompile Include="MyLib\Shader\Effector.hlsl">
-      <Filter>リソース ファイル</Filter>
+    <FxCompile Include="MyLib\Shader\TexVS.hlsl">
+      <Filter>リソース ファイル\Texture</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\TexPS.hlsl">
+      <Filter>リソース ファイル\Texture</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\Primitive.hlsl">
+      <Filter>リソース ファイル\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\PrimVS.hlsl">
+      <Filter>リソース ファイル\Primitive</Filter>
+    </FxCompile>
+    <FxCompile Include="MyLib\Shader\PrimPS.hlsl">
+      <Filter>リソース ファイル\Primitive</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>
