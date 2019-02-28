@@ -13,7 +13,7 @@ class Effector
 		// ディストーション
 		float distortion;
 		//コンプレッサ
-		snd::Compressor compressor;
+		snd::Compressor comp;
 		//パン
 		float pan;
 		//音量

@@ -34,7 +34,7 @@ void Render::Init(void)
 	rsc.resize(tmp.BufferCount);
 
 	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 
-		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, rsc.size());
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, uint(rsc.size()));
 
 	auto hr = S_OK;
 	for (uint i = 0; i < rsc.size(); ++i)

@@ -11,7 +11,9 @@ int main()
 	Texture tex("Š®¬.png");
 	
 	Sound sound("mtgx.wav");
-	sound.Play(true);
+	sound.filterParam.cutoff = 20000.0f;
+	sound.filterParam.bw = 1.0f;
+	sound.Play(false);
 	
 	bool stop = false;
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
@@ -20,11 +22,15 @@ int main()
 		lib->Draw(tex, 1.0f);
 		lib->Execution();
 
+		sound.LowPass();
+
 		if (KEY.Trigger(KeyCode::Space))
 		{
+			sound.Stop();
+			continue;
 			if (stop == false)
 			{
-				sound.Stop();
+				
 				stop = true;
 			}
 			else
@@ -37,19 +43,14 @@ int main()
 		if (KEY.CheckKey(KeyCode::Right))
 		{
 			sound.pan += 1.0f;
-			if (sound.pan >= 360.0f)
-			{
-				sound.pan = 0.0f;
-			}
+			
 		}
 		else if (KEY.CheckKey(KeyCode::Left))
 		{
 			sound.pan -= 1.0f;
-			if (sound.pan < 0.0f)
-			{
-				sound.pan = 0.0f;
-			}
+			
 		}
+		printf("%f\n", sound.pan);
 	}
 
 	return 0;

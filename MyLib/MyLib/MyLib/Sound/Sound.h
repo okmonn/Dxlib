@@ -15,16 +15,16 @@ public:
 	// サウンド情報
 	snd::Info info;
 
-	// ディストーション（ハードクリッピング）
+	// ディストーション(1.0f <= distortion)
 	float distortion;
 
 	// コンプレッサパラメータ
-	snd::Compressor compressor;
+	snd::Compressor comp;
 
 	// パン
 	float pan;
 
-	// ボリューム
+	// ボリューム(0.0f <= volume)
 	float volume;
 
 	// ディレイパラメータ

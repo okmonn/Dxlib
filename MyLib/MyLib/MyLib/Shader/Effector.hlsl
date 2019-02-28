@@ -1,6 +1,6 @@
 // ルートシグネチャの宣言
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
-                    "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+					 "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
@@ -43,6 +43,26 @@ cbuffer Param : register(b0)
 	float volume;
 };
 
+// コンプレッサ
+void Compressor(uint id)
+{
+	//増幅率
+	float gain = 1.0f / (threshold + (1.0f - threshold) * ratio);
+
+	//圧縮
+	if (output[id] > threshold)
+	{
+		output[id] = threshold + (output[id] - threshold) * ratio;
+	}
+	else if (output[id] < -threshold)
+	{
+		output[id] = -threshold + (input[id] + threshold) * ratio;
+	}
+
+	//増幅
+	output[id] *= gain;
+}
+
 // ディストーション(ハードクリッピング)
 void Distortion(uint id)
 {
@@ -57,40 +77,20 @@ void Distortion(uint id)
 	}
 }
 
-// コンプレッサ
-void Compressor(uint id)
-{
-	//増幅率
-	float gain = 1.0f / (threshold + (1.0f - threshold) * ratio);
-
-	//圧縮
-	if (output[id] > threshold)
-	{
-		output[id] = threshold + (output[id] - threshold) * ratio;
-    }
-	else if (output[id] < -threshold)
-	{
-		output[id] = -threshold + (input[id] + threshold) * ratio;
-	}
-
-	//増幅
-	output[id] *= gain;
-}
-
 // パンニング
 void Panning(uint id)
 {
-    float tmp = (180.0f - pan) / 90.0f;
+    float tmp = pan / 90.0f;
 
     if(id % 2 == 0)
     {
         //左
-        output[id] *= 1.0f + tmp;
+        output[id] *= 1.0f - tmp;
     }
     else
     {
         //右
-        output[id + 1] *= 1.0f - tmp;
+		output[id] *= 1.0f + tmp;
     }
 }
 
@@ -106,8 +106,8 @@ void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_
 {
 	output[gID.x] = input[gID.x];
 
-	Distortion(gID.x);
 	Compressor(gID.x);
+	Distortion(gID.x);
     Panning(gID.x);
 	Volume(gID.x);
 

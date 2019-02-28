@@ -1,6 +1,7 @@
 #include "Delay.h"
 #include "Sound.h"
 #include <algorithm>
+#include <minmax.h>
 
 // コンストラクタ
 Delay::Delay(Sound* sound) : 
@@ -19,8 +20,14 @@ void Delay::Execution(std::vector<float>& input, const uint& offset)
 	//データ追加
 	std::copy(input.begin(), input.end(), std::back_inserter(old));
 
-	if (sound->delayParam.loop == 0)
+	//修正
+	sound->delayParam.decay = max(sound->delayParam.decay, 0.01f);
+	sound->delayParam.decay = min(sound->delayParam.decay, 1.0f);
+	sound->delayParam.loop  = max(sound->delayParam.loop, 1);
+
+	if (sound->delayParam.time <= 0.0f)
 	{
+		sound->delayParam.time = 0.0f;
 		return;
 	}
 

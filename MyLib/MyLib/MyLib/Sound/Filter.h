@@ -18,13 +18,19 @@ private:
 	void operator=(const Filter&) = delete;
 
 	// ローパスフィルタ
-	void LowPass(const snd::FilterParam& param, const snd::Info& info);
+	void LowPass(void);
 
 	// ハイパスフィルタ
-	void HighPass(const snd::FilterParam& param, const snd::Info& info);
+	void HighPass(void);
 
-	// バンドパス
-	void BandPass(const snd::FilterParam& param, const snd::Info& info);
+	// バンドパスフィルタ
+	void BandPass(void);
+
+	// ノッチフィルタ
+	void Notch(void);
+
+	// オールパスフィルタ
+	void AllPass(void);
 
 	// 実行
 	void Execution(std::vector<float>& input);

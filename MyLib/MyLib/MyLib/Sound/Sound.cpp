@@ -33,10 +33,10 @@ Sound::Sound() :
 	filter      = std::make_unique<Filter>(this);
 	info        = {};
 	distortion  = 1.0f;
-	compressor  = { 1.0f, 1.0f / 10.0f };
+	comp        = {};
 	pan         = 0.0f;
 	volume      = 1.0f;
-	delayParam  = { 1.0f, 0.0f, 0 };
+	delayParam  = {};
 	filterParam = {};
 
 	wave.resize(BUFFER);
@@ -51,10 +51,10 @@ Sound::Sound(const std::string& fileName) :
 	filter      = std::make_unique<Filter>(this);
 	info        = {};
 	distortion  = 1.0f;
-	compressor  = { 1.0f, 1.0f / 10.0f };
+	comp        = {};
 	pan         = 0.0f;
 	volume      = 1.0f;
-	delayParam  = { 1.0f, 0.0f, 0 };
+	delayParam  = {};
 	filterParam = {};
 
 	wave.resize(BUFFER);
@@ -74,7 +74,7 @@ Sound::Sound(const Sound& sound)
 	threadFlag  = true;
 	info        = sound.info;
 	distortion  = sound.distortion;
-	compressor  = sound.compressor;
+	comp        = sound.comp;
 	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;
@@ -99,7 +99,7 @@ Sound::Sound(const Sound& sound)
 Sound::~Sound()
 {
 	threadFlag = false;
-	back->End();
+	SetEvent(back->handle);
 	if (th.joinable() == true)
 	{
 		th.join();
@@ -142,7 +142,6 @@ int Sound::Load(const std::string& fileName)
 
 	this->fileName = fileName;
 	info = SndLoader::Get().GetInfo(fileName);
-	filterParam = { func::Floor(float(info.sample / 2), 3), 1.0f / std::sqrt(2.0f) };
 
 	CreateVoice();
 
@@ -158,19 +157,19 @@ int Sound::Load(const std::string& fileName)
 // ローパスフィルタ
 void Sound::LowPass(void)
 {
-	filter->LowPass(filterParam, info);
+	filter->LowPass();
 }
 
 // ハイパスフィルタ
 void Sound::HighPass(void)
 {
-	filter->HighPass(filterParam, info);
+	filter->HighPass();
 }
 
 // バンドパス
 void Sound::BandPass(void)
 {
-	filter->BandPass(filterParam, info);
+	filter->BandPass();
 }
 
 // 再生
@@ -192,7 +191,7 @@ long Sound::Play(const bool& loop)
 long Sound::Stop(void) const
 {
 	//バッファ処理終了まで待機
-	WaitForSingleObject(back->handle[1], INFINITE);
+	WaitForSingleObject(back->handle, INFINITE);
 
 	auto hr = voice->Stop();
 	if (FAILED(hr))
@@ -207,6 +206,7 @@ long Sound::Stop(void) const
 void Sound::StreamFile(void)
 {
 	const uint bps = (info.sample * info.channel) / Offset();
+
 	XAUDIO2_BUFFER buf{};
 	XAUDIO2_VOICE_STATE st{};
 	while (threadFlag)
@@ -225,12 +225,13 @@ void Sound::StreamFile(void)
 		wave[index].assign(&SndLoader::Get().GetWave(fileName)->at(read), &SndLoader::Get().GetWave(fileName)->at(read + size));
 		if (wave[index].size() % info.channel)
 		{
+			//サイズ調節
 			wave[index].resize(wave[index].size() + wave[index].size() % info.channel);
 		}
 
+		filter->Execution(wave[index]);
 		effe->Execution(wave[index]);
 		delay->Execution(wave[index], read);
-		filter->Execution(wave[index]);
 
 		buf.AudioBytes = uint(sizeof(float) * wave[index].size());
 		buf.pAudioData = (uchar*)(wave[index].data());
@@ -241,7 +242,7 @@ void Sound::StreamFile(void)
 			continue;
 		}
 
-		index = (index + 1 >= 2) ? 0 : ++index;
+		index = (index + 1 >= BUFFER) ? 0 : ++index;
 		read += size;
 
 		if (read + 1 >= SndLoader::Get().GetWave(fileName)->size())
@@ -274,13 +275,13 @@ void Sound::operator=(const Sound & sound)
 	back.reset(new VoiceCallback()); 
 	delay.reset(new Delay(this));
 	filter.reset(new Filter(this));
-	index       = 0;
+	index       = 0; 
 	read        = 0;
 	loop        = false;
 	threadFlag  = true;
 	info        = sound.info;
 	distortion  = sound.distortion;
-	compressor  = sound.compressor;
+	comp        = sound.comp;
 	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;

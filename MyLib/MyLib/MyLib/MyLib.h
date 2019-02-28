@@ -3,8 +3,8 @@
 #include "Primitive/Primitive.h"
 #include "Texture/Texture.h"
 #include "Sound/Sound.h"
+#include "Compute/Compute.h"
 #include "etc/Func.h"
-#include <unordered_map>
 
 #define KEY Input::Get()
 

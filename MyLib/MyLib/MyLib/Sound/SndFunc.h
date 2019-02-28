@@ -75,8 +75,8 @@ namespace snd
 	struct FilterParam {
 		//カットオフ周波数
 		float cutoff;
-		//クオリティファクタ
-		float q;
+		//クオリティファクタ・帯域幅
+		float bw;
 	};
 
 

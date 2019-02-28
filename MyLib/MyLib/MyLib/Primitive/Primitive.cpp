@@ -45,7 +45,7 @@ Primitive::Primitive(const Primitive & prim)
 		break;
 	}
 
-	Init(type, pos.size());
+	Init(type, uint(pos.size()));
 }
 
 // デストラクタ
@@ -128,5 +128,5 @@ void Primitive::operator=(const Primitive & prim)
 	default:
 		break;
 	}
-	Init(type, pos.size());
+	Init(type, uint(pos.size()));
 }
