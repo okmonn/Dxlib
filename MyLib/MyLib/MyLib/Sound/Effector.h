@@ -10,10 +10,14 @@ class Effector
 {
 	// エフェクトパラメータ
 	struct Param {
-		// ディストーション
-		float distortion;
 		//コンプレッサ
 		snd::Compressor comp;
+		// ディストーション
+		float distortion;
+		//トレモロ
+		snd::Toremor toremor;
+		//読み込みインデックス
+		float index;
 		//パン
 		float pan;
 		//音量

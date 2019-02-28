@@ -10,9 +10,7 @@ int main()
 
 	Texture tex("Š®¬.png");
 	
-	Sound sound("mtgx.wav");
-	sound.filterParam.cutoff = 20000.0f;
-	sound.filterParam.bw = 1.0f;
+	Sound sound("‚¦‚ê‚­‚Æ‚è‚Á‚­‚¦‚ñ‚¶‚¥‚¤.wav");
 	sound.Play(false);
 	
 	bool stop = false;
@@ -21,8 +19,6 @@ int main()
 		lib->Clear();
 		lib->Draw(tex, 1.0f);
 		lib->Execution();
-
-		sound.LowPass();
 
 		if (KEY.Trigger(KeyCode::Space))
 		{

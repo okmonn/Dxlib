@@ -15,11 +15,14 @@ public:
 	// サウンド情報
 	snd::Info info;
 
+	// コンプレッサパラメータ
+	snd::Compressor comp;
+
 	// ディストーション(1.0f <= distortion)
 	float distortion;
 
-	// コンプレッサパラメータ
-	snd::Compressor comp;
+	// トレモロ
+	snd::Toremor toremor;
 
 	// パン
 	float pan;
@@ -62,7 +65,8 @@ public:
 
 	// 1回処理するデータ用オフセット
 	inline constexpr uint Offset(void) const;
-
+	// 読み込みインデックス取得
+	uint GetRead(void) const;
 	// 現在の波形データ取得
 	inline std::vector<float> GetWave(void) const;
 

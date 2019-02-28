@@ -1,6 +1,8 @@
 // ルートシグネチャの宣言
 #define RS "RootFlags(ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT),"\
-					 "DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+					"DescriptorTable(CBV(b0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
+                                    "visibility = SHADER_VISIBILITY_ALL),"\
+					"DescriptorTable(CBV(b1, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
                     "DescriptorTable(UAV(u0, numDescriptors = 1, space = 0, offset = DESCRIPTOR_RANGE_OFFSET_APPEND), "\
                                     "visibility = SHADER_VISIBILITY_ALL),"\
@@ -29,14 +31,31 @@ RWStructuredBuffer<float> output : register(u1);
 #define PI 3.14159265358979323846f
 
 // パラメータ
-cbuffer Param : register(b0)
+cbuffer Info : register(b0)
 {
+	//サンプリング周波数
+    uint sample;
+	//量子化ビット数
+    uint bit;
+	//チャンネル数
+    uint channel;
+}
+
+// パラメータ
+cbuffer Param : register(b1)
+{
+	//閾値
+    float threshold;
+	//レシオ
+    float ratio;
 	//ディストーション
 	float distortion;
-	//閾値
-	float threshold;
-	//レシオ
-	float ratio;
+	//変調深度
+    float depth;
+	//変調周波数
+    float rate;
+	//読み込みインデックス
+    float index;
     //パン
     float pan;
 	//音量
@@ -77,12 +96,21 @@ void Distortion(uint id)
 	}
 }
 
+// トレモロ
+void Tremor(uint id)
+{
+    //変調信号
+    float signal = 1.0f + depth * sin(2.0f * PI * rate * (index + id) / sample);
+
+    output[id] *= signal;
+}
+
 // パンニング
 void Panning(uint id)
 {
     float tmp = pan / 90.0f;
 
-    if(id % 2 == 0)
+    if (id % channel == 0)
     {
         //左
         output[id] *= 1.0f - tmp;
@@ -90,26 +118,27 @@ void Panning(uint id)
     else
     {
         //右
-		output[id] *= 1.0f + tmp;
+        output[id] *= 1.0f + tmp;
     }
 }
 
 // 音量調節
 void Volume(uint id)
 {
-	output[id] *= volume;
+    output[id] *= volume;
 }
 
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-	output[gID.x] = input[gID.x];
+    output[gID.x] = input[gID.x];
 
-	Compressor(gID.x);
-	Distortion(gID.x);
+    Compressor(gID.x);
+    Distortion(gID.x);
+    Tremor(gID.x);
     Panning(gID.x);
-	Volume(gID.x);
+    Volume(gID.x);
 
-	AllMemoryBarrierWithGroupSync();
+    AllMemoryBarrierWithGroupSync();
 }

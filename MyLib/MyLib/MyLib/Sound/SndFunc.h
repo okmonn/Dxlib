@@ -61,6 +61,14 @@ namespace snd
 		float ratio;
 	};
 
+	// トレモロパラメータ
+	struct Toremor {
+		//変調深度
+		float depth;
+		//変調周波数
+		float rate;
+	};
+
 	// ディレイパラメータ
 	struct Delay {
 		//減衰率

@@ -32,8 +32,9 @@ Sound::Sound() :
 	delay       = std::make_unique<Delay>(this);
 	filter      = std::make_unique<Filter>(this);
 	info        = {};
-	distortion  = 1.0f;
 	comp        = {};
+	distortion  = 1.0f;
+	toremor     = {};
 	pan         = 0.0f;
 	volume      = 1.0f;
 	delayParam  = {};
@@ -50,8 +51,9 @@ Sound::Sound(const std::string& fileName) :
 	delay       = std::make_unique<Delay>(this);
 	filter      = std::make_unique<Filter>(this);
 	info        = {};
-	distortion  = 1.0f;
 	comp        = {};
+	distortion  = 1.0f;
+	toremor     = {};
 	pan         = 0.0f;
 	volume      = 1.0f;
 	delayParam  = {};
@@ -73,8 +75,9 @@ Sound::Sound(const Sound& sound)
 	loop        = false;
 	threadFlag  = true;
 	info        = sound.info;
-	distortion  = sound.distortion;
 	comp        = sound.comp;
+	distortion  = sound.distortion;
+	toremor     = sound.toremor;
 	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;
@@ -263,6 +266,12 @@ inline constexpr uint Sound::Offset(void) const
 	return 100;
 }
 
+// 読み込みインデックス取得
+uint Sound::GetRead(void) const
+{
+	return read;
+}
+
 // 現在の波形データ取得
 inline std::vector<float> Sound::GetWave(void) const
 {
@@ -280,8 +289,9 @@ void Sound::operator=(const Sound & sound)
 	loop        = false;
 	threadFlag  = true;
 	info        = sound.info;
-	distortion  = sound.distortion;
 	comp        = sound.comp;
+	distortion  = sound.distortion;
+	toremor     = sound.toremor;
 	pan         = sound.pan;
 	volume      = sound.volume;
 	delayParam  = sound.delayParam;
