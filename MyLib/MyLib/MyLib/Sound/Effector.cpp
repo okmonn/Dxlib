@@ -1,6 +1,7 @@
 #include "Effector.h"
 #include "Sound.h"
 #include "../Compute/Compute.h"
+#include "../../resource.h"
 #include "../etc/Func.h"
 #include <minmax.h>
 
@@ -11,7 +12,7 @@
 Effector::Effector(Sound* sound) : 
 	sound(sound)
 {
-	compute = std::make_unique<Compute>("Shader/Effector.cso", RSC_MAX);
+	compute = std::make_unique<Compute>(EFFECTOR, RSC_MAX);
 	param = {};
 
 	Init();

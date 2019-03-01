@@ -109,6 +109,9 @@
     <Filter Include="リソース ファイル\Compute">
       <UniqueIdentifier>{025296fe-2676-46cb-bbe5-2095813f75bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\cso">
+      <UniqueIdentifier>{809d9b6a-c99e-422d-96bf-9d5a974fde6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -326,5 +329,22 @@
     <Image Include="Icon\avicii.ico">
       <Filter>リソース ファイル\Icon</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Effector.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="Shader\PrimPS.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="Shader\PrimVS.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="Shader\TexPS.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="Shader\TexVS.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
   </ItemGroup>
 </Project>

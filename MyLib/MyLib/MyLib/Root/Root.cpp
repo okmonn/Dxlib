@@ -1,5 +1,6 @@
 #include <d3dcompiler.h>
 #include "Root.h"
+#include "../../resource.h"
 #include "../etc/Func.h"
 #include "../etc/Release.h"
 
@@ -23,19 +24,7 @@ Root::~Root()
 // 頂点シェーダコンパイル
 void Root::Vertex(const std::string& fileName, const std::string& func, const std::string& ver)
 {
-	if (fileName.find(".hlsl") != std::string::npos)
-	{
-		Compile(fileName, func, ver, &vertex);
-	}
-	else if (fileName.find(".cso") != std::string::npos)
-	{
-		Load(fileName, &vertex);
-	}
-	else
-	{
-
-	}
-	
+	Compile(fileName, func, ver, &vertex);
 	RootInfo(vertex);
 	CreateRoot();
 }
@@ -43,53 +32,75 @@ void Root::Vertex(const std::string& fileName, const std::string& func, const st
 // ジオメトリーシェーダコンパイル
 void Root::Geometry(const std::string & fileName, const std::string & func, const std::string & ver)
 {
-	if (fileName.find(".hlsl") != std::string::npos)
-	{
-		Compile(fileName, func, ver, &geometry);
-	}
-	else if (fileName.find(".cso") != std::string::npos)
-	{
-		Load(fileName, &geometry);
-	}
-	else
-	{
-
-	}
+	Compile(fileName, func, ver, &geometry);
 }
 
 // ピクセルシェーダコンパイル
 void Root::Pixel(const std::string & fileName, const std::string & func, const std::string & ver)
 {
-	if (fileName.find(".hlsl") != std::string::npos)
-	{
-		Compile(fileName, func, ver, &pixel);
-	}
-	else if (fileName.find(".cso") != std::string::npos)
-	{
-		Load(fileName, &pixel);
-	}
-	else
-	{
-
-	}
+	Compile(fileName, func, ver, &pixel);
 }
 
 // コンピュートシェーダコンパイル
 void Root::Compute(const std::string & fileName, const std::string & func, const std::string & ver)
 {
-	if (fileName.find(".hlsl") != std::string::npos)
-	{
-		Compile(fileName, func, ver, &compute);
-	}
-	else if (fileName.find(".cso") != std::string::npos)
-	{
-		Load(fileName, &compute);
-	}
-	else
-	{
-		
-	}
-	
+	Compile(fileName, func, ver, &compute);
+	RootInfo(compute);
+	CreateRoot();
+}
+
+// .cso読み込み
+void Root::Vertex(const std::string & fileName)
+{
+	Load(fileName, &vertex);
+	RootInfo(vertex);
+	CreateRoot();
+}
+
+// .cso読み込み
+void Root::Geometry(const std::string & fileName)
+{
+	Load(fileName, &geometry);
+}
+
+// .cso読み込み
+void Root::Pixel(const std::string & fileName)
+{
+	Load(fileName, &pixel);
+}
+
+// .cso読み込み
+void Root::Compute(const std::string & fileName)
+{
+	Load(fileName, &compute);
+	RootInfo(compute);
+	CreateRoot();
+}
+
+// リソース読み込み
+void Root::Vertex(const int& id)
+{
+	Read(id, &vertex);
+	RootInfo(vertex);
+	CreateRoot();
+}
+
+// リソース読み込み
+void Root::Geometry(const int& id)
+{
+	Read(id, &geometry);
+}
+
+// リソース読み込み
+void Root::Pixel(const int& id)
+{
+	Read(id, &pixel);
+}
+
+// リソース読み込み
+void Root::Compute(const int& id)
+{
+	Read(id, &compute);
 	RootInfo(compute);
 	CreateRoot();
 }
@@ -116,6 +127,39 @@ long Root::Load(const std::string& fileName, ID3DBlob** blob)
 	if (FAILED(hr))
 	{
 		func::DebugLog(".cso読み込み：失敗");
+	}
+
+	return hr;
+}
+
+// リソース読み込み
+long Root::Read(const int& id, ID3DBlob** blob)
+{
+	//リソース情報取得
+	HRSRC rsc = FindResource(nullptr, MAKEINTRESOURCE(id), L"Shader");
+	if (rsc == nullptr)
+	{
+		func::DebugLog("リソース情報取得：失敗");
+		return S_FALSE;
+	}
+
+	//リソース読み込み
+	HANDLE handle = LoadResource(nullptr, rsc);
+	if (handle == nullptr)
+	{
+		func::DebugLog("リソース読み込み：失敗");
+		return S_FALSE;
+	}
+
+	//データ取得
+	void* data = LockResource(handle);
+	//サイズ取得
+	size_t size = SizeofResource(nullptr, rsc);
+
+	auto hr = D3DSetBlobPart(data, size, D3D_BLOB_PART::D3D_BLOB_PRIVATE_DATA, 0, data, size, blob);
+	if (FAILED(hr))
+	{
+		int n = 0;
 	}
 
 	return hr;

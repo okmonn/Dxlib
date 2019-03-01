@@ -13,13 +13,25 @@ public:
 	~Root();
 
 	// 頂点シェーダコンパイル
-	void Vertex(const std::string& fileName, const std::string& func = "VS", const std::string& ver = "vs_5_1");
+	void Vertex(const std::string& fileName, const std::string& func, const std::string& ver);
 	// ジオメトリーシェーダコンパイル
-	void Geometry(const std::string& fileName, const std::string& func = "GS", const std::string& ver = "gs_5_1");
+	void Geometry(const std::string& fileName, const std::string& func, const std::string& ver);
 	// ピクセルシェーダコンパイル
-	void Pixel(const std::string& fileName, const std::string& func = "PS", const std::string& ver = "ps_5_1");
+	void Pixel(const std::string& fileName, const std::string& func, const std::string& ver);
 	// コンピュートシェーダコンパイル
-	void Compute(const std::string& fileName, const std::string& func = "CS", const std::string& ver = "cs_5_1");
+	void Compute(const std::string& fileName, const std::string& func, const std::string& ver);
+
+	// .cso読み込み
+	void Vertex(const std::string& fileName);
+	void Geometry(const std::string& fileName);
+	void Pixel(const std::string& fileName);
+	void Compute(const std::string& fileName);
+
+	// リソース読み込み
+	void Vertex(const int& id);
+	void Geometry(const int& id);
+	void Pixel(const int& id);
+	void Compute(const int& id);
 
 	// ルートシグネチャ取得
 	ID3D12RootSignature* Get(void) const;
@@ -43,6 +55,9 @@ private:
 
 	// .cso読み込み
 	long Load(const std::string& fileName, ID3DBlob** blob);
+
+	// リソース読み込み
+	long Read(const int& id, ID3DBlob** blob);
 
 	// ルート情報取得
 	long RootInfo(ID3DBlob* blob);

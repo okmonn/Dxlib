@@ -22,6 +22,21 @@ Compute::Compute(const std::string& fileName, const uint& num) :
 		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
 }
 
+// コンストラクタ
+Compute::Compute(const int& id, const uint& num) :
+	heap(nullptr)
+{
+	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	list = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	fence = std::make_unique<Fence>(queue);
+	root = std::make_shared<Root>();
+	root->Compute(id);
+	pipe = std::make_unique<Pipe>(root);
+
+	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
+}
+
 // デストラクタ
 Compute::~Compute()
 {
@@ -146,5 +161,4 @@ void Compute::UpData(const std::string& name, std::vector<T>& output)
 	uint size = uint(rsc[name]->GetDesc().Width / sizeof(T));
 	output.assign((T*)data[name], (T*)data[name] + size);
 }
-
 template void Compute::UpData<float>(const std::string&name, std::vector<float>& output);

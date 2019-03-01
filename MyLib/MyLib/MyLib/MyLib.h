@@ -77,7 +77,8 @@ private:
 	void Init(void);
 
 	// ルートのインスタンス
-	void RootSignature(const std::string& name, const std::initializer_list<std::string>& fileName);
+	template <typename T>
+	void RootSignature(const std::string& name, const std::initializer_list<T>& id);
 
 	// パイプのインスタンス
 	void PipeLine(const std::string& name, const std::string& root, 

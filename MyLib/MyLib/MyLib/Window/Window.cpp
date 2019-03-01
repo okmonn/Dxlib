@@ -76,8 +76,8 @@ int Window::CreateWnd(const Vec2& pos, const Vec2& size, void* parent)
 	wnd.cbSize        = sizeof(WNDCLASSEX);
 	wnd.hbrBackground = CreateSolidBrush(COLOR_APPWORKSPACE);
 	wnd.hCursor       = LoadCursor(nullptr, IDC_ARROW);
-	wnd.hIcon         = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(ICON_ID));
-	wnd.hIconSm       = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(ICON_ID));
+	wnd.hIcon         = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(AVICII));
+	wnd.hIconSm       = LoadIcon(GetModuleHandle(0), MAKEINTRESOURCE(AVICII));
 	wnd.hInstance     = GetModuleHandle(0);
 	wnd.lpfnWndProc   = WNDPROC(WindowProc);
 	wnd.lpszClassName = _T("‚¨‚©‚à‚ñ");

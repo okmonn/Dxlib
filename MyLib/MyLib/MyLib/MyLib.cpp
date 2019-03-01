@@ -10,6 +10,7 @@
 #include "Root/Root.h"
 #include "Pipe/Pipe.h"
 #include "etc/Release.h"
+#include "../resource.h"
 #include <Windows.h>
 
 #pragma comment(lib, "d3d12.lib")
@@ -153,16 +154,16 @@ void MyLib::Init(void)
 }
 
 // ルートのインスタンス
-void MyLib::RootSignature(const std::string& name, const std::initializer_list<std::string>& fileName)
+template <typename T>
+void MyLib::RootSignature(const std::string& name, const std::initializer_list<T>& id)
 {
 	if (root.find(name) != root.end())
 	{
 		return;
 	}
-
 	root[name] = std::make_shared<Root>();
-	auto itr = fileName.begin();
-	while (itr != fileName.end())
+	auto itr = id.begin();
+	while (itr != id.end())
 	{
 		root[name]->Vertex(*itr);
 		++itr;
@@ -170,6 +171,8 @@ void MyLib::RootSignature(const std::string& name, const std::initializer_list<s
 		++itr;
 	}
 }
+template void MyLib::RootSignature(const std::string& name, const std::initializer_list<int>& id);
+template void MyLib::RootSignature(const std::string& name, const std::initializer_list<std::string>& id);
 
 // パイプのインスタンス
 void MyLib::PipeLine(const std::string & name, const std::string & rootName, 
@@ -200,12 +203,14 @@ void MyLib::Instance(const Vec2& pos, void* parent)
 	render = std::make_unique<Render>(swap);
 	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
 
-	RootSignature("primitive", { "Shader/PrimVS.cso", "Shader/PrimPS.cso" });
+	//RootSignature("primitive", { "Shader/PrimVS.cso", "Shader/PrimPS.cso" });
+	RootSignature("primitive", { PRIM_VS, PRIM_PS });
 	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
 	PipeLine("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0 }, false);
 	PipeLine("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0 }, false);
 
-	RootSignature("texture", { "Shader/TexVS.cso", "Shader/TexPS.cso" });
+	//RootSignature("texture", { "Shader/TexVS.cso", "Shader/TexPS.cso" });
+	RootSignature("texture", { TEX_VS, TEX_PS });
 	PipeLine("texture", "texture", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 }
 
