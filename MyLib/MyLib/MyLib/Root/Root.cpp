@@ -2,16 +2,11 @@
 #include "Root.h"
 #include "../etc/Func.h"
 #include "../etc/Release.h"
-#include <iostream>
 
 // コンストラクタ
 Root::Root() : 
 	root(nullptr), sig(nullptr), vertex(nullptr), geometry(nullptr), pixel(nullptr), compute(nullptr)
 {
-	vBlob = {};
-	gBlob = {};
-	pBlob = {};
-	cBlob = {};
 }
 
 // デストラクタ
@@ -31,19 +26,17 @@ void Root::Vertex(const std::string& fileName, const std::string& func, const st
 	if (fileName.find(".hlsl") != std::string::npos)
 	{
 		Compile(fileName, func, ver, &vertex);
-		RootInfo(vertex);
 	}
 	else if (fileName.find(".cso") != std::string::npos)
 	{
-		vBlob = std::make_shared<Blob>();
-		Load(fileName, vBlob);
-		RootInfo(vBlob);
+		Load(fileName, &vertex);
 	}
 	else
 	{
 
 	}
 	
+	RootInfo(vertex);
 	CreateRoot();
 }
 
@@ -56,8 +49,7 @@ void Root::Geometry(const std::string & fileName, const std::string & func, cons
 	}
 	else if (fileName.find(".cso") != std::string::npos)
 	{
-		gBlob = std::make_shared<Blob>();
-		Load(fileName, gBlob);
+		Load(fileName, &geometry);
 	}
 	else
 	{
@@ -74,8 +66,7 @@ void Root::Pixel(const std::string & fileName, const std::string & func, const s
 	}
 	else if (fileName.find(".cso") != std::string::npos)
 	{
-		pBlob = std::make_shared<Blob>();
-		Load(fileName, pBlob);
+		Load(fileName, &pixel);
 	}
 	else
 	{
@@ -89,19 +80,17 @@ void Root::Compute(const std::string & fileName, const std::string & func, const
 	if (fileName.find(".hlsl") != std::string::npos)
 	{
 		Compile(fileName, func, ver, &compute);
-		RootInfo(compute);
 	}
 	else if (fileName.find(".cso") != std::string::npos)
 	{
-		cBlob = std::make_shared<Blob>();
-		Load(fileName, cBlob);
-		RootInfo(cBlob);
+		Load(fileName, &compute);
 	}
 	else
 	{
 		
 	}
 	
+	RootInfo(compute);
 	CreateRoot();
 }
 
@@ -120,45 +109,22 @@ long Root::Compile(const std::string& fileName, const std::string& func, const s
 }
 
 // .cso読み込み
-int Root::Load(const std::string& fileName, std::shared_ptr<Blob> blob)
+long Root::Load(const std::string& fileName, ID3DBlob** blob)
 {
-	FILE* file = nullptr;
-	if (fopen_s(&file, fileName.c_str(), "rb") != 0)
-	{
-		func::DebugLog(".cso読み込み：失敗");
-		return -1;
-	}
-
-	//終端に移動
-	fseek(file, 0, SEEK_END);
-	//サイズ取得
-	blob->data.resize(ftell(file));
-	blob->size = blob->data.size();
-	//先頭に移動
-	fseek(file, 0, SEEK_SET);
-	fread(blob->data.data(), sizeof(blob->data[0]) * blob->data.size(), 1, file);
-
-	fclose(file);
-
-	return 0;
-}
-
-// ルート情報取得
-long Root::RootInfo(ID3DBlob* blob)
-{
-	auto hr = D3DGetBlobPart(blob->GetBufferPointer(), blob->GetBufferSize(), D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
+	auto pass = func::ChangeCode(fileName);
+	auto hr = D3DReadFileToBlob(pass.c_str(), blob);
 	if (FAILED(hr))
 	{
-		func::DebugLog("ルートシグネチャ情報取得：失敗");
+		func::DebugLog(".cso読み込み：失敗");
 	}
 
 	return hr;
 }
 
 // ルート情報取得
-long Root::RootInfo(std::shared_ptr<Blob> blob)
+long Root::RootInfo(ID3DBlob* blob)
 {
-	auto hr = D3DGetBlobPart(blob->data.data(), blob->size, D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
+	auto hr = D3DGetBlobPart(blob->GetBufferPointer(), blob->GetBufferSize(), D3D_BLOB_PART::D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
 	if (FAILED(hr))
 	{
 		func::DebugLog("ルートシグネチャ情報取得：失敗");
@@ -192,25 +158,25 @@ ID3DBlob* Root::GetSig(void) const
 }
 
 // 頂点シェーダ取得
-std::tuple<ID3DBlob*, std::shared_ptr<Blob>> Root::GetVertex(void) const
+ID3DBlob* Root::GetVertex(void) const
 {
-	return std::forward_as_tuple(vertex, vBlob);
+	return vertex;
 }
 
 // ジオメトリーシェーダ取得
-std::tuple<ID3DBlob*, std::shared_ptr<Blob>> Root::GetGeometry(void) const
+ID3DBlob* Root::GetGeometry(void) const
 {
-	return std::forward_as_tuple(geometry, gBlob);
+	return geometry;
 }
 
 // ピクセルシェーダ取得
-std::tuple<ID3DBlob*, std::shared_ptr<Blob>> Root::GetPixel(void) const
+ID3DBlob* Root::GetPixel(void) const
 {
-	return std::forward_as_tuple(pixel, pBlob);
+	return pixel;
 }
 
 // コンピュートシェーダ取得
-std::tuple<ID3DBlob*, std::shared_ptr<Blob>> Root::GetCompute(void) const
+ID3DBlob* Root::GetCompute(void) const
 {
-	return std::forward_as_tuple(compute, cBlob);
+	return compute;
 }

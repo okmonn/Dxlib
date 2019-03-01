@@ -1,17 +1,7 @@
 #pragma once
 #include "../etc/Define.h"
-#include <tuple>
 #include <string>
 #include <vector>
-#include <memory>
-
-// シェーダ情報
-struct Blob {
-	//データ
-	std::vector<uchar>data;
-	//サイズ
-	size_t size;
-};
 
 // ルートシグネチャ
 class Root
@@ -36,13 +26,13 @@ public:
 	// シグネチャ取得
 	ID3DBlob* GetSig(void) const;
 	// 頂点シェーダ取得
-	std::tuple<ID3DBlob*, std::shared_ptr<Blob>> GetVertex(void) const;
+	ID3DBlob* GetVertex(void) const;
 	// ジオメトリーシェーダ取得
-	std::tuple<ID3DBlob*, std::shared_ptr<Blob>> GetGeometry(void) const;
+	ID3DBlob* GetGeometry(void) const;
 	// ピクセルシェーダ取得
-	std::tuple<ID3DBlob*, std::shared_ptr<Blob>> GetPixel(void) const;
+	ID3DBlob* GetPixel(void) const;
 	// コンピュートシェーダ取得
-	std::tuple<ID3DBlob*, std::shared_ptr<Blob>> GetCompute(void) const;
+	ID3DBlob* GetCompute(void) const;
 
 private:
 	Root(const Root&) = delete;
@@ -52,11 +42,10 @@ private:
 	long Compile(const std::string& fileName, const std::string& func, const std::string& ver, ID3DBlob** blob);
 
 	// .cso読み込み
-	int Load(const std::string& fileName, std::shared_ptr<Blob>blob);
+	long Load(const std::string& fileName, ID3DBlob** blob);
 
 	// ルート情報取得
 	long RootInfo(ID3DBlob* blob);
-	long RootInfo(std::shared_ptr<Blob> blob);
 
 	// ルートシグネチャ生成
 	long CreateRoot(void);
@@ -70,17 +59,13 @@ private:
 
 	// 頂点シェーダ
 	ID3DBlob* vertex;
-	std::shared_ptr<Blob>vBlob;
 
 	// ジオメトリーシェーダー
 	ID3DBlob* geometry;
-	std::shared_ptr<Blob>gBlob;
 
 	// ピクセルシェーダ
 	ID3DBlob* pixel;
-	std::shared_ptr<Blob>pBlob;
 
 	// コンピュートシェーダ
 	ID3DBlob* compute;
-	std::shared_ptr<Blob>cBlob;
 };
