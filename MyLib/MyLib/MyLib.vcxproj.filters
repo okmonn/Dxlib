@@ -19,9 +19,6 @@
     <Filter Include="Window">
       <UniqueIdentifier>{c5e52749-0151-442c-a8d0-3626fc1d3c83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Window\Icon">
-      <UniqueIdentifier>{d2367287-ecb6-4af0-a9da-4cbe4170fae7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="etc">
       <UniqueIdentifier>{c445565f-0012-4316-9ef6-ab3466c4602a}</UniqueIdentifier>
     </Filter>
@@ -105,6 +102,12 @@
     </Filter>
     <Filter Include="リソース ファイル\Primitive">
       <UniqueIdentifier>{ef27bffc-6c52-465b-95a7-e7d8002f2e68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Icon">
+      <UniqueIdentifier>{cdc621fc-de70-480a-b714-acf05adff18d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Compute">
+      <UniqueIdentifier>{025296fe-2676-46cb-bbe5-2095813f75bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,9 +200,6 @@
     <ClInclude Include="MyLib\Window\Window.h">
       <Filter>Window</Filter>
     </ClInclude>
-    <ClInclude Include="MyLib\Window\Icon.h">
-      <Filter>Window\Icon</Filter>
-    </ClInclude>
     <ClInclude Include="MyLib\etc\Define.h">
       <Filter>etc</Filter>
     </ClInclude>
@@ -290,16 +290,11 @@
     <ClInclude Include="MyLib\Sound\Delay.h">
       <Filter>Sound\Delay</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MyLib\Window\Icon.rc">
-      <Filter>Window\Icon</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="MyLib\Shader\Effector.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="MyLib\Shader\Texture.hlsl">
       <Filter>リソース ファイル\Texture</Filter>
     </FxCompile>
@@ -318,5 +313,18 @@
     <FxCompile Include="MyLib\Shader\PrimPS.hlsl">
       <Filter>リソース ファイル\Primitive</Filter>
     </FxCompile>
+    <FxCompile Include="MyLib\Shader\Effector.hlsl">
+      <Filter>リソース ファイル\Compute</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyLib.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon\avicii.ico">
+      <Filter>リソース ファイル\Icon</Filter>
+    </Image>
   </ItemGroup>
 </Project>

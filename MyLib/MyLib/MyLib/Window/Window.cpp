@@ -1,6 +1,6 @@
 #include "Window.h"
-#include "Icon.h"
 #include "../etc/Func.h"
+#include "../../resource.h"
 #include <Windows.h>
 #include <tchar.h>
 

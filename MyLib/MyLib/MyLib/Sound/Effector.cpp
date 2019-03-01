@@ -11,7 +11,7 @@
 Effector::Effector(Sound* sound) : 
 	sound(sound)
 {
-	compute = std::make_unique<Compute>("MyLib/Shader/Effector.hlsl", RSC_MAX);
+	compute = std::make_unique<Compute>("Shader/Effector.cso", RSC_MAX);
 	param = {};
 
 	Init();

@@ -200,12 +200,12 @@ void MyLib::Instance(const Vec2& pos, void* parent)
 	render = std::make_unique<Render>(swap);
 	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
 
-	RootSignature("primitive", { "Mylib/Shader/PrimVS.hlsl", "Mylib/Shader/PrimPS.hlsl" });
+	RootSignature("primitive", { "Shader/PrimVS.cso", "Shader/PrimPS.cso" });
 	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
 	PipeLine("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0 }, false);
 	PipeLine("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0 }, false);
 
-	RootSignature("texture", { "MyLib/Shader/TexVS.hlsl", "MyLib/Shader/TexPS.hlsl" });
+	RootSignature("texture", { "Shader/TexVS.cso", "Shader/TexPS.cso" });
 	PipeLine("texture", "texture", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
 }
 

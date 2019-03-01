@@ -34,30 +34,30 @@ RWStructuredBuffer<float> output : register(u1);
 cbuffer Info : register(b0)
 {
 	//サンプリング周波数
-    uint sample;
+	uint sample;
 	//量子化ビット数
-    uint bit;
+	uint bit;
 	//チャンネル数
-    uint channel;
+	uint channel;
 }
 
 // パラメータ
 cbuffer Param : register(b1)
 {
 	//閾値
-    float threshold;
+	float threshold;
 	//レシオ
-    float ratio;
+	float ratio;
 	//ディストーション
 	float distortion;
 	//変調深度
-    float depth;
+	float depth;
 	//変調周波数
-    float rate;
+	float rate;
 	//読み込みインデックス
-    float index;
-    //パン
-    float pan;
+	float index;
+	//パン
+	float pan;
 	//音量
 	float volume;
 };
@@ -99,46 +99,46 @@ void Distortion(uint id)
 // トレモロ
 void Tremor(uint id)
 {
-    //変調信号
-    float signal = 1.0f + depth * sin(2.0f * PI * rate * (index + id) / sample);
+	//変調信号
+	float signal = 1.0f + depth * sin(2.0f * PI * rate * (index + id) / sample);
 
-    output[id] *= signal;
+	output[id] *= signal;
 }
 
 // パンニング
 void Panning(uint id)
 {
-    float tmp = pan / 90.0f;
+	float tmp = pan / 90.0f;
 
-    if (id % channel == 0)
-    {
-        //左
-        output[id] *= 1.0f - tmp;
-    }
-    else
-    {
-        //右
-        output[id] *= 1.0f + tmp;
-    }
+	if (id % channel == 0)
+	{
+		//左
+		output[id] *= 1.0f - tmp;
+	}
+	else
+	{
+		//右
+		output[id] *= 1.0f + tmp;
+	}
 }
 
 // 音量調節
 void Volume(uint id)
 {
-    output[id] *= volume;
+	output[id] *= volume;
 }
 
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void CS(uint3 gID : SV_GroupID, uint3 gtID : SV_GroupThreadID, uint3 disID : SV_DispatchThreadID)
 {
-    output[gID.x] = input[gID.x];
+	output[gID.x] = input[gID.x];
 
-    Compressor(gID.x);
-    Distortion(gID.x);
-    Tremor(gID.x);
-    Panning(gID.x);
-    Volume(gID.x);
+	Compressor(gID.x);
+	Distortion(gID.x);
+	Tremor(gID.x);
+	Panning(gID.x);
+	Volume(gID.x);
 
-    AllMemoryBarrierWithGroupSync();
+	//AllMemoryBarrierWithGroupSync();
 }

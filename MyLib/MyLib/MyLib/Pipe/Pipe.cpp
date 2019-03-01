@@ -78,23 +78,56 @@ long Pipe::Graphic(const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, con
 	desc.DepthStencilState.BackFace.StencilPassOp       = D3D12_STENCIL_OP::D3D12_STENCIL_OP_DECR;
 	desc.DepthStencilState.BackFace.StencilFunc         = D3D12_COMPARISON_FUNC::D3D12_COMPARISON_FUNC_ALWAYS;
 	desc.DSVFormat                                      = DXGI_FORMAT::DXGI_FORMAT_D32_FLOAT;
-	if (root.lock()->GetGeometry() != nullptr)
+	
+	auto blob1 = std::get<0>(root.lock()->GetGeometry());
+	auto blob2 = std::get<1>(root.lock()->GetGeometry());
+	if (blob1 != nullptr)
 	{
-		desc.GS.pShaderBytecode = root.lock()->GetGeometry()->GetBufferPointer();
-		desc.GS.BytecodeLength  = root.lock()->GetGeometry()->GetBufferSize();
+		desc.GS.pShaderBytecode = blob1->GetBufferPointer();
+		desc.GS.BytecodeLength  = blob1->GetBufferSize();
+	}
+	else
+	{
+		if (blob2 != nullptr)
+		{
+			desc.GS.pShaderBytecode = blob2->data.data();
+			desc.GS.BytecodeLength  = blob2->size;
+		}
 	}
 	desc.InputLayout           = { &input, static_cast<unsigned int>(num) };
 	desc.NumRenderTargets      = 1;
 	desc.PrimitiveTopologyType = type;
 	desc.pRootSignature        = root.lock()->Get();
-	desc.PS.pShaderBytecode    = root.lock()->GetPixel()->GetBufferPointer();
-	desc.PS.BytecodeLength     = root.lock()->GetPixel()->GetBufferSize();
+
+	blob1 = std::get<0>(root.lock()->GetPixel());
+	blob2 = std::get<1>(root.lock()->GetPixel());
+	if (blob1 != nullptr)
+	{
+		desc.PS.pShaderBytecode = blob1->GetBufferPointer();
+		desc.PS.BytecodeLength  = blob1->GetBufferSize();
+	}
+	else
+	{
+		desc.PS.pShaderBytecode = blob2->data.data();
+		desc.PS.BytecodeLength  = blob2->size;
+	}
 	desc.RasterizerState       = rasterizer;
 	desc.RTVFormats[0]         = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.SampleMask            = UINT_MAX;
 	desc.SampleDesc            = { 1, 0 };
-	desc.VS.pShaderBytecode    = root.lock()->GetVertex()->GetBufferPointer();
-	desc.VS.BytecodeLength     = root.lock()->GetVertex()->GetBufferSize();
+
+	blob1 = std::get<0>(root.lock()->GetVertex());
+	blob2 = std::get<1>(root.lock()->GetVertex());
+	if (blob1 != nullptr)
+	{
+		desc.VS.pShaderBytecode = blob1->GetBufferPointer();
+		desc.VS.BytecodeLength  = blob1->GetBufferSize();
+	}
+	else
+	{
+		desc.VS.pShaderBytecode = blob2->data.data();
+		desc.VS.BytecodeLength  = blob2->size;
+	}
 
 	auto hr = Dev->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&pipe));
 	if (FAILED(hr))
@@ -109,8 +142,18 @@ long Pipe::Graphic(const D3D12_INPUT_ELEMENT_DESC& input, const size_t& num, con
 long Pipe::Compute(void)
 {
 	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
-	desc.CS.pShaderBytecode = root.lock()->GetCompute()->GetBufferPointer();
-	desc.CS.BytecodeLength  = root.lock()->GetCompute()->GetBufferSize();
+	auto blob1 = std::get<0>(root.lock()->GetCompute());
+	auto blob2 = std::get<1>(root.lock()->GetCompute());
+	if (blob1 != nullptr)
+	{
+		desc.CS.pShaderBytecode = blob1->GetBufferPointer();
+		desc.CS.BytecodeLength  = blob1->GetBufferSize();
+	}
+	else
+	{
+		desc.CS.pShaderBytecode = blob2->data.data();
+		desc.CS.BytecodeLength  = blob2->size;
+	}
 	desc.Flags              = D3D12_PIPELINE_STATE_FLAGS::D3D12_PIPELINE_STATE_FLAG_NONE;
 	desc.pRootSignature     = root.lock()->Get();
 
