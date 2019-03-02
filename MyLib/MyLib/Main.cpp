@@ -5,13 +5,10 @@ int main()
 	const Vec2 winSize = { 640, 480 };
 	std::shared_ptr<MyLib>lib;
 	lib = std::make_shared<MyLib>(winSize);
-	std::shared_ptr<MyLib>lib2;
-	lib2 = std::make_shared<MyLib>(lib, winSize);
 
 	Texture tex("Š®¬.png");
 	
-	Sound sound("‚¦‚ê‚­‚Æ‚è‚Á‚­‚¦‚ñ‚¶‚¥‚¤.wav");
-	sound.Play(false);
+	Sound sound;
 	
 	bool stop = false;
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
@@ -19,6 +16,13 @@ int main()
 		lib->Clear();
 		lib->Draw(tex, 1.0f);
 		lib->Execution();
+		
+		auto hr = lib->GetDropFilePass();
+		if (hr.size() > 0)
+		{
+			sound.Load(hr);
+			sound.Play(false);
+		}
 
 		if (KEY.Trigger(KeyCode::Space))
 		{

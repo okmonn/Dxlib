@@ -1,5 +1,6 @@
 #include "Mixer.h"
 #include <MyLib.h>
+#include <optional>
 
 #pragma comment(lib, "MyLib.lib")
 
@@ -20,8 +21,13 @@ Mixer::~Mixer()
 // ˆ—
 void Mixer::Run(void)
 {
+	Sound sound;
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
 	{
-
+		if (lib->GetDropFilePass() != std::nullopt)
+		{
+			sound.Load(lib->GetDropFilePass().value());
+			sound.Play(false);
+		}
 	}
 }

@@ -1,10 +1,10 @@
 #include "Window.h"
 #include "../etc/Func.h"
-#include "../../resource.h"
+#include "../resource.h"
 #include <Windows.h>
 #include <tchar.h>
 
-std::optional<std::string> Window::dropFile = std::nullopt;
+std::optional<std::wstring> Window::dropFile = std::nullopt;
 
 // コンストラクタ
 Window::Window(const Vec2& pos, const Vec2& size, void* parent) : 
@@ -46,18 +46,19 @@ long __stdcall Window::WindowProc(void * hWnd, uint message, uint wParam, long l
 		return 0;
 	case WM_DROPFILES:
 		//ファイル数取得
-		fileNum = DragQueryFileA(HDROP(wParam), -1, nullptr, 0);
+		fileNum = DragQueryFile(HDROP(wParam), -1, nullptr, 0);
 		if (fileNum > 1)
 		{
 			break;
 		}
 
-		size = DragQueryFileA(HDROP(wParam), 0, nullptr, 0);
+		size = DragQueryFile(HDROP(wParam), 0, nullptr, 0);
 		drop = HDROP(wParam);
+		dropFile = std::wstring();
 		dropFile->resize(size);
 
 		//ファイルパス取得
-		DragQueryFileA(drop, 0, &dropFile->at(0), sizeof(dropFile->at(0)) * size);
+		DragQueryFile(drop, 0, &dropFile->at(0), sizeof(dropFile->at(0)) * size);
 
 		//ウィンドウをアクティブにする
 		SetForegroundWindow(HWND(hWnd));
@@ -115,9 +116,9 @@ void * Window::Get(void) const
 }
 
 // ドロップファイル取得
-std::optional<std::string> Window::GetDrop(void)
+std::optional<std::wstring> Window::GetDrop(void)
 {
 	auto tmp = dropFile;
-	tmp = std::nullopt;
+	dropFile = std::nullopt;
 	return tmp;
 }

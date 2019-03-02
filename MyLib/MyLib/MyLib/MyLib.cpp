@@ -10,7 +10,7 @@
 #include "Root/Root.h"
 #include "Pipe/Pipe.h"
 #include "etc/Release.h"
-#include "../resource.h"
+#include "resource.h"
 #include <Windows.h>
 
 #pragma comment(lib, "d3d12.lib")
@@ -90,12 +90,13 @@ inline void MyLib::ChangeTitle(const std::string & title)
 // ドロップされたファイルパス取得
 std::string MyLib::GetDropFilePass(void)
 {
-	if (win->GetDrop() == std::nullopt)
+	auto hr = win->GetDrop();
+	if (hr == std::nullopt)
 	{
 		return std::string();
 	}
 
-	return win->GetDrop().value();
+	return func::ChangeCode(hr.value());
 }
 
 // ウィンドウ座標取得

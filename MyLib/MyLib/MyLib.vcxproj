@@ -32,20 +32,20 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -88,6 +88,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(SolutionDir)$(ProjectName)\lib\$(PlatformTarget)\$(Configuration)\%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -103,6 +106,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(SolutionDir)$(ProjectName)\lib\$(PlatformTarget)\$(Configuration)\%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -123,6 +129,9 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(SolutionDir)$(ProjectName)\lib\$(PlatformTarget)\$(Configuration)\%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -143,10 +152,13 @@
       <Command>
       </Command>
     </PreBuildEvent>
+    <ResourceCompile>
+      <ResourceOutputFileName>$(SolutionDir)$(ProjectName)\lib\$(PlatformTarget)\$(Configuration)\%(Filename).res</ResourceOutputFileName>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -197,6 +209,7 @@
     <ClInclude Include="MyLib\Primitive\Primitive.h" />
     <ClInclude Include="MyLib\Queue\Queue.h" />
     <ClInclude Include="MyLib\Render\Render.h" />
+    <ClInclude Include="MyLib\resource.h" />
     <ClInclude Include="MyLib\Root\Root.h" />
     <ClInclude Include="MyLib\Sound\Delay.h" />
     <ClInclude Include="MyLib\Sound\Effector.h" />
@@ -211,7 +224,6 @@
     <ClInclude Include="MyLib\Texture\Texture.h" />
     <ClInclude Include="MyLib\Texture\WICTextureLoader12.h" />
     <ClInclude Include="MyLib\Window\Window.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="MyLib\Shader\Effector.hlsl">
@@ -378,9 +390,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MyLib.rc" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Icon\avicii.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +398,9 @@
     <None Include="Shader\PrimVS.cso" />
     <None Include="Shader\TexPS.cso" />
     <None Include="Shader\TexVS.cso" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyLib\MyLib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

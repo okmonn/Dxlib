@@ -293,7 +293,7 @@
     <ClInclude Include="MyLib\Sound\Delay.h">
       <Filter>Sound\Delay</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
+    <ClInclude Include="MyLib\resource.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -321,11 +321,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="MyLib.rc">
-      <Filter>リソース ファイル</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Icon\avicii.ico">
       <Filter>リソース ファイル\Icon</Filter>
     </Image>
@@ -346,5 +341,10 @@
     <None Include="Shader\TexVS.cso">
       <Filter>リソース ファイル\cso</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyLib\MyLib.rc">
+      <Filter>リソース ファイル</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

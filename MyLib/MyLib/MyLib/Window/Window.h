@@ -15,7 +15,7 @@ public:
 	// ハンドル取得
 	void* Get(void) const;
 	// ドロップファイル取得
-	std::optional<std::string> GetDrop(void);
+	std::optional<std::wstring> GetDrop(void);
 
 private:
 	Window(const Window&) = delete;
@@ -42,5 +42,5 @@ private:
 	const wchar_t* name;
 
 	// ドロップファイル名
-	static std::optional<std::string>dropFile;
+	static std::optional<std::wstring>dropFile;
 };

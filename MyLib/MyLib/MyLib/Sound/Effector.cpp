@@ -1,8 +1,8 @@
 #include "Effector.h"
 #include "Sound.h"
 #include "../Compute/Compute.h"
-#include "../../resource.h"
 #include "../etc/Func.h"
+#include "../resource.h"
 #include <minmax.h>
 
 // ƒŠƒ\[ƒX”

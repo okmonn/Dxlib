@@ -1,6 +1,5 @@
 #include <d3dcompiler.h>
 #include "Root.h"
-#include "../../resource.h"
 #include "../etc/Func.h"
 #include "../etc/Release.h"
 
