@@ -16,6 +16,12 @@
     <Filter Include="Mixer">
       <UniqueIdentifier>{b747f77d-b19a-40ae-b8f6-775e0d2c3259}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DFT">
+      <UniqueIdentifier>{d483816c-c5eb-48ed-8b3e-e188e77ef60b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Waves">
+      <UniqueIdentifier>{7b6cc64f-2c1e-4da3-b96d-8d17d4c70e56}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -24,10 +30,27 @@
     <ClCompile Include="Mixer\Mixer.cpp">
       <Filter>Mixer</Filter>
     </ClCompile>
+    <ClCompile Include="Waves\Waves.cpp">
+      <Filter>Waves</Filter>
+    </ClCompile>
+    <ClCompile Include="DFT\DFT.cpp">
+      <Filter>DFT</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mixer\Mixer.h">
       <Filter>Mixer</Filter>
     </ClInclude>
+    <ClInclude Include="Waves\Waves.h">
+      <Filter>Waves</Filter>
+    </ClInclude>
+    <ClInclude Include="DFT\DFT.h">
+      <Filter>DFT</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DFT\DFT.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

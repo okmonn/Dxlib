@@ -40,7 +40,7 @@ public:
 	~MyLib();
 
 	// タイトル名変更
-	inline void ChangeTitle(const std::string& title);
+	void ChangeTitle(const std::string& title);
 
 	// ドロップされたファイルパス取得
 	std::string GetDropFilePass(void);

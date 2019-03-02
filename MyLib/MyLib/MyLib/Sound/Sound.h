@@ -68,7 +68,7 @@ public:
 	// 読み込みインデックス取得
 	uint GetRead(void) const;
 	// 現在の波形データ取得
-	inline std::vector<float> GetWave(void) const;
+	std::vector<float> GetWave(void) const;
 
 	// 演算子オーバーロード
 	void operator=(const Sound& sound);

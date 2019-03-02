@@ -82,7 +82,7 @@ MyLib::~MyLib()
 }
 
 // タイトル名変更
-inline void MyLib::ChangeTitle(const std::string & title)
+void MyLib::ChangeTitle(const std::string & title)
 {
 	SetWindowTextA(HWND(win->Get()), title.c_str());
 }
@@ -111,7 +111,7 @@ Vec2 MyLib::GetWinPos(void)
 Vec2 MyLib::GetWinSize(void)
 {
 	RECT rect{};
-	GetWindowRect(HWND(win->Get()), &rect);
+	GetClientRect(HWND(win->Get()), &rect);
 	return Vec2(int(rect.right), int(rect.bottom));
 }
 

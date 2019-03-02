@@ -273,7 +273,7 @@ uint Sound::GetRead(void) const
 }
 
 // 現在の波形データ取得
-inline std::vector<float> Sound::GetWave(void) const
+std::vector<float> Sound::GetWave(void) const
 {
 	return wave[index];
 }

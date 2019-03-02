@@ -15,7 +15,7 @@ namespace func
 	inline constexpr float Rad(const float& angle);
 
 	// メインディスプレイ解像度取得
-	inline Vec2 GetDisplayResolution(void);
+	Vec2 GetDisplayResolution(void);
 
 	// 文字コード変換
 	std::wstring ChangeCode(const std::string& code);
@@ -50,8 +50,8 @@ namespace func
 	std::vector<float> IFFT(const std::vector<float>& real, const std::vector<float>& imag, const unsigned int& outNum);
 
 	// 振幅取得
-	inline float Amplitude(const float& real, const float& imag);
+	float Amplitude(const float& real, const float& imag);
 
 	// 位相取得
-	inline float Phase(const float& real, const float& imag);
+	float Phase(const float& real, const float& imag);
 }

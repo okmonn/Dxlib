@@ -16,6 +16,7 @@ class Compute
 {
 public:
 	// コンストラクタ
+	Compute(const std::string& fileName, const std::string& func, const std::string& ver, const uint& num);
 	Compute(const std::string& fileName, const uint& num);
 	Compute(const int& id, const uint& num);
 	// デストラクタ

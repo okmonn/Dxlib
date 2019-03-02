@@ -23,7 +23,7 @@ inline constexpr float func::Rad(const float & angle)
 }
 
 // メインディスプレイ解像度取得
-inline Vec2 func::GetDisplayResolution(void)
+Vec2 func::GetDisplayResolution(void)
 {
 	return Vec2(GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
 }
@@ -291,13 +291,13 @@ std::vector<float> func::IFFT(const std::vector<float>& real, const std::vector<
 }
 
 // 振幅取得
-inline float func::Amplitude(const float & real, const float & imag)
+float func::Amplitude(const float & real, const float & imag)
 {
 	return std::sqrt(real * real + imag * imag);
 }
 
 // 位相取得
-inline float func::Phase(const float & real, const float & imag)
+float func::Phase(const float & real, const float & imag)
 {
 	return std::atan2(imag, real);
 }

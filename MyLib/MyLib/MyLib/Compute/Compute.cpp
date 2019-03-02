@@ -8,6 +8,21 @@
 #include "../etc/Release.h"
 
 // コンストラクタ
+Compute::Compute(const std::string& fileName, const std::string& func, const std::string& ver, const uint& num) : 
+	heap(nullptr)
+{
+	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	list  = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	fence = std::make_unique<Fence>(queue);
+	root  = std::make_shared<Root>();
+	root->Compute(fileName, func, ver);
+	pipe  = std::make_unique<Pipe>(root);
+
+	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
+}
+
+// コンストラクタ
 Compute::Compute(const std::string& fileName, const uint& num) : 
 	heap(nullptr)
 {

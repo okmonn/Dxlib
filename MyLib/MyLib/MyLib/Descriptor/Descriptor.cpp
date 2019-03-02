@@ -124,6 +124,11 @@ long Descriptor::Map(ID3D12Resource * rsc, void ** data)
 // アンマップ
 void Descriptor::UnMap(ID3D12Resource * rsc)
 {
+	if (rsc == nullptr)
+	{
+		return;
+	}
+
 	D3D12_RANGE range = { 0, 1 };
 	rsc->Unmap(0, &range);
 }
