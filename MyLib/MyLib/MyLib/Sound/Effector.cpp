@@ -37,6 +37,7 @@ void Effector::Init(void)
 void Effector::Execution(std::vector<float>& input)
 {
 	//C³
+	sound->comp.threshold = max(sound->comp.threshold, 0.01f);
 	sound->comp.ratio = max(sound->comp.ratio, 0.01f);
 	sound->comp.ratio = min(sound->comp.ratio, 1.0f);
 	sound->distortion = max(sound->distortion, 1.0f);

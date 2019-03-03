@@ -131,11 +131,17 @@
     <ClCompile Include="DFT\DFT.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mixer\Mixer.cpp" />
+    <ClCompile Include="Mouse\Mouse.cpp" />
+    <ClCompile Include="ParamMane\ParamMane.cpp" />
+    <ClCompile Include="Thumb\Thumb.cpp" />
     <ClCompile Include="Waves\Waves.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DFT\DFT.h" />
     <ClInclude Include="Mixer\Mixer.h" />
+    <ClInclude Include="Mouse\Mouse.h" />
+    <ClInclude Include="ParamMane\ParamMane.h" />
+    <ClInclude Include="Thumb\Thumb.h" />
     <ClInclude Include="Waves\Waves.h" />
   </ItemGroup>
   <ItemGroup>

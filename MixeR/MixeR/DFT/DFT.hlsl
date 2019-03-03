@@ -32,6 +32,9 @@ RWStructuredBuffer<float> imag  : register(u2);
 // —£Uƒt[ƒŠƒG•ÏŠ·
 void DFT(uint id)
 {
+    real[id] = 0.0f;
+    imag[id] = 0.0f;
+
     uint2 size;
     input.GetDimensions(size.x, size.y);
     for (uint i = 0; i < size.x; ++i)

@@ -22,6 +22,15 @@
     <Filter Include="Waves">
       <UniqueIdentifier>{7b6cc64f-2c1e-4da3-b96d-8d17d4c70e56}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mouse">
+      <UniqueIdentifier>{f0da2635-4048-47a3-8fca-e55607b69aac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thumb">
+      <UniqueIdentifier>{081e3f1b-7fce-4913-83ec-53487b3135a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ParamMane">
+      <UniqueIdentifier>{56f43097-fb57-4e0b-85c2-cb3f11fc2b6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -36,6 +45,15 @@
     <ClCompile Include="DFT\DFT.cpp">
       <Filter>DFT</Filter>
     </ClCompile>
+    <ClCompile Include="Mouse\Mouse.cpp">
+      <Filter>Mouse</Filter>
+    </ClCompile>
+    <ClCompile Include="Thumb\Thumb.cpp">
+      <Filter>Thumb</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamMane\ParamMane.cpp">
+      <Filter>ParamMane</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mixer\Mixer.h">
@@ -46,6 +64,15 @@
     </ClInclude>
     <ClInclude Include="DFT\DFT.h">
       <Filter>DFT</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse\Mouse.h">
+      <Filter>Mouse</Filter>
+    </ClInclude>
+    <ClInclude Include="Thumb\Thumb.h">
+      <Filter>Thumb</Filter>
+    </ClInclude>
+    <ClInclude Include="ParamMane\ParamMane.h">
+      <Filter>ParamMane</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
