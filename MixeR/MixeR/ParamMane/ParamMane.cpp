@@ -5,7 +5,7 @@
 
 // コンストラクタ
 ParamMane::ParamMane(std::weak_ptr<MyLib> lib, std::weak_ptr<Sound> sound, std::weak_ptr<Mouse> mouse) : 
-	lib(lib), sound(sound), mouse(mouse), old(-1.0f)
+	lib(lib), sound(sound), mouse(mouse), old(-1.0f), type(Type::low)
 {
 	Init();
 	InitFunc();
@@ -31,47 +31,90 @@ void ParamMane::SetParam(const std::string& name, const float& min, const float&
 void ParamMane::Init(void)
 {
 	uint index = 0;
-	SetParam("thd",   0.01f, 1.0f,   1.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("ratio", 0.0f,  1.0f,   1.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("dis",   1.0f,  10.0f,  1.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("depth", 0.0f,  1.0f,   0.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("rate",  0.0f,  10.0f,  0.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("pan",   0.0f,  180.0f, 90.0, Vec2f(100.0f * index++, 0.0f));
-	SetParam("vol",   0.0f,  10.0f,  1.0f, Vec2f(100.0f * index++, 0.0f));
-	SetParam("decay", 0.01f, 1.0f, 1.0f, Vec2f(100.0f * index++, 0.0f));
+	SetParam("thd",   0.1f,  1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("ratio", 0.0f,  1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("dis",   1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("depth", 0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("rate",  0.0f,  10.0f,  0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("pan",   0.0f,  180.0f, 90.0, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("vol",   0.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("decay", 0.01f, 1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("time",  0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("loop",  1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("cutoff", 10.0f, func::Floor(float(sound.lock()->info.sample / 2), 3), func::Floor(float(sound.lock()->info.sample / 2), 3), Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
+	SetParam("bw", 0.01f, 5.0f, 1.0f / std::sqrt(2.0f), Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	++index;
 }
 
 //関数ポインタセット
-void ParamMane::SetFunc(const std::string & name, float & effect)
+template <typename T>
+void ParamMane::SetFunc(const std::string& name, T& effect)
 {
 	if (func.find(name) != func.end())
 	{
 		return;
 	}
 
+	effect = T(thumb[name]->GetEffect());
 	func[name] = [&](Thumb& i)->void {
 		i.UpData();
-		effect = i.GetEffect();
+		effect = T(i.GetEffect());
 	};
 }
+template void ParamMane::SetFunc<float>(const std::string&, float&);
+template void ParamMane::SetFunc<uint>(const std::string&, uint&);
 
 // 関数ポインタセット
 void ParamMane::InitFunc(void)
 {
 	//閾値調節
-	SetFunc("thd", sound.lock()->comp.threshold);
+	SetFunc("thd",   sound.lock()->comp.threshold);
 	//圧縮比率調節
 	SetFunc("ratio", sound.lock()->comp.ratio);
 	//ディストーション
-	SetFunc("dis", sound.lock()->distortion);
+	SetFunc("dis",   sound.lock()->distortion);
 	//変調深度調節
 	SetFunc("depth", sound.lock()->toremor.depth);
 	//変調周波数調節
-	SetFunc("rate", sound.lock()->toremor.rate);
+	SetFunc("rate",  sound.lock()->toremor.rate);
 	//定位調節
-	SetFunc("pan", sound.lock()->pan);
+	SetFunc("pan",   sound.lock()->pan);
 	//音量調節
-	SetFunc("vol", sound.lock()->volume);
+	SetFunc("vol",   sound.lock()->volume);
+	//遅延音量調節
+	SetFunc("decay", sound.lock()->delayParam.decay);
+	//遅延時間調節
+	SetFunc("time",  sound.lock()->delayParam.time);
+	//遅延回数調節
+	SetFunc("loop",  sound.lock()->delayParam.loop);
+	//カットオフ周波数調節
+	SetFunc("cutoff", sound.lock()->filterParam.cutoff);
+	//クオリティファクタ調節
+	SetFunc("bw", sound.lock()->filterParam.bw);
+
+	//ローパス
+	filter[Type::low] = [&]()->void {
+		sound.lock()->LowPass();
+	};
+	//バンドパス
+	filter[Type::band] = [&]()->void {
+		sound.lock()->BandPass();
+	};
+	//ハイパス
+	filter[Type::high] = [&]()->void {
+		sound.lock()->HighPass();
+	};
 }
 
 // 描画
@@ -86,6 +129,12 @@ void ParamMane::Draw(void)
 // 処理
 void ParamMane::UpData(void)
 {
+	if (KEY.Trigger(KeyCode::Return))
+	{
+		type = uint(type) + 1 > uint(Type::high) ? Type(0) : Type(uint(type) + 1);
+		filter[type]();
+	}
+
 	if (mouse.lock()->GetClick() < 0.0f)
 	{
 		old = -1.0f;
@@ -109,4 +158,6 @@ void ParamMane::UpData(void)
 			break;
 		}
 	}
+
+	filter[type]();
 }

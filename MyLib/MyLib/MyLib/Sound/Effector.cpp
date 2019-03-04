@@ -37,26 +37,26 @@ void Effector::Init(void)
 void Effector::Execution(std::vector<float>& input)
 {
 	//C³
-	sound->comp.threshold = max(sound->comp.threshold, 0.01f);
-	sound->comp.ratio = max(sound->comp.ratio, 0.01f);
-	sound->comp.ratio = min(sound->comp.ratio, 1.0f);
-	sound->distortion = max(sound->distortion, 1.0f);
-	sound->toremor.depth = max(sound->toremor.depth, 0.0f);
-	sound->toremor.depth = min(sound->toremor.depth, 1.0f);
-	sound->toremor.rate = max(sound->toremor.rate, 0.0f);
+	sound->comp.threshold = max(sound->comp.threshold, 0.0f);
+	sound->comp.ratio     = max(sound->comp.ratio, 0.01f);
+	sound->comp.ratio     = min(sound->comp.ratio, 1.0f);
+	sound->distortion     = max(sound->distortion, 1.0f);
+	sound->toremor.depth  = max(sound->toremor.depth, 0.0f);
+	sound->toremor.depth  = min(sound->toremor.depth, 1.0f);
+	sound->toremor.rate   = max(sound->toremor.rate, 0.0f);
 	if (sound->info.channel == 1)
 	{
-		sound->pan = 0.0f;
+		sound->pan = 90.0f;
 	}
 	else
 	{
-		if (sound->pan > 180.0f / sound->info.channel)
+		if (sound->pan > 180.0f)
 		{
-			sound->pan = 180.0f / sound->info.channel;
+			sound->pan = 180.0f;
 		}
-		else if (sound->pan < -180.0f / sound->info.channel)
+		else if (sound->pan < 0.0f)
 		{
-			sound->pan = -180.0f / sound->info.channel;
+			sound->pan = 0.0f;
 		}
 	}
 	sound->volume = max(sound->volume, 0.0f);

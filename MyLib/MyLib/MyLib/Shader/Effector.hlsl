@@ -108,7 +108,7 @@ void Tremor(uint id)
 // ƒpƒ“ƒjƒ“ƒO
 void Panning(uint id)
 {
-	float tmp = pan / 90.0f;
+    float tmp = (pan - 90.0f) / 90.0f;
 
 	if (id % channel == 0)
 	{

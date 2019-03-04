@@ -54,7 +54,7 @@ void Waves::Run(void)
 		{
 			tmp += wave[index * sound.lock()->info.channel + ch];
 		}
-		prim->pos[i + 1].y -= tmp * 100;
+		prim->pos[i + 1].y -= tmp * sound.lock()->Offset() / 2;
 		++index;
 	}
 	flam = 0;

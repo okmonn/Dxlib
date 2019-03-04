@@ -145,8 +145,8 @@ void func::DFT(const std::vector<float>& input, std::vector<float>& real, std::v
 			auto re =  std::cos(2.0f * func::PI() * i * n / input.size());
 			auto im = -std::sin(2.0f * func::PI() * i * n / input.size());
 
-			real[i] += re * input[n];
-			imag[i] += im * input[n];
+			real[i] += re * input[n] * Haninng(n, input.size());
+			imag[i] += im * input[n] * Haninng(n, input.size());
 		}
 	}
 }
@@ -178,7 +178,7 @@ void func::FFT(const std::vector<float>& input, std::vector<float>& real, std::v
 
 	real = input;
 	real.resize(num, 0.0f);
-	imag.resize(num, 0.0f);
+	imag.assign(num, 0.0f);
 
 	std::vector<unsigned int>index(num, 0);
 

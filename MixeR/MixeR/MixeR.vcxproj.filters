@@ -75,9 +75,4 @@
       <Filter>ParamMane</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="DFT\DFT.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
-  </ItemGroup>
 </Project>

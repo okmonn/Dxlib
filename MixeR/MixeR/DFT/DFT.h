@@ -3,7 +3,6 @@
 #include <memory>
 
 class MyLib;
-class Compute;
 class Sound;
 class Primitive;
 
@@ -20,18 +19,11 @@ public:
 	void Run(void);
 
 private:
-	// 初期化
-	void Init(void);
-
-
 	// ライブラリ
 	std::unique_ptr<MyLib>lib;
 
 	// サウンド
 	std::weak_ptr<Sound>sound;
-
-	// コンピュート
-	std::unique_ptr<Compute>compute;
 
 	// プリミティブ
 	std::unique_ptr< Primitive>prim;

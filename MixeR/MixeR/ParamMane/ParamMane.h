@@ -13,6 +13,11 @@ class Thumb;
 // パラメータ管理S
 class ParamMane
 {
+	enum class Type {
+		low,
+		band,
+		high
+	};
 public:
 	// コンストラクタ
 	ParamMane(std::weak_ptr<MyLib>lib, std::weak_ptr<Sound>sound, std::weak_ptr<Mouse>mouse);
@@ -33,7 +38,8 @@ private:
 	void Init(void);
 
 	//関数ポインタセット
-	void SetFunc(const std::string& name, float& effect);
+	template <typename T>
+	void SetFunc(const std::string& name, T& effect);
 
 	// 関数ポインタ初期化
 	void InitFunc(void);
@@ -51,9 +57,13 @@ private:
 	// 前の値
 	float old;
 
+	// フィルタタイプ
+	Type type;
+
 	// パラメータ
 	std::unordered_map<std::string, std::unique_ptr<Thumb>>thumb;
 	
 	// 関数ポインタ
 	std::unordered_map<std::string, std::function<void(Thumb& i)>>func;
+	std::unordered_map<Type, std::function<void(void)>>filter;
 };

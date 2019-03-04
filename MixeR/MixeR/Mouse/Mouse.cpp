@@ -20,9 +20,9 @@ void Mouse::UpData(void)
 		Vec2 tmp = lib.lock()->GetMousePos();
 		if (click < 0.0f)
 		{
-			click = Vec2f(tmp.x, tmp.y);
+			click = Vec2f(float(tmp.x), float(tmp.y));
 		}
-		pos = Vec2f(tmp.x, tmp.y);
+		pos = Vec2f(float(tmp.x), float(tmp.y));
 	}
 	else
 	{

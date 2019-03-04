@@ -11,27 +11,14 @@ DFT::DFT(std::weak_ptr<MyLib>lib, std::weak_ptr<Sound>sound) :
 	sound(sound)
 {
 	this->lib = std::make_unique<MyLib>(lib, winSize, Vec2(lib.lock()->GetWinPos().x + lib.lock()->GetWinSize().x, lib.lock()->GetWinPos().y));
-	compute   = std::make_unique<Compute>("DFT/DFT.hlsl", "CS", "cs_5_1", RSC_MAX);
 	prim      = std::make_unique<Primitive>();
 
 	this->lib->ChangeTitle("振幅スペクトル");
-	Init();
 }
 
 // デストラクタ
 DFT::~DFT()
 {
-}
-
-// 初期化
-void DFT::Init(void)
-{
-	const uint num = sound.lock()->info.sample / sound.lock()->Offset();
-
-	uint index = 0;
-	compute->UAV("input", sizeof(float), num, index++);
-	compute->UAV("real", sizeof(float), num, index++);
-	compute->UAV("imag", sizeof(float), num, index++);
 }
 
 // 処理
@@ -42,10 +29,6 @@ void DFT::Run(void)
 		return;
 	}
 
-	prim->Init(PrimitiveType::line, (sound.lock()->info.sample / sound.lock()->Offset() * 2));
-
-	const float width = float(winSize.x) / float(prim->pos.size() / 2);
-
 	auto wave = sound.lock()->GetWave();
 	std::vector<float>tmp(wave.size() / sound.lock()->info.channel);
 	for (uint i = 0; i < tmp.size(); ++i)
@@ -55,16 +38,14 @@ void DFT::Run(void)
 			tmp[i] += wave[i * sound.lock()->info.channel + ch];
 		}
 	}
+	const float width = float(winSize.x) / float(tmp.size());
 
-	compute->Copy("input", tmp);
-	compute->Execution(tmp.size());
-	compute->UpData("real", real);
-	compute->UpData("imag", imag);
-
+	func::DFT(tmp, real, imag);
+	prim->Init(PrimitiveType::line, (sound.lock()->info.sample / sound.lock()->Offset() * 2));
 	uint index = 0;
 	for (uint i = 0; i < prim->pos.size(); i += 2)
 	{
-		prim->pos[i] = Vec2f(width * i / 2, float(winSize.y));
+		prim->pos[i] = Vec2f(width * i / 2, float(winSize.y / 2));
 		prim->pos[i + 1] = prim->pos[i];
 		auto a = func::Amplitude(real[index], imag[index]);
 		prim->pos[i + 1].y -= a;
