@@ -14,6 +14,8 @@ public:
 
 	// ハンドル取得
 	void* Get(void) const;
+	// マウスホイール回転量取得
+	int GetWheel(void) const;
 	// ドロップファイル取得
 	std::optional<std::wstring> GetDrop(void);
 
@@ -40,6 +42,9 @@ private:
 
 	// ウィンドウ名
 	const wchar_t* name;
+
+	// マウスホイール量
+	static int wheel;
 
 	// ドロップファイル名
 	static std::optional<std::wstring>dropFile;

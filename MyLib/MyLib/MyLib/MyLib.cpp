@@ -125,6 +125,12 @@ Vec2 MyLib::GetMousePos(void)
 	return Vec2(int(point.x), int(point.y));
 }
 
+// マウスホイール量取得
+int MyLib::GetMouseWheel(void) const
+{
+	return win->GetWheel();
+}
+
 // 初期化
 void MyLib::Init(void)
 {

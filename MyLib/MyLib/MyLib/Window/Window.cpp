@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <tchar.h>
 
+int Window::wheel = 0;
 std::optional<std::wstring> Window::dropFile = std::nullopt;
 
 // コンストラクタ
@@ -37,6 +38,9 @@ long __stdcall Window::WindowProc(void * hWnd, uint message, uint wParam, long l
 
 	switch (message)
 	{
+	case WM_MOUSEWHEEL:
+		wheel += GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
+		break;
 	case WM_DESTROY:
 		if (GetParent(HWND(hWnd)) != nullptr)
 		{
@@ -113,6 +117,12 @@ int Window::CreateWnd(const Vec2& pos, const Vec2& size, void* parent)
 void * Window::Get(void) const
 {
 	return handle;;
+}
+
+// マウスホイール回転量取得
+int Window::GetWheel(void) const
+{
+	return wheel;
 }
 
 // ドロップファイル取得

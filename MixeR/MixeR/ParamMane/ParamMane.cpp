@@ -141,7 +141,7 @@ void ParamMane::UpData(void)
 		return;
 	}
 
-	const int offset = 10;
+	const int offset = 5;
 	auto m = mouse.lock()->GetClick();
 	for (auto& i : thumb)
 	{

@@ -54,6 +54,9 @@ public:
 	// マウス座標取得
 	Vec2 GetMousePos(void);
 
+	// マウスホイール量取得
+	int GetMouseWheel(void) const;
+
 	// メッセージの確認
 	bool CheckMsg(void) const;
 
