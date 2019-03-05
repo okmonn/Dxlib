@@ -81,10 +81,8 @@ void Mixer::UpData(void)
 		return;
 	}
 
-	lib->Clear();
 	param->Draw();
 	param->UpData();
-	lib->Execution();
 }
 
 // Ä¶E’âŽ~
@@ -115,11 +113,13 @@ void Mixer::Run(void)
 {
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
 	{
+		lib->Clear();
+
 		Reset();
-
 		UpData();
-
 		PlayAndStop();
+
+		lib->Execution();
 	}
 }
 

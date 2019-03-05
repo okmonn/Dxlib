@@ -5,7 +5,7 @@
 
 // コンストラクタ
 Delay::Delay(Sound* sound) : 
-	sound(sound)
+	sound(sound), time(0.0f), index(1), fade(1)
 {
 }
 
@@ -31,22 +31,39 @@ void Delay::Execution(std::vector<float>& input, const uint& offset)
 		return;
 	}
 
+	if (time != sound->delayParam.time)
+	{
+		index = 0;
+		fade  = uint(input.size() / sound->info.channel * sound->Offset());
+	}
+
 	//遅延間隔
 	float delay = sound->info.sample * sound->delayParam.time;
 
-	uint index = 0;
-	for (auto& i : input)
+	for (uint i = 0; i < input.size(); i += sound->info.channel)
 	{
-		for (uint loop = 1; loop <= sound->delayParam.loop; ++loop)
+		for (uint ch = 0; ch < sound->info.channel; ++ch)
 		{
-			int m = offset + index - uint(delay * loop);
-			if (m >= 0)
+			for (uint loop = 1; loop <= sound->delayParam.loop; ++loop)
 			{
-				i += old[m] * std::pow(sound->delayParam.decay, float(loop));
+				int m = offset + i + ch - uint(delay * loop);
+				if (m >= 0)
+				{
+					input[i + ch] += old[m] * std::pow(sound->delayParam.decay, float(loop)) * index / fade;
+				}
 			}
 		}
-		++index;
+
+		index = (index + 1) >= fade ? index : ++index;
 	}
+
+	if (index >= fade)
+	{
+		index = 1;
+		fade  = 1;
+	}
+
+	time = sound->delayParam.time;
 }
 
 // 過去データクリア

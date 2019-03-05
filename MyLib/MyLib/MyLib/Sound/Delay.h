@@ -26,6 +26,15 @@ private:
 	// サウンド
 	Sound* sound;
 
+	// 遅延時間
+	float time;
+
+	// フェードインデックス
+	uint index;
+
+	// フェード範囲
+	uint fade;
+
 	// 過去データ
 	std::vector<float>old;
 };

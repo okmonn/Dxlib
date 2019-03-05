@@ -48,7 +48,7 @@ void DFT::Run(void)
 		prim->pos[i] = Vec2f(width * i / 2, float(winSize.y / 2));
 		prim->pos[i + 1] = prim->pos[i];
 		auto a = func::Amplitude(real[index], imag[index]);
-		prim->pos[i + 1].y -= a;
+		prim->pos[i + 1].y -= a * 2.0f;
 		++index;
 	}
 
