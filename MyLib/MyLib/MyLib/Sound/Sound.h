@@ -18,7 +18,7 @@ public:
 	// コンプレッサパラメータ
 	snd::Compressor comp;
 
-	// ディストーション(1.0f <= distortion)
+	// ディストーション
 	float distortion;
 
 	// トレモロ
@@ -27,7 +27,7 @@ public:
 	// パン
 	float pan;
 
-	// ボリューム(0.0f <= volume)
+	// ボリューム
 	float volume;
 
 	// ディレイパラメータ
@@ -65,6 +65,8 @@ public:
 
 	// 1回処理するデータ用オフセット
 	inline constexpr uint Offset(void) const;
+	// ファイル名取得
+	std::string GetFileName(void) const;
 	// 読み込みインデックス取得
 	uint GetRead(void) const;
 	// 現在の波形データ取得

@@ -15,9 +15,6 @@ public:
 	// 実行
 	void Execution(std::vector<float>& input, const uint& offset);
 
-	// 過去データクリア
-	void Clear(void);
-
 private:
 	Delay(const Delay&) = delete;
 	void operator=(const Delay&) = delete;
@@ -34,7 +31,4 @@ private:
 
 	// フェード範囲
 	uint fade;
-
-	// 過去データ
-	std::vector<float>old;
 };

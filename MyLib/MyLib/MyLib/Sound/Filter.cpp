@@ -109,7 +109,7 @@ void Filter::Execution(std::vector<float>& input)
 		//•ÏŠ·‘O•ÛŽ
 		float tmp = i;
 
-		i = b[0] / a[0] * i
+		i = b[0] / a[0] * tmp
 		  + b[1] / a[0] * this->input[0]
 		  + b[2] / a[0] * this->input[1]
 		  - a[1] / a[0] * out[0]

@@ -255,7 +255,6 @@ void Sound::StreamFile(void)
 				Stop();
 			}
 			read = 0;
-			delay->Clear();
 		}
 	}
 }
@@ -264,6 +263,12 @@ void Sound::StreamFile(void)
 inline constexpr uint Sound::Offset(void) const
 {
 	return 100;
+}
+
+// ファイル名取得
+std::string Sound::GetFileName(void) const
+{
+	return fileName;
 }
 
 // 読み込みインデックス取得

@@ -1,4 +1,5 @@
 #include "Delay.h"
+#include "SndLoader.h"
 #include "Sound.h"
 #include <algorithm>
 #include <minmax.h>
@@ -17,9 +18,6 @@ Delay::~Delay()
 // 実行
 void Delay::Execution(std::vector<float>& input, const uint& offset)
 {
-	//データ追加
-	std::copy(input.begin(), input.end(), std::back_inserter(old));
-
 	//修正
 	sound->delayParam.decay = max(sound->delayParam.decay, 0.01f);
 	sound->delayParam.decay = min(sound->delayParam.decay, 1.0f);
@@ -49,7 +47,7 @@ void Delay::Execution(std::vector<float>& input, const uint& offset)
 				int m = offset + i + ch - uint(delay * loop);
 				if (m >= 0)
 				{
-					input[i + ch] += old[m] * std::pow(sound->delayParam.decay, float(loop)) * index / fade;
+					input[i + ch] += SndLoader::Get().GetWave(sound->GetFileName())->at(m) * std::pow(sound->delayParam.decay, float(loop)) * index / fade;
 				}
 			}
 		}
@@ -64,10 +62,4 @@ void Delay::Execution(std::vector<float>& input, const uint& offset)
 	}
 
 	time = sound->delayParam.time;
-}
-
-// 過去データクリア
-void Delay::Clear(void)
-{
-	old.clear();
 }
