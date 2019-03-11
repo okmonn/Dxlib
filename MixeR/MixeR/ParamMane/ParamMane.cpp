@@ -31,29 +31,29 @@ void ParamMane::SetParam(const std::string& name, const float& min, const float&
 void ParamMane::Init(void)
 {
 	uint index = 0;
-	SetParam("thd",   0.1f,  1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("thd",   0.1f,  1.0f,   1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("ratio", 0.0f,  1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("ratio", 0.0f,  1.0f,   1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("dis",   1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("dis",   1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("depth", 0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("depth", 0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("rate",  0.0f,  10.0f,  0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("rate",  0.0f,  10.0f,  0.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("pan",   0.0f,  180.0f, 90.0, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("pan",   0.0f,  180.0f, 90.0, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("vol",   0.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("vol",   0.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("decay", 0.01f, 1.0f,   1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("decay", 0.01f, 1.0f,   1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("time",  0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("time",  0.0f,  1.0f,   0.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("loop",  1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("loop",  1.0f,  10.0f,  1.0f, Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("cutoff", 10.0f, func::Floor(float(sound.lock()->info.sample / 2), 3), func::Floor(float(sound.lock()->info.sample / 2), 3), Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("cutoff", 10.0f, func::Floor(float(sound.lock()->info.sample / 2), 3), func::Floor(float(sound.lock()->info.sample / 2), 3), Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
-	SetParam("bw", 0.01f, 5.0f, 1.0f / std::sqrt(2.0f), Vec2f(100.0f * (index % 5), 100.0f * (index / 5)));
+	SetParam("bw", 0.01f, 5.0f, 1.0f / std::sqrt(2.0f), Vec2f(100.0f * (index % 4), 100.0f * (index / 4)));
 	++index;
 }
 

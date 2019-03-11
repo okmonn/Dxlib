@@ -4,6 +4,7 @@
 #include <thread>
 
 class MyLib;
+class Texture;
 class Sound;
 class Mouse;
 class ParamMane;
