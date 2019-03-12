@@ -24,7 +24,7 @@ void ParamMane::SetParam(const std::string& name, const float& min, const float&
 		return;
 	}
 
-	thumb[name] = std::make_unique<Thumb>(pos, size, min, max, now);
+	thumb[name] = std::make_shared<Thumb>(pos, size, min, max, now);
 }
 
 // ‰Šú‰»

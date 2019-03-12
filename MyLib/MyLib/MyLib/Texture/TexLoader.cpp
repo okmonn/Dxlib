@@ -29,7 +29,8 @@ long TexLoader::Load(const std::string & fileName)
 		return S_OK;
 	}
 
-	auto hr = DirectX::LoadWICTextureFromFile(Dev, func::ChangeCode(fileName).c_str(), &rsc[fileName], decode[fileName], sub[fileName]);
+	sub[fileName] = std::make_shared<D3D12_SUBRESOURCE_DATA>();
+	auto hr = DirectX::LoadWICTextureFromFile(Dev, func::ChangeCode(fileName).c_str(), &rsc[fileName], decode[fileName], *sub[fileName]);
 	if (FAILED(hr))
 	{
 		func::DebugLog("画像読み込み：失敗");
@@ -79,11 +80,11 @@ uchar * TexLoader::GetDecode(const std::string & fileName)
 }
 
 // サブデータ取得
-D3D12_SUBRESOURCE_DATA TexLoader::GetSub(const std::string & fileName)
+std::shared_ptr<D3D12_SUBRESOURCE_DATA> TexLoader::GetSub(const std::string & fileName)
 {
 	if (sub.find(fileName) == sub.end())
 	{
-		return D3D12_SUBRESOURCE_DATA();
+		return nullptr;
 	}
 	
 	return sub[fileName];

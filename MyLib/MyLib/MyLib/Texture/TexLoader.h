@@ -24,7 +24,7 @@ public:
 	// デコード取得
 	uchar* GetDecode(const std::string& fileName);
 	// サブデータ取得
-	D3D12_SUBRESOURCE_DATA GetSub(const std::string& fileName);
+	std::shared_ptr<D3D12_SUBRESOURCE_DATA> GetSub(const std::string& fileName);
 	// 画像サイズ取得
 	Vec2f GetSize(const std::string& fileName);
 
@@ -41,5 +41,5 @@ private:
 	std::unordered_map<std::string, std::unique_ptr<uchar[]>>decode;
 
 	// サブデータ
-	std::unordered_map<std::string, D3D12_SUBRESOURCE_DATA>sub;
+	std::unordered_map<std::string, std::shared_ptr<D3D12_SUBRESOURCE_DATA>>sub;
 };

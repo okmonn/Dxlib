@@ -10,14 +10,15 @@ class Sound;
 class Mouse;
 class Thumb;
 
+enum class Type {
+	low,
+	band,
+	high
+};
+
 // パラメータ管理S
 class ParamMane
 {
-	enum class Type {
-		low,
-		band,
-		high
-	};
 public:
 	// コンストラクタ
 	ParamMane(std::weak_ptr<MyLib>lib, std::weak_ptr<Sound>sound, std::weak_ptr<Mouse>mouse);
@@ -61,7 +62,7 @@ private:
 	Type type;
 
 	// パラメータ
-	std::unordered_map<std::string, std::unique_ptr<Thumb>>thumb;
+	std::unordered_map<std::string, std::shared_ptr<Thumb>>thumb;
 	
 	// 関数ポインタ
 	std::unordered_map<std::string, std::function<void(Thumb& i)>>func;

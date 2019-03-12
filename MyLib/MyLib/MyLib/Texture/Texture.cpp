@@ -121,7 +121,7 @@ long Texture::WriteSub(const uint& index)
 	box.right  = uint(rsc[index]->GetDesc().Width);
 
 	auto hr = rsc[index]->WriteToSubresource(0, &box, &TexLoader::Get().GetDecode(fileName)[0], 
-		uint(TexLoader::Get().GetSub(fileName).RowPitch), uint(TexLoader::Get().GetSub(fileName).SlicePitch));
+		uint(TexLoader::Get().GetSub(fileName)->RowPitch), uint(TexLoader::Get().GetSub(fileName)->SlicePitch));
 	if (FAILED(hr))
 	{
 		func::DebugLog("サブリソース書き込み：失敗");
