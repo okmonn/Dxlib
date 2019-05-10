@@ -6,13 +6,14 @@ int main()
 	std::shared_ptr<MyLib>lib;
 	lib = std::make_shared<MyLib>(winSize);
 
-	Texture tex("Š®¬.png");
+	Texture tex("Test.png");
 	
 	Sound sound;
 	
 	bool stop = false;
 	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
 	{
+		tex.pos.x += 5.0f;
 		lib->Clear();
 		lib->Draw(tex, 1.0f);
 		lib->Execution();
