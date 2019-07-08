@@ -1,228 +1,21 @@
 #include "MyLib.h"
-#include "Descriptor/Descriptor.h"
-#include "Window/Window.h"
-#include "Queue/Queue.h"
-#include "List/List.h"
-#include "Fence/Fence.h"
-#include "Swap/Swap.h"
-#include "Render/Render.h"
-#include "Depth/Depth.h"
-#include "Root/Root.h"
-#include "Pipe/Pipe.h"
-#include "etc/Release.h"
-#include "resource.h"
+#include "Input/Input.h"
+#include "Manager/Manager.h"
+#include "Graphics/Texture/TexLoader.h"
 #include <Windows.h>
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
-#pragma comment(lib, "xaudio2.lib")
-
-std::unordered_map<std::string, std::shared_ptr<Root>> MyLib::root;
-std::unordered_map<std::string, std::shared_ptr<Pipe>> MyLib::pipe;
-
-// インプット一覧
-const D3D12_INPUT_ELEMENT_DESC inputs[] = {
-	//0
-	{ "POSITION", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION::D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-	//1
-	{ "NORMAL",   0, DXGI_FORMAT::DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION::D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-	//2
-	{ "TEXCOORD", 0, DXGI_FORMAT::DXGI_FORMAT_R32G32_FLOAT,       0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION::D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-	//3
-	{ "BORN",     0, DXGI_FORMAT::DXGI_FORMAT_R16G16_UINT,        0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION::D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-	//4
-	{ "WEIGHT",   0, DXGI_FORMAT::DXGI_FORMAT_R8_UINT,            0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION::D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-};
-
-// コンストラクタ
-MyLib::MyLib(const Vec2& size, const Vec2& pos) : 
-	heap(nullptr), rsc(nullptr), constant(nullptr)
-{
-#ifdef _DEBUG
-	ID3D12Debug* debug = nullptr;
-	D3D12GetDebugInterface(IID_PPV_ARGS(&debug));
-	debug->EnableDebugLayer();
-#endif
-	Init();
-
-	constant->winSize = Vec2f(float(size.x), float(size.y));
-
-	Instance(pos);
-}
-
-// コンストラクタ
-MyLib::MyLib(const MyLib& mylib, const Vec2& size, const Vec2& pos) :
-	heap(nullptr), rsc(nullptr), constant(nullptr)
-{
-	Init();
-
-	constant->winSize = Vec2f(float(size.x), float(size.y));
-
-	Instance(pos, mylib.win->Get());
-}
-
-// コンストラクタ
-MyLib::MyLib(std::weak_ptr<MyLib> mylib, const Vec2& size, const Vec2& pos) :
-	heap(nullptr), rsc(nullptr), constant(nullptr)
-{
-	Init();
-
-	constant->winSize = Vec2f(float(size.x), float(size.y));
-
-	Instance(pos, mylib.lock()->win->Get());
-}
-
-// デストラクタ
-MyLib::~MyLib()
-{
-	Desc.UnMap(rsc);
-	Release(rsc);
-	Release(heap)
-}
-
-// タイトル名変更
-void MyLib::ChangeTitle(const std::string & title)
-{
-	SetWindowTextA(HWND(win->Get()), title.c_str());
-}
-
-// ドロップされたファイルパス取得
-std::string MyLib::GetDropFilePass(void)
-{
-	auto hr = win->GetDrop();
-	if (hr == std::nullopt)
-	{
-		return std::string();
-	}
-
-	return func::ChangeCode(hr.value());
-}
-
-// ウィンドウ座標取得
-Vec2 MyLib::GetWinPos(void)
-{
-	RECT rect{};
-	GetWindowRect(HWND(win->Get()), &rect);
-	return Vec2(int(rect.left), int(rect.top));
-}
-
-// ウィンドウサイズ取得
-Vec2 MyLib::GetWinSize(void)
-{
-	RECT rect{};
-	GetClientRect(HWND(win->Get()), &rect);
-	return Vec2(int(rect.right), int(rect.bottom));
-}
-
-// マウス座標取得
-Vec2 MyLib::GetMousePos(void)
-{
-	POINT point{};
-	GetCursorPos(&point);
-	ScreenToClient(HWND(win->Get()), &point);
-
-	return Vec2(int(point.x), int(point.y));
-}
-
-// マウスホイール量取得
-int MyLib::GetMouseWheel(void) const
-{
-	return win->GetWheel();
-}
 
 // 初期化
-void MyLib::Init(void)
+bool okmonn::Init(const Vec2& winSize, const Vec2& winPos, const std::string& parent)
 {
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 
-		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
-
-	D3D12_HEAP_PROPERTIES prop{};
-	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	prop.MemoryPoolPreference = D3D12_MEMORY_POOL::D3D12_MEMORY_POOL_UNKNOWN;
-	prop.Type                 = D3D12_HEAP_TYPE::D3D12_HEAP_TYPE_UPLOAD;
-
-	D3D12_RESOURCE_DESC desc{};
-	desc.DepthOrArraySize = 1;
-	desc.Dimension        = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_BUFFER;
-	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
-	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
-	desc.Height           = 1;
-	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	desc.MipLevels        = 1;
-	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = (sizeof(Constant) + 0xff) &~0xff;
-
-	Desc.CreateRsc(&rsc, prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ);
-
-	Desc.CBV(heap, rsc);
-
-	Desc.Map(rsc, (void**)(&constant));
+	return Manager::Get().InitLib(winSize, winPos, parent);
 }
 
-// ルートのインスタンス
-template <typename T>
-void MyLib::RootSignature(const std::string& name, const std::initializer_list<T>& id)
-{
-	if (root.find(name) != root.end())
-	{
-		return;
-	}
-	root[name] = std::make_shared<Root>();
-	auto itr = id.begin();
-	while (itr != id.end())
-	{
-		root[name]->Vertex(*itr);
-		++itr;
-		root[name]->Pixel(*itr);
-		++itr;
-	}
-}
-template void MyLib::RootSignature(const std::string& name, const std::initializer_list<int>& id);
-template void MyLib::RootSignature(const std::string& name, const std::initializer_list<std::string>& id);
-
-// パイプのインスタンス
-void MyLib::PipeLine(const std::string & name, const std::string & rootName, 
-	const D3D12_PRIMITIVE_TOPOLOGY_TYPE & type, const std::initializer_list<uint>& index, const bool & depth)
-{
-	if (pipe.find(name) != pipe.end())
-	{
-		return;
-	}
-
-	std::vector<D3D12_INPUT_ELEMENT_DESC>input;
-	for (auto& i : index)
-	{
-		input.push_back(inputs[i]);
-	}
-
-	pipe[name] = std::make_shared<Pipe>(root[rootName], *input.data(), input.size(), type, depth);
-}
-
-// クラスのインスタンス化
-void MyLib::Instance(const Vec2& pos, void* parent)
-{
-	win    = std::make_shared<Window>(pos, Vec2(int(constant->winSize.x), int(constant->winSize.y)), parent);
-	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list   = std::make_shared<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	fence  = std::make_unique<Fence>(queue);
-	swap   = std::make_shared<Swap>(win, queue, Vec2(int(constant->winSize.x), int(constant->winSize.y)));
-	render = std::make_unique<Render>(swap);
-	depth  = std::make_unique<Depth>(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
-
-	//RootSignature("primitive", { "Shader/PrimVS.cso", "Shader/PrimPS.cso" });
-	RootSignature("primitive", { PRIM_VS, PRIM_PS });
-	PipeLine("point",    "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT,    { 0 }, false);
-	PipeLine("line",     "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE,     { 0 }, false);
-	PipeLine("triangle", "primitive", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0 }, false);
-
-	//RootSignature("texture", { "Shader/TexVS.cso", "Shader/TexPS.cso" });
-	RootSignature("texture", { TEX_VS, TEX_PS });
-	PipeLine("texture", "texture", D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE, { 0, 2 }, false);
-}
-
-// メッセージの確認
-bool MyLib::CheckMsg(void) const
+// メッセージ確認
+bool okmonn::CheckMsg(void)
 {
 	static MSG msg{};
 
@@ -243,104 +36,106 @@ bool MyLib::CheckMsg(void) const
 	return true;
 }
 
-// クリア
-void MyLib::Clear(void) const
+// キー入力
+bool okmonn::CheckKey(const KeyCode& key)
 {
-	list->Reset();
-
-	list->Viewport(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
-	list->Scissor(Vec2(int(constant->winSize.x), int(constant->winSize.y)));
-
-	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, render->Get());
-
-	render->Clear(list, depth->Get());
-
-	depth->Clear(list);
+	return Input::Get().CheckKey(key);
 }
 
-// プリミティブ描画
-void MyLib::Draw(Primitive& primitive, const Vec3f& color, const float& alpha)
+// トリガー入力
+bool okmonn::Trigger(const KeyCode& key)
 {
-	primitive.UpData();
-
-	constant->color = color;
-	constant->alpha = alpha;
-
-	list->GraphicRoot(root["primitive"]->Get());
-	switch (primitive.type)
-	{
-	case 0:
-		break;
-	case 1:
-		list->Pipeline(pipe["point"]->Get());
-		break;
-	case 2:
-		list->Pipeline(pipe["line"]->Get());
-		break;
-	default:
-		list->Pipeline(pipe["triangle"]->Get());
-		break;
-	}
-
-	D3D12_VERTEX_BUFFER_VIEW view{};
-	view.BufferLocation = primitive.rsc->GetGPUVirtualAddress();
-	view.SizeInBytes    = uint(primitive.rsc->GetDesc().Width);
-	view.StrideInBytes  = sizeof(primitive.pos[0]);
-	list->VertexView(view);
-
-	list->Heap(&heap, 1);
-	list->GraphicTable(0, heap);
-
-	list->Topology(D3D12_PRIMITIVE_TOPOLOGY(primitive.type));
-
-	list->DrawVertex(primitive.pos.size());
+	return Input::Get().Trigger(key);
 }
 
-// 画像描画
-void MyLib::Draw(Texture& tex, const float& alpha)
+// 画像読み込み
+int okmonn::LoadImg(const std::string& fileName)
 {
-	tex.vertex[0] = { Vec3f(0.0f),                             Vec2f(0.0f) };
-	tex.vertex[1] = { Vec3f(Vec2f(constant->winSize.x, 0.0f)), Vec2f(1.0f, 0.0f) };
-	tex.vertex[2] = { Vec3f(Vec2f(0.0f, constant->winSize.y)), Vec2f(0.0f, 1.0f) };
-	tex.vertex[3] = { Vec3f(constant->winSize),                Vec2f(1.0f) };
-	memcpy(tex.data, tex.vertex.data(), sizeof(tex.vertex[0]) * tex.vertex.size());
-	
-	constant->alpha = alpha;
+	return Manager::Get().LoadImg(fileName);
+}
 
-	list->GraphicRoot(root["texture"]->Get());
-	list->Pipeline(pipe["texture"]->Get());
+// 画面クリア
+void okmonn::Clear(void)
+{
+	Manager::Get().Clear();
+}
 
-	DirectX::XMStoreFloat4x4(&tex.constant->matrix, DirectX::XMMatrixAffineTransformation2D(
-		DirectX::XMLoadFloat2(&Convert2(tex.size / constant->winSize)),
-		DirectX::XMLoadFloat2(&Convert2(tex.size / 2.0f)),
-		tex.rotate,
-		DirectX::XMLoadFloat3(&Convert3(tex.pos))
-	));
+// 本来の画像サイズで描画
+void okmonn::DrawImg(const int& id, const Vec2& pos, const float& angle, const bool& turnX, const bool& turnY, const float& alpha)
+{
+	Manager::Get().DrawImg(id, Vec2f(float(pos.x), float(pos.y)), angle, turnX, turnY, alpha);
+}
 
-	auto index = tex.SetDraw(list);
+// 指定した画像サイズで描画
+void okmonn::DrawImgRect(const int& id, const Vec2& pos, const Vec2& size, const float& angle, const bool& turnX, const bool& turnY, const float& alpha)
+{
+	Manager::Get().DrawImgRect(id, Vec2f(float(pos.x), float(pos.y)), Vec2f(float(size.x), float(size.y)), angle, turnX, turnY, alpha);
+}
 
-	list->Heap(&heap, 1);
-	list->GraphicTable(index, heap);
+// 指定した画像サイズで指定した矩形に分割して描画
+void okmonn::DrawImgDivide(const int& id, const Vec2& pos, const Vec2& size, const Vec2& uvPos, const Vec2& uvSize, 
+	const float& angle, const bool& turnX, const bool& turnY, const float& alpha)
+{
+	Manager::Get().DrawImgDivide(id, Vec2f(float(pos.x), float(pos.y)), Vec2f(float(size.x), float(size.y)), 
+		Vec2f(float(uvPos.x), float(uvPos.y)), Vec2f(float(uvSize.x), float(uvSize.y)), angle, turnX, turnY, alpha);
+}
 
-	list->Topology(D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+// ポイント描画
+void okmonn::DrawPoint(const Vec2& pos, const float& r, const float& g, const float& b, const float& a)
+{
+	Manager::Get().DrawPoint(Vec2f(float(pos.x), float(pos.y)), r, g, b, a);
+}
 
-	list->DrawVertex(tex.GetVertexNum());
+// ライン描画
+void okmonn::DrawLine(const Vec2& pos1, const Vec2& pos2, const float& r, const float& g, const float& b, const float& a)
+{
+	Manager::Get().DrawLine(Vec2f(float(pos1.x), float(pos1.y)), Vec2f(float(pos2.x), float(pos2.y)), r, g, b, a);
+}
+
+// トライアングル描画
+void okmonn::DrawTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const float& r, const float& g, const float& b, const float& a)
+{
+	Manager::Get().DrawTriangle(Vec2f(float(pos1.x), float(pos1.y)), Vec2f(float(pos2.x), float(pos2.y)), Vec2f(float(pos3.x), float(pos3.y)), r, g, b, a);
+}
+
+// ボックス描画
+void okmonn::DrawBox(const Vec2& pos, const Vec2& size, const float& r, const float& g, const float& b, const float& a)
+{
+	Manager::Get().DrawBox(Vec2f(float(pos.x), float(pos.y)), Vec2f(float(size.x), float(size.y)), r, g, b, a);
 }
 
 // 実行
-void MyLib::Execution(void) const
+void okmonn::Execution(void)
 {
-	list->Barrier(D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_PRESENT, render->Get());
+	Manager::Get().Execution();
+}
 
-	list->Close();
+// ターゲットにするライブラリを変える
+void okmonn::ChangeTargetName(const std::string& name)
+{
+	Manager::Get().ChangeTarget(name);
+}
 
-	ID3D12CommandList* com[] = {
-		list->GetList()
-	};
+// 現在ターゲットにしているライブラリ個別名を取得
+std::string okmonn::GetNowTargetLibName(void)
+{
+	return Manager::Get().GetTarget();
+}
 
-	queue->Execution(com, _countof(com));
+// テクスチャハンドル削除
+void okmonn::DeleteImg(const int& id)
+{
+	Manager::Get().DeleteTex(id);
+}
 
-	swap->Present();
+// プリミティブデータ削除
+void okmonn::DeletePrim(const bool& memReset)
+{
+	Manager::Get().DeletePrim(memReset);
+}
 
-	fence->Wait();
+// 画像データ削除
+void okmonn::DeleteImg(const std::string& fileName)
+{
+	TexLoader::Get().Delete(fileName);
 }

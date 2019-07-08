@@ -1,58 +1,18 @@
 #include "MyLib/MyLib.h"
+#include "MyLib/Func/Func.h"
 
 int main()
 {
-	const Vec2 winSize = { 640, 480 };
-	std::shared_ptr<MyLib>lib;
-	lib = std::make_shared<MyLib>(winSize);
+	okmonn::Init(640);
+	int imag = okmonn::LoadImg("test.png");
 
-	Texture tex("Test.png");
-	
-	Sound sound;
-	
-	bool stop = false;
-	while (lib->CheckMsg() && KEY.CheckKey(KeyCode::Escape) == false)
+	float a = 0.0f;
+	while (okmonn::CheckMsg() && !okmonn::CheckKey(okmonn::KeyCode::Escape))
 	{
-		tex.pos.x += 5.0f;
-		lib->Clear();
-		lib->Draw(tex, 1.0f);
-		lib->Execution();
-		
-		auto hr = lib->GetDropFilePass();
-		if (hr.size() > 0)
-		{
-			sound.Load(hr);
-			sound.Play(false);
-		}
-
-		if (KEY.Trigger(KeyCode::Space))
-		{
-			sound.Stop();
-			continue;
-			if (stop == false)
-			{
-				
-				stop = true;
-			}
-			else
-			{
-				sound.Play(true);
-				stop = false;
-			}
-		}
-
-		if (KEY.CheckKey(KeyCode::Right))
-		{
-			sound.pan += 1.0f;
-			
-		}
-		else if (KEY.CheckKey(KeyCode::Left))
-		{
-			sound.pan -= 1.0f;
-			
-		}
-		printf("%f\n", sound.pan);
+		okmonn::Clear();
+		okmonn::DrawImg(imag, 0, okmonn::Rad(a++));
+		//okmonn::DrawImgDivide(imag, 0, 320, 0, { 160, 320 });
+		okmonn::Execution();
+		okmonn::DeletePrim();
 	}
-
-	return 0;
 }

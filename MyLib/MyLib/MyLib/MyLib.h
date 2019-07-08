@@ -1,129 +1,67 @@
 #pragma once
-#include "Input/Input.h"
-#include "Primitive/Primitive.h"
-#include "Texture/Texture.h"
-#include "Sound/Sound.h"
-#include "Compute/Compute.h"
-#include "etc/Func.h"
+#include "etc/Vector2.h"
+#include "Input/KeyCode.h"
+#include <string>
 
-#define KEY Input::Get()
-
-class Window;
-class Queue;
-class List;
-class Fence;
-class Swap;
-class Render;
-class Depth;
-class Root;
-class Pipe;
-
-// おかもん自作ライブラリ
-class MyLib
+namespace okmonn
 {
-	// 定数
-	struct Constant {
-		//カラー
-		Vec3f color;
-		//アルファ値
-		float alpha;
-		//ウィンドウサイズ
-		Vec2f winSize;
-	};
-
-public:
-	// コンストラクタ
-	MyLib(const Vec2& size, const Vec2& pos = 0x80000000);
-	MyLib(const MyLib& mylib, const Vec2& size, const Vec2& pos = 0x80000000);
-	MyLib(std::weak_ptr<MyLib> mylib, const Vec2& size, const Vec2& pos = 0x80000000);
-	// デストラクタ
-	~MyLib();
-
-	// タイトル名変更
-	void ChangeTitle(const std::string& title);
-
-	// ドロップされたファイルパス取得
-	std::string GetDropFilePass(void);
-
-	// ウィンドウ座標取得
-	Vec2 GetWinPos(void);
-
-	// ウィンドウサイズ取得
-	Vec2 GetWinSize(void);
-
-	// マウス座標取得
-	Vec2 GetMousePos(void);
-
-	// マウスホイール量取得
-	int GetMouseWheel(void) const;
-
-	// メッセージの確認
-	bool CheckMsg(void) const;
-
-	// クリア
-	void Clear(void) const;
-
-	// プリミティブ描画
-	void Draw(Primitive& primitive, const Vec3f& color, const float& alpha = 1.0f);
-
-	// 画像描画
-	void Draw(Texture& tex, const float& alpha = 1.0f);
-
-	// 実行
-	void Execution(void) const;
-
-private:
-	MyLib(const MyLib&) = delete;
-	void operator=(const MyLib&) = delete;
-
 	// 初期化
-	void Init(void);
+	bool Init(const Vec2& winSize, const Vec2& winPos = 0x80000000, const std::string& parent = "");
 
-	// ルートのインスタンス
-	template <typename T>
-	void RootSignature(const std::string& name, const std::initializer_list<T>& id);
+	// メッセージ確認
+	bool CheckMsg(void);
 
-	// パイプのインスタンス
-	void PipeLine(const std::string& name, const std::string& root, 
-		const D3D12_PRIMITIVE_TOPOLOGY_TYPE& type, const std::initializer_list<uint>& index, const bool& depth);
+	// キー入力
+	bool CheckKey(const KeyCode& key);
 
-	// クラスのインスタンス化
-	void Instance(const Vec2& pos, void* parent = nullptr);
+	// トリガー入力
+	bool Trigger(const KeyCode& key);
 
+	// 画像読み込み
+	int LoadImg(const std::string& fileName);
 
-	// ヒープ
-	ID3D12DescriptorHeap* heap;
+	// 画面クリア
+	void Clear(void);
 
-	// リソース
-	ID3D12Resource* rsc;
+	// 本来の画像サイズで描画
+	void DrawImg(const int& id, const Vec2& pos, const float& angle = 0.0f, const bool& turnX = false, const bool& turnY = false, const float& alpha = 1.0f);
 
-	// 定数データ
-	Constant* constant;
+	// 指定した画像サイズで描画
+	void DrawImgRect(const int& id, const Vec2& pos, const Vec2& size, const float& angle = 0.0f,
+		const bool& turnX = false, const bool& turnY = false, const float& alpha = 1.0f);
 
-	// ウィンドウ
-	std::shared_ptr<Window>win;
+	// 指定した画像サイズで指定した矩形に分割して描画
+	void DrawImgDivide(const int& id, const Vec2& pos, const Vec2& size, const Vec2& uvPos, const Vec2& uvSize, 
+		const float& angle = 0.0f, const bool& turnX = false, const bool& turnY = false, const float& alpha = 1.0f);
 
-	// キュー
-	std::shared_ptr<Queue>queue;
+	// ポイント描画
+	void DrawPoint(const Vec2& pos, const float& r, const float& g, const float& b, const float& a = 1.0f);
 
-	// リスト
-	std::shared_ptr<List>list;
+	// ライン描画
+	void DrawLine(const Vec2& pos1, const Vec2& pos2, const float& r, const float& g, const float& b, const float& a = 1.0f);
 
-	// フェンス
-	std::unique_ptr<Fence>fence;
+	// トライアングル描画
+	void DrawTriangle(const Vec2& pos1, const Vec2& pos2, const Vec2& pos3, const float& r, const float& g, const float& b, const float& a = 1.0f);
 
-	// スワップ
-	std::shared_ptr<Swap>swap;
+	// ボックス描画
+	void DrawBox(const Vec2& pos, const Vec2& size, const float& r, const float& g, const float& b, const float& a = 1.0f);
+	
+	// 実行
+	void Execution(void);
 
-	// レンダー
-	std::unique_ptr<Render>render;
+	// ターゲットにするライブラリを変える（新しく作る際のライブラリ個別名を設定する）
+	void ChangeTargetName(const std::string& name);
 
-	// デプス
-	std::unique_ptr<Depth>depth;
+	// 現在ターゲットにしているライブラリ個別名を取得
+	std::string GetNowTargetLibName(void);
 
-	// ルート
-	static std::unordered_map<std::string, std::shared_ptr<Root>>root;
+	// テクスチャハンドル削除
+	void DeleteImg(const int& id);
 
-	// パイプ
-	static std::unordered_map<std::string, std::shared_ptr<Pipe>>pipe;
-};
+	// プリミティブデータ削除
+	// 毎フレーム呼び出し推奨
+	void DeletePrim(const bool& memReset = false);
+
+	// 画像データ削除
+	void DeleteImg(const std::string& fileName);
+}

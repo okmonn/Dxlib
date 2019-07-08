@@ -1,9 +1,6 @@
 #pragma once
-#include "../etc/Define.h"
-#include <string>
-#include <optional>
+#include "../etc/Vector2.h"
 
-// ウィンドウ
 class Window
 {
 public:
@@ -12,26 +9,19 @@ public:
 	// デストラクタ
 	~Window();
 
-	// ハンドル取得
+	// ウィンドウハンドル取得
 	void* Get(void) const;
-	// マウスホイール回転量取得
-	int GetWheel(void) const;
-	// ドロップファイル取得
-	std::optional<std::wstring> GetDrop(void);
 
 private:
-	Window(const Window&) = delete;
-	void operator=(const Window&) = delete;
-
 	// ウィンドウコールバック
 #ifdef _WIN64
-	static __int64 __stdcall WindowProc(void* hWnd, uint message, uint64 wParam, int64 lParam);
+	static __int64 __stdcall WindowProc(void* hWnd, unsigned int message, unsigned __int64 wParam, __int64 lParam);
 #else
-	static long __stdcall WindowProc(void* hWnd, uint message, uint wParam, long lParam);
+	static long __stdcall WindowProc(void* hWnd, unsigned int message, unsigned int wParam, long lParam);
 #endif
 
 	// ウィンドウ生成
-	int CreateWnd(const Vec2& pos, const Vec2& size, void* parent);
+	void CreateWnd(const Vec2& pos, const Vec2& size, void* parent);
 
 
 	// ウィンドウハンドル
@@ -42,10 +32,4 @@ private:
 
 	// ウィンドウ名
 	const wchar_t* name;
-
-	// マウスホイール量
-	static int wheel;
-
-	// ドロップファイル名
-	static std::optional<std::wstring>dropFile;
 };

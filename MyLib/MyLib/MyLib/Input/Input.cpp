@@ -1,11 +1,12 @@
 #include "Input.h"
-#include <windows.h>
+#include "KeyCode.h"
+#include <Windows.h>
 
 // コンストラクタ
 Input::Input()
 {
-	memset(&now[0], 0, sizeof(now));
-	memset(&old[0], 0, sizeof(old));
+	std::fill(now.begin(), now.end(), 0);
+	std::fill(old.begin(), old.end(), 0);
 }
 
 // デストラクタ
@@ -14,11 +15,11 @@ Input::~Input()
 }
 
 // キー入力
-bool Input::CheckKey(const KeyCode & key)
+bool Input::CheckKey(const okmonn::KeyCode& key)
 {
-	old[uint(key)] = now[uint(key)];
-	now[uint(key)] = (GetKeyState(uint(key)) & 0x80);
-	if (now[uint(key)])
+	old[unsigned char(key)] = now[unsigned char(key)];
+	now[unsigned char(key)] = (GetKeyState(unsigned char(key)) & 0x80);
+	if (now[unsigned char(key)])
 	{
 		return true;
 	}
@@ -27,20 +28,13 @@ bool Input::CheckKey(const KeyCode & key)
 }
 
 // トリガー入力
-bool Input::Trigger(const KeyCode & key)
+bool Input::Trigger(const okmonn::KeyCode& key)
 {
-	if (CheckKey(key) == true 
-		&& now[uint(key)] != old[uint(key)])
+	if (CheckKey(key) == true
+		&& now[unsigned char(key)] != old[unsigned char(key)])
 	{
 		return true;
 	}
 
 	return false;
-}
-
-// インスタンス変数取得
-Input & Input::Get(void)
-{
-	static Input instance;
-	return instance;
 }

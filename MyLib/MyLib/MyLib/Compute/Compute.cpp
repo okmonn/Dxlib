@@ -1,112 +1,87 @@
 #include "Compute.h"
-#include "../Queue/Queue.h"
-#include "../List/List.h"
-#include "../Fence/Fence.h"
-#include "../Root/Root.h"
-#include "../Pipe/Pipe.h"
-#include "../Descriptor/Descriptor.h"
-#include "../etc/Release.h"
+#include "../Graphics/Queue/Queue.h"
+#include "../Graphics/Allocator/Allocator.h"
+#include "../Graphics/List/List.h"
+#include "../Graphics/Fence/Fence.h"
+#include "../Graphics/Root/Root.h"
+#include "../Graphics/Pipe/Pipe.h"
+#include "../Graphics/Descriptor/Descriptor.h"
+#include <d3d12.h>
 
 // コンストラクタ
-Compute::Compute(const std::string& fileName, const std::string& func, const std::string& ver, const uint& num) : 
-	heap(nullptr)
+Compute::Compute() : 
+	heap(nullptr), index(0)
 {
 	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	list  = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	fence = std::make_unique<Fence>(queue);
-	root  = std::make_shared<Root>();
-	root->Compute(fileName, func, ver);
-	pipe  = std::make_unique<Pipe>(root);
-
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
-}
-
-// コンストラクタ
-Compute::Compute(const std::string& fileName, const uint& num) : 
-	heap(nullptr)
-{
-	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	list  = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	fence = std::make_unique<Fence>(queue);
-	root  = std::make_shared<Root>();
-	root->Compute(fileName);
-	pipe  = std::make_unique<Pipe>(root);
-
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
-}
-
-// コンストラクタ
-Compute::Compute(const int& id, const uint& num) :
-	heap(nullptr)
-{
-	queue = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	list = std::make_unique<List>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
-	fence = std::make_unique<Fence>(queue);
-	root = std::make_shared<Root>();
-	root->Compute(id);
-	pipe = std::make_unique<Pipe>(root);
-
-	Desc.CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
-		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
+	allo  = std::make_shared<Allocator>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	list  = std::make_shared<List>(allo, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_COMPUTE);
+	fence = std::make_shared<Fence>(queue);
 }
 
 // デストラクタ
 Compute::~Compute()
 {
-	for (auto& i : rsc)
-	{
-		Desc.UnMap(i.second);
-		Release(i.second);
-	}
-	Release(heap);
+}
+
+// シェーダーファイル読み込み
+void Compute::Compile(const std::string& fileName, const std::string& func, const std::string& ver)
+{
+	root = std::make_shared<Root>();
+	root->Compute(fileName, func, ver);
+	pipe = std::make_shared<Pipe>(root);
+}
+
+// .cso読み込み
+void Compute::Load(const std::string& fileName)
+{
+	root = std::make_shared<Root>();
+	root->Compute(fileName);
+	pipe = std::make_shared<Pipe>(root);
+}
+
+// リソース読み込み
+void Compute::Read(const int& id)
+{
+	root = std::make_shared<Root>();
+	root->Compute(id);
+	pipe = std::make_shared<Pipe>(root);
+}
+
+// ヒープ生成
+void Compute::CreateHeap(const size_t& num)
+{
+	okmonn::CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE, num);
+
+	rsc.resize(num);
 }
 
 // 定数リソース生成
-long Compute::CBV(const std::string& name, const size_t& size, const uint& index)
+int Compute::CreateCRsc(const size_t& size)
 {
-	if (rsc.find(name) != rsc.end())
-	{
-		return S_FALSE;
-	}
-
 	D3D12_HEAP_PROPERTIES prop{};
-	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
-	prop.MemoryPoolPreference = D3D12_MEMORY_POOL::D3D12_MEMORY_POOL_UNKNOWN;
-	prop.Type                 = D3D12_HEAP_TYPE::D3D12_HEAP_TYPE_UPLOAD;
+	prop.Type = D3D12_HEAP_TYPE::D3D12_HEAP_TYPE_UPLOAD;
 
 	D3D12_RESOURCE_DESC desc{};
 	desc.DepthOrArraySize = 1;
 	desc.Dimension        = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_BUFFER;
-	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_NONE;
-	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
 	desc.Height           = 1;
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = (size + 0xff) &~0xff;
+	desc.Width            = (size + 0xff) & ~0xff;
 
-	if (FAILED(Desc.CreateRsc(&rsc[name], prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ)))
-	{
-		return S_FALSE;
-	}
+	okmonn::CreateRsc(&rsc[index].rsc, prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ);
 
-	Desc.CBV(heap, rsc[name], index);
+	okmonn::CBV(rsc[index].rsc.Get(), heap.Get(), index);
+	okmonn::Map(rsc[index].rsc.Get(), &rsc[index].data);
 
-	Desc.Map(rsc[name], &data[name]);
-
-	return S_OK;
+	return index++;
 }
 
-// UAVリソース生成
-long Compute::UAV(const std::string & name, const size_t& stride, const size_t& num, const uint& index)
+// 非順序リソース生成
+int Compute::CreateURsc(const size_t& stride, const size_t& num)
 {
-	if (rsc.find(name) != rsc.end())
-	{
-		return S_FALSE;
-	}
-
 	D3D12_HEAP_PROPERTIES prop{};
 	prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY::D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 	prop.MemoryPoolPreference = D3D12_MEMORY_POOL::D3D12_MEMORY_POOL_L0;
@@ -116,64 +91,69 @@ long Compute::UAV(const std::string & name, const size_t& stride, const size_t& 
 	desc.DepthOrArraySize = 1;
 	desc.Dimension        = D3D12_RESOURCE_DIMENSION::D3D12_RESOURCE_DIMENSION_BUFFER;
 	desc.Flags            = D3D12_RESOURCE_FLAGS::D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	desc.Format           = DXGI_FORMAT::DXGI_FORMAT_UNKNOWN;
 	desc.Height           = 1;
 	desc.Layout           = D3D12_TEXTURE_LAYOUT::D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	desc.MipLevels        = 1;
 	desc.SampleDesc       = { 1, 0 };
-	desc.Width            = uint64(stride * num);
+	desc.Width            = unsigned __int64(stride * num);
 
-	if (FAILED(Desc.CreateRsc(&rsc[name], prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_UNORDERED_ACCESS)))
-	{
-		return S_FALSE;
-	}
+	okmonn::CreateRsc(&rsc[index].rsc, prop, desc, nullptr, D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_GENERIC_READ);
 
-	Desc.UAV(heap, rsc[name], stride, num, index);
+	okmonn::UAV(rsc[index].rsc.Get(), heap.Get(), stride, num, index);
+	okmonn::Map(rsc[index].rsc.Get(), &rsc[index].data);
 
-	Desc.Map(rsc[name], &data[name]);
+	return index++;
+}
 
-	return S_OK;
+// GPUメモリにコピー
+void Compute::Copy(const int& id, void* data, const size_t& size)
+{
+	memcpy(rsc[id].data, data, size);
 }
 
 // 実行
-void Compute::Execution(const uint& x, const uint& y, const uint& z)
+void Compute::Execution(const unsigned int& x, const unsigned int& y, const unsigned int& z)
 {
-	list->Reset();
+	allo->Get()->Reset();
+	list->Get()->Reset(allo->Get(), nullptr);
 
-	list->ComputeRoot(root->Get());
-	list->Pipeline(pipe->Get());
+	list->Get()->SetComputeRootSignature(root->Get());
+	list->Get()->SetPipelineState(pipe->Get());
 
-	list->Heap(&heap, 1);
-	uint index = 0;
-	for (auto& i : rsc)
+	list->Get()->SetDescriptorHeaps(1, heap.GetAddressOf());
+	for (unsigned int i = 0; i < rsc.size(); ++i)
 	{
-		list->ComputeTable(index, heap, index);
-		++index;
+		list->SetComputeTable(i, heap.Get(), i);
 	}
 
-	list->Dispatch(x, y, z);
+	list->Get()->Dispatch(x, y, z);
 
-	list->Close();
+	list->Get()->Close();
 
 	ID3D12CommandList* com[] = {
-		list->GetList()
+		list->Get()
 	};
 
-	queue->Execution(com, _countof(com));
+	queue->Get()->ExecuteCommandLists(_countof(com), com);
 
 	fence->Wait();
 }
 
-// 反映
-template<typename T>
-void Compute::UpData(const std::string& name, std::vector<T>& output)
+// GPUメモリデータ取得
+template <typename T>
+std::vector<T> Compute::GetData(const int& id)
 {
-	if (rsc.find(name) == rsc.end())
-	{
-		return;
-	}
-
-	uint size = uint(rsc[name]->GetDesc().Width / sizeof(T));
-	output.assign((T*)data[name], (T*)data[name] + size);
+	auto size = rsc[id].rsc->GetDesc().Width / sizeof(T);
+	return std::vector<T>((T*)rsc[id].data, (T*)rsc[id].data + size);
 }
-template void Compute::UpData<float>(const std::string&name, std::vector<float>& output);
+template std::vector<int> Compute::GetData(const int&);
+template std::vector<float> Compute::GetData(const int&);
+
+// 終了
+void Compute::Finish(void)
+{
+	for (Resource& i : rsc)
+	{
+		okmonn::UnMap(i.rsc.Get());
+	}
+}

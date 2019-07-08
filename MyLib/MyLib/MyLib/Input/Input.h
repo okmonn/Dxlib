@@ -1,32 +1,32 @@
 #pragma once
-#include "KeyCode.h"
-#include "../etc/Define.h"
+#include "../etc/Single.h"
+#include <array>
 
-// インプット
-class Input
+namespace okmonn {
+	enum class KeyCode;
+}
+
+class Input :
+	public Single<Input>
 {
+	friend Single<Input>;
 public:
+	// キー入力
+	bool CheckKey(const okmonn::KeyCode& key);
+
+	// トリガー入力
+	bool Trigger(const okmonn::KeyCode& key);
+
+private:
+	// コンストラクタ
+	Input();
 	// デストラクタ
 	~Input();
 
-	// キー入力
-	bool CheckKey(const KeyCode& key);
+	
+	// 現在の状態
+	std::array<unsigned char, 256>now;
 
-	// トリガー入力
-	bool Trigger(const KeyCode& key);
-
-	// インスタンス変数取得
-	static Input& Get(void);
-
-private:
-	Input();
-	Input(const Input&) = delete;
-	void operator=(const Input&) = delete;
-
-
-	// 現在の入力キーコード
-	uint now[256];
-
-	// 過去の入力キーコード
-	uint old[256];
+	// 過去の状態
+	std::array<unsigned char, 256>old;
 };

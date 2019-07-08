@@ -1,96 +1,93 @@
 #pragma once
-#include "../etc/Define.h"
+#include <wrl.h>
 #include <string>
 #include <vector>
 #include <memory>
-#include <unordered_map>
 
+struct ID3D12DescriptorHeap;
+struct ID3D12Resource;
 class Queue;
+class Allocator;
 class List;
 class Fence;
 class Root;
 class Pipe;
 
-// コンピュート
 class Compute
 {
+	// リソース
+	struct Resource {
+		//リソース
+		Microsoft::WRL::ComPtr<ID3D12Resource>rsc;
+		//送信データ
+		void* data;
+
+		Resource() : rsc(nullptr), data(nullptr) {}
+	};
+
 public:
 	// コンストラクタ
-	Compute(const std::string& fileName, const std::string& func, const std::string& ver, const uint& num);
-	Compute(const std::string& fileName, const uint& num);
-	Compute(const int& id, const uint& num);
+	Compute();
 	// デストラクタ
-	~Compute();
-
-	// 定数リソース生成
-	long CBV(const std::string& name, const size_t& size, const uint& index = 0);
-
-	// UAVリソース生成
-	long UAV(const std::string& name, const size_t& stride, const size_t& num, const uint& index = 0);
-
-	// コピー
-	template <typename T>
-	void Copy(const std::string& name, const T& input);
-	template <typename T>
-	void Copy(const std::string& name, const std::vector<T>& input);
-
-	// 実行
-	void Execution(const uint& x = 1, const uint& y = 1, const uint& z = 1);
-
-	// 反映
-	template <typename T>
-	void UpData(const std::string& name, std::vector<T>& output);
+	virtual ~Compute();
 
 protected:
-	Compute(const Compute&) = delete;
-	void operator=(const Compute&) = delete;
+	// .hlsl読み込み
+	void Compile(const std::string& fileName, const std::string& func, const std::string& ver = "cs_5_1");
 
+	// .cso読み込み
+	void Load(const std::string& fileName);
 
+	// リソース読み込み
+	void Read(const int& id);
+
+	// ヒープ生成
+	void CreateHeap(const size_t& num);
+
+	// 定数リソース生成
+	int CreateCRsc(const size_t& size);
+
+	// 非順序リソース生成
+	int CreateURsc(const size_t& stride, const size_t& num);
+
+	// GPUメモリにコピー
+	void Copy(const int& id, void* data, const size_t& size);
+
+	// 実行
+	void Execution(const unsigned int& x, const unsigned int& y = 1, const unsigned int& z = 1);
+
+	// GPUメモリデータ取得
+	template <typename T>
+	std::vector<T> GetData(const int& id);
+
+	// 終了
+	void Finish(void);
+
+private:
 	// キュー
 	std::shared_ptr<Queue>queue;
 
+	// アロケータ
+	std::shared_ptr<Allocator>allo;
+
 	// リスト
-	std::unique_ptr<List>list;
+	std::shared_ptr<List>list;
 
 	// フェンス
-	std::unique_ptr<Fence>fence;
+	std::shared_ptr<Fence>fence;
 
 	// ルート
 	std::shared_ptr<Root>root;
 
 	// パイプ
-	std::unique_ptr<Pipe>pipe;
+	std::shared_ptr<Pipe>pipe;
 
 	// ヒープ
-	ID3D12DescriptorHeap* heap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>heap;
 
 	// リソース
-	std::unordered_map<std::string, ID3D12Resource*>rsc;
+	std::vector<Resource>rsc;
 
-	// 送信データ
-	std::unordered_map<std::string, void*>data;
+	// インデックス
+	unsigned char index;
 };
-
-// コピー
-template<typename T>
-void Compute::Copy(const std::string& name, const T& input)
-{
-	if (rsc.find(name) == rsc.end())
-	{
-		return;
-	}
-
-	memcpy(data[name], &input, sizeof(input));
-}
-
-// コピー
-template<typename T>
-void Compute::Copy(const std::string & name, const std::vector<T>& input)
-{
-	if (rsc.find(name) == rsc.end())
-	{
-		return;
-	}
-
-	memcpy(data[name], input.data(), sizeof(input[0]) * input.size());
-}
