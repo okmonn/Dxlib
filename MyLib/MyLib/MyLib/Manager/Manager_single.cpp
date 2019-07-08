@@ -5,6 +5,7 @@
 #include "../Graphics/Texture/Texture.h"
 #include "../Graphics/Primitive/Primitive.h"
 #include "../Func/Func.h"
+#include "../../resource.h"
 #include <d3d12.h>
 
 // インプット一覧
@@ -50,7 +51,17 @@ void Manager::CreateRoot(const std::string& name, const std::initializer_list<T>
 		auto itr = id.begin();
 		while (itr != id.end())
 		{
-			root[name]->Vertex(*itr, "main", "vs_5_1");
+			root[name]->Vertex(*itr);
+			++itr;
+			if (geoFlag == true)
+			{
+				root[name]->Geometry(*itr);
+				++itr;
+			}
+			root[name]->Pixel(*itr);
+			++itr;
+
+			/*root[name]->Vertex(*itr, "main", "vs_5_1");
 			++itr;
 			if (geoFlag == true)
 			{
@@ -58,12 +69,12 @@ void Manager::CreateRoot(const std::string& name, const std::initializer_list<T>
 				++itr;
 			}
 			root[name]->Pixel(*itr, "main", "ps_5_1");
-			++itr;
+			++itr;*/
 		}
 	}
 }
-//template void Manager::CreateRoot(const std::string&, const std::initializer_list<int>&, const bool&);
-template void Manager::CreateRoot(const std::string&, const std::initializer_list<std::string>&, const bool&);
+template void Manager::CreateRoot(const std::string&, const std::initializer_list<int>&, const bool&);
+//template void Manager::CreateRoot(const std::string&, const std::initializer_list<std::string>&, const bool&);
 
 // パイプ生成
 void Manager::CreatePipe(const std::string& name, std::weak_ptr<Root>root, const std::initializer_list<unsigned char>& index, 
@@ -86,10 +97,12 @@ void Manager::Init(void)
 	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	_ASSERT(hr == S_OK);
 
-	CreateRoot("tex", { "MyLib/Shader/Texture/TexVertex.hlsl", "MyLib/Shader/Texture/TexGeometry.hlsl", "MyLib/Shader/Texture/TexPixel.hlsl" }, true);
+	//CreateRoot("tex", { "MyLib/Shader/Texture/TexVertex.hlsl", "MyLib/Shader/Texture/TexGeometry.hlsl", "MyLib/Shader/Texture/TexPixel.hlsl" }, true);
+	CreateRoot("tex", { TexVertex, TexGeometry, TexPixel }, true);
 	CreatePipe("tex", root["tex"], { 0, 1 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
 
-	CreateRoot("prim", { "MyLib/Shader/Primitive/primVertex.hlsl", "MyLib/Shader/Primitive/PrimPixel.hlsl" });
+	//CreateRoot("prim", { "MyLib/Shader/Primitive/primVertex.hlsl", "MyLib/Shader/Primitive/PrimPixel.hlsl" });
+	CreateRoot("prim", { PrimVertex, PrimPixel });
 	CreatePipe("point",    root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT);
 	CreatePipe("line",     root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
 	CreatePipe("triangle", root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

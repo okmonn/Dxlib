@@ -274,19 +274,19 @@
     <None Include="MyLib\Shader\Primitive\Primitive.hlsli">
       <Filter>リソース ファイル\Shader\Primitive</Filter>
     </None>
-    <None Include="..\shader\TexVertex.cso">
-      <Filter>リソース ファイル\cso</Filter>
-    </None>
-    <None Include="..\shader\TexPixel.cso">
-      <Filter>リソース ファイル\cso</Filter>
-    </None>
-    <None Include="..\shader\TexGeometry.cso">
+    <None Include="..\shader\PrimPixel.cso">
       <Filter>リソース ファイル\cso</Filter>
     </None>
     <None Include="..\shader\PrimVertex.cso">
       <Filter>リソース ファイル\cso</Filter>
     </None>
-    <None Include="..\shader\PrimPixel.cso">
+    <None Include="..\shader\TexGeometry.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="..\shader\TexPixel.cso">
+      <Filter>リソース ファイル\cso</Filter>
+    </None>
+    <None Include="..\shader\TexVertex.cso">
       <Filter>リソース ファイル\cso</Filter>
     </None>
   </ItemGroup>
