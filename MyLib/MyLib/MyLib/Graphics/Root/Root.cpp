@@ -6,14 +6,28 @@
 #include <crtdbg.h>
 #include <functional>
 #include <unordered_map>
+#include <dxcapi.h>
 
 // シェーダコンパイル
 void okmonn::ShaderCompile(const std::string& fileName, const std::string& func, const std::string& ver, ID3DBlob** blob)
 {
 	auto path = okmonn::ChangeCode(fileName);
-	auto hr = D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, func.c_str(), ver.c_str(),
-		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, *(&blob), nullptr);
+	auto f = okmonn::ChangeCode(func);
+	auto v = okmonn::ChangeCode(ver);
+	Microsoft::WRL::ComPtr<IDxcCompiler>compiler = nullptr;
+	auto hr = DxcCreateInstance(__uuidof(compiler), IID_PPV_ARGS(&compiler));
 	_ASSERT(hr == S_OK);
+
+	Microsoft::WRL::ComPtr<IDxcBlob>b = nullptr;
+	
+	LPCWSTR arg[] = { L"/Zi" };
+	Microsoft::WRL::ComPtr<IDxcOperationResult>result = nullptr;
+	hr = compiler->Compile(b.Get(), path.c_str(), f.c_str(), v.c_str(), arg, _countof(arg), nullptr, 0, nullptr, &result);
+	_ASSERT(hr == S_OK);
+
+	/*auto hr = D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, func.c_str(), ver.c_str(),
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, *(&blob), nullptr);
+	*/_ASSERT(hr == S_OK);
 }
 
 // .cso読み込み
