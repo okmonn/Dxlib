@@ -4,6 +4,8 @@
 #include <crtdbg.h>
 #include <dxgi1_6.h>
 
+unsigned int Swap::bufferCnt = 3;
+
 // コンストラクタ
 Swap::Swap(std::weak_ptr<Window>win, std::weak_ptr<Queue>queue) :
 	win(win), queue(queue), swap(nullptr)
@@ -29,7 +31,7 @@ void Swap::CreateSwap(void)
 
 	DXGI_SWAP_CHAIN_DESC1 desc{};
 	desc.AlphaMode   = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
-	desc.BufferCount = 2;
+	desc.BufferCount = bufferCnt;
 	desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	desc.Format      = DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM;
 	desc.Height      = winSize.bottom;

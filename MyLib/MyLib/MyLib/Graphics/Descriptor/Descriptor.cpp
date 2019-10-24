@@ -27,8 +27,9 @@ void okmonn::CreateRsc(ID3D12Resource** rsc, const D3D12_HEAP_PROPERTIES& prop, 
 void okmonn::RTV(ID3D12Resource* rsc, ID3D12DescriptorHeap* heap, const size_t& index)
 {
 	D3D12_RENDER_TARGET_VIEW_DESC desc{};
-	desc.Format        = rsc->GetDesc().Format;
-	desc.ViewDimension = D3D12_RTV_DIMENSION::D3D12_RTV_DIMENSION_TEXTURE2D;
+	desc.Format             = rsc->GetDesc().Format;
+	desc.ViewDimension      = D3D12_RTV_DIMENSION::D3D12_RTV_DIMENSION_TEXTURE2D;
+	desc.Texture2D.MipSlice = 0;
 
 	auto handle = heap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += Device::Get().Dev()->GetDescriptorHandleIncrementSize(heap->GetDesc().Type) * index;

@@ -54,6 +54,8 @@ void List::Barrier(ID3D12Resource* rsc, const D3D12_RESOURCE_STATES& befor, cons
 	barrier.Transition.pResource   = rsc;
 	barrier.Transition.StateBefore = befor;
 	barrier.Transition.StateAfter  = affter;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE::D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 
 	list->ResourceBarrier(1, &barrier);
 }
@@ -77,7 +79,7 @@ void List::SetComputeTable(const unsigned int& id, ID3D12DescriptorHeap* heap, c
 }
 
 // コマンドリスト取得
-ID3D12GraphicsCommandList* List::Get(void) const
+ID3D12GraphicsCommandList5* List::Get(void) const
 {
 	return list.Get();
 }

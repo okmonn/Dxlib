@@ -19,6 +19,7 @@ Queue::~Queue()
 void Queue::CreateQueue(const D3D12_COMMAND_LIST_TYPE& type)
 {
 	D3D12_COMMAND_QUEUE_DESC desc{};
+	desc.Flags = D3D12_COMMAND_QUEUE_FLAGS::D3D12_COMMAND_QUEUE_FLAG_NONE;
 	desc.Type = type;
 
 	auto hr = Device::Get().Dev()->CreateCommandQueue(&desc, IID_PPV_ARGS(&queue));

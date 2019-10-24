@@ -1,5 +1,4 @@
 #include "MyLib/MyLib.h"
-#include "MyLib/Func/Func.h"
 
 int main()
 {

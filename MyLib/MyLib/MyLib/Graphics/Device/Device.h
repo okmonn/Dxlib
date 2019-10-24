@@ -2,7 +2,7 @@
 #include "../../etc/Single.h"
 #include <wrl.h>
 
-struct ID3D12Device;
+struct ID3D12Device5;
 struct IDXGIFactory1;
 
 class Device :
@@ -11,7 +11,7 @@ class Device :
 	friend Single<Device>;
 public:
 	// デバイス取得
-	ID3D12Device* Dev(void) const;
+	ID3D12Device5* Dev(void) const;
 
 private:
 	// コンストラクタ
@@ -24,5 +24,5 @@ private:
 
 
 	// デバイス
-	Microsoft::WRL::ComPtr<ID3D12Device>dev;
+	Microsoft::WRL::ComPtr<ID3D12Device5>dev;
 };

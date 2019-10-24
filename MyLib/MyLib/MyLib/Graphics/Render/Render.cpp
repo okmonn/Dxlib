@@ -31,12 +31,8 @@ Render::~Render()
 // ヒープ生成
 void Render::CreateHeap(void)
 {
-	DXGI_SWAP_CHAIN_DESC1 desc{};
-	auto hr = swap.lock()->Get()->GetDesc1(&desc);
-	_ASSERT(hr == S_OK);
-
-	okmonn::CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, desc.BufferCount);
-	rsc.resize(desc.BufferCount);
+	okmonn::CreateHeap(&heap, D3D12_DESCRIPTOR_HEAP_TYPE::D3D12_DESCRIPTOR_HEAP_TYPE_RTV, D3D12_DESCRIPTOR_HEAP_FLAGS::D3D12_DESCRIPTOR_HEAP_FLAG_NONE, Swap::bufferCnt);
+	rsc.resize(Swap::bufferCnt);
 }
 
 // リソース生成

@@ -17,6 +17,9 @@ public:
 	// スワップチェイン取得
 	IDXGISwapChain4* Get(void) const;
 
+	// バックバッファ数
+	static unsigned int bufferCnt;
+
 private:
 	// スワップチェインの生成
 	void CreateSwap(void);

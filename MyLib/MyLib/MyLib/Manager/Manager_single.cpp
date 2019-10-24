@@ -51,7 +51,7 @@ void Manager::CreateRoot(const std::string& name, const std::initializer_list<T>
 		auto itr = id.begin();
 		while (itr != id.end())
 		{
-			/*root[name]->Vertex(*itr);
+			root[name]->Vertex(*itr);
 			++itr;
 			if (geoFlag == true)
 			{
@@ -59,9 +59,9 @@ void Manager::CreateRoot(const std::string& name, const std::initializer_list<T>
 				++itr;
 			}
 			root[name]->Pixel(*itr);
-			++itr;*/
+			++itr;
 
-			root[name]->Vertex(*itr, "main", "vs_6_3");
+			/*root[name]->Vertex(*itr, "main", "vs_6_3");
 			++itr;
 			if (geoFlag == true)
 			{
@@ -69,7 +69,7 @@ void Manager::CreateRoot(const std::string& name, const std::initializer_list<T>
 				++itr;
 			}
 			root[name]->Pixel(*itr, "main", "ps_6_3");
-			++itr;
+			++itr;*/
 		}
 	}
 }
@@ -97,12 +97,12 @@ void Manager::Init(void)
 	auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 	_ASSERT(hr == S_OK);
 
-	CreateRoot("tex", { "MyLib/Shader/Texture/TexVertex.hlsl", "MyLib/Shader/Texture/TexGeometry.hlsl", "MyLib/Shader/Texture/TexPixel.hlsl" }, true);
-	//CreateRoot("tex", { TexVertex, TexGeometry, TexPixel }, true);
+	//CreateRoot("tex", { "MyLib/Shader/Texture/TexVertex.hlsl", "MyLib/Shader/Texture/TexGeometry.hlsl", "MyLib/Shader/Texture/TexPixel.hlsl" }, true);
+	CreateRoot("tex", { TexVertex, TexGeometry, TexPixel }, true);
 	CreatePipe("tex", root["tex"], { 0, 1 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
 
-	CreateRoot("prim", { "MyLib/Shader/Primitive/primVertex.hlsl", "MyLib/Shader/Primitive/PrimPixel.hlsl" });
-	//CreateRoot("prim", { PrimVertex, PrimPixel });
+	//CreateRoot("prim", { "MyLib/Shader/Primitive/primVertex.hlsl", "MyLib/Shader/Primitive/PrimPixel.hlsl" });
+	CreateRoot("prim", { PrimVertex, PrimPixel });
 	CreatePipe("point",    root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT);
 	CreatePipe("line",     root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE);
 	CreatePipe("triangle", root["prim"], { 0 }, D3D12_PRIMITIVE_TOPOLOGY_TYPE::D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

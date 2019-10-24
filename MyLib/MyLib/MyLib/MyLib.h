@@ -1,6 +1,7 @@
 #pragma once
 #include "etc/Vector2.h"
 #include "Input/KeyCode.h"
+#include "Func/Func.h"
 #include <string>
 
 namespace okmonn

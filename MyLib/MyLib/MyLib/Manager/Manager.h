@@ -60,7 +60,7 @@ private:
 	std::shared_ptr<Queue>queue;
 
 	// アロケータ
-	std::shared_ptr<Allocator>allo;
+	std::vector<std::shared_ptr<Allocator>>allo;
 
 	// リスト
 	std::shared_ptr<List>list;

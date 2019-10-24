@@ -13,7 +13,8 @@
 #include <dxgi1_6.h>
 
 // コンストラクタ
-MyLib::MyLib(const Vec2& size, const Vec2& pos, MyLib* parent)
+MyLib::MyLib(const Vec2& size, const Vec2& pos, MyLib* parent) : 
+	allo(Swap::bufferCnt)
 {
 	void* tmp = (parent == nullptr) ? nullptr : parent->win->Get();
 	win = std::make_shared<Window>(pos, size, tmp);
@@ -58,8 +59,11 @@ void MyLib::Init(void)
 	CreateRsc();
 
 	queue  = std::make_shared<Queue>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	allo   = std::make_shared<Allocator>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
-	list   = std::make_shared<List>(allo, D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	for (auto& i : allo)
+	{
+		i  = std::make_shared<Allocator>(D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
+	}
+	list   = std::make_shared<List>(allo[0], D3D12_COMMAND_LIST_TYPE::D3D12_COMMAND_LIST_TYPE_DIRECT);
 	fence  = std::make_shared<Fence>(queue);
 	swap   = std::make_shared<Swap>(win, queue);
 	render = std::make_shared<Render>(swap);
@@ -68,10 +72,12 @@ void MyLib::Init(void)
 // 画面クリア
 void MyLib::Clear(void)
 {
+	unsigned int index = swap->Get()->GetCurrentBackBufferIndex();
+
 	//コマンド関連のリセット
-	auto hr = allo->Get()->Reset();
+	auto hr = allo[index]->Get()->Reset();
 	_ASSERTE(hr == S_OK);
-	hr = list->Get()->Reset(allo->Get(), nullptr);
+	hr = list->Get()->Reset(allo[index]->Get(), nullptr);
 	_ASSERTE(hr == S_OK);
 
 	//描画区画セット
@@ -102,7 +108,7 @@ void MyLib::Execution(void)
 	queue->Get()->ExecuteCommandLists(_countof(com), com);
 
 	//裏・表画面反転
-	swap->Get()->Present(1, 0);
+	swap->Get()->Present(0, 0);
 
 	fence->Wait();
 }
