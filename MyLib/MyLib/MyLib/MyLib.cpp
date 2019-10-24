@@ -7,6 +7,7 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "dxcompiler.lib")
 
 // ‰Šú‰»
 bool okmonn::Init(const Vec2& winSize, const Vec2& winPos, const std::string& parent)

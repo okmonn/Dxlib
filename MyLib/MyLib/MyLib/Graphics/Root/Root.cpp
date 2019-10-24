@@ -11,23 +11,54 @@
 // シェーダコンパイル
 void okmonn::ShaderCompile(const std::string& fileName, const std::string& func, const std::string& ver, ID3DBlob** blob)
 {
-	auto path = okmonn::ChangeCode(fileName);
-	auto f = okmonn::ChangeCode(func);
-	auto v = okmonn::ChangeCode(ver);
-	Microsoft::WRL::ComPtr<IDxcCompiler>compiler = nullptr;
-	auto hr = DxcCreateInstance(__uuidof(compiler), IID_PPV_ARGS(&compiler));
+	auto path  = okmonn::ChangeCode(fileName);
+	auto entry = okmonn::ChangeCode(func);
+	auto model = okmonn::ChangeCode(ver);
+
+	Microsoft::WRL::ComPtr<IDxcLibrary>library = nullptr;
+	auto hr = DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&library));
 	_ASSERT(hr == S_OK);
 
-	Microsoft::WRL::ComPtr<IDxcBlob>b = nullptr;
-	
+	Microsoft::WRL::ComPtr<IDxcIncludeHandler>handler = nullptr;
+	hr = library->CreateIncludeHandler(&handler);
+	_ASSERT(hr == S_OK);
+
+	Microsoft::WRL::ComPtr<IDxcBlobEncoding>encode = nullptr;
+	hr = library->CreateBlobFromFile(path.c_str(), nullptr, &encode);
+	_ASSERT(hr == S_OK);
+
 	LPCWSTR arg[] = { L"/Zi" };
+	Microsoft::WRL::ComPtr<IDxcCompiler>compiler = nullptr;
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&compiler));
+	_ASSERT(hr == S_OK);
 	Microsoft::WRL::ComPtr<IDxcOperationResult>result = nullptr;
-	hr = compiler->Compile(b.Get(), path.c_str(), f.c_str(), v.c_str(), arg, _countof(arg), nullptr, 0, nullptr, &result);
+	hr = compiler->Compile(encode.Get(), path.c_str(), entry.c_str(), model.c_str(), arg, _countof(arg), nullptr, 0, handler.Get(), &result);
 	_ASSERT(hr == S_OK);
 
-	/*auto hr = D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, func.c_str(), ver.c_str(),
+	result->GetStatus(&hr);
+	if (SUCCEEDED(hr))
+	{
+		hr = result->GetResult((IDxcBlob**)&(*blob));
+		_ASSERT(hr == S_OK);
+	}
+	else
+	{
+		Microsoft::WRL::ComPtr<IDxcBlobEncoding>print = nullptr;
+		Microsoft::WRL::ComPtr<IDxcBlobEncoding>print16 = nullptr;
+		
+		hr = result->GetErrorBuffer(&print);
+		_ASSERT(hr == S_OK);
+
+		hr = library->GetBlobAsUtf16(print.Get(), &print16);
+		_ASSERT(hr == S_OK);
+		
+		wprintf(L"%*s", (int)print16->GetBufferSize() / 2, (LPCWSTR)print16->GetBufferPointer());
+	}
+
+	/*auto path = okmonn::ChangeCode(fileName);
+	auto hr = D3DCompileFromFile(path.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, func.c_str(), ver.c_str(),
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, *(&blob), nullptr);
-	*/_ASSERT(hr == S_OK);
+	_ASSERT(hr == S_OK);*/
 }
 
 // .cso読み込み
