@@ -91,6 +91,9 @@
     <Filter Include="リソース ファイル\cso">
       <UniqueIdentifier>{7165fd9c-84a9-4e68-a336-c3e9383c3af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphic\Acceleration">
+      <UniqueIdentifier>{89c19123-a8b4-4f18-a3e4-aeec0a39da31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -158,6 +161,9 @@
     </ClCompile>
     <ClCompile Include="MyLib\Input\Input.cpp">
       <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLib\Graphics\Acceleration\Accerelation.cpp">
+      <Filter>Graphic\Acceleration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="MyLib\Input\KeyCode.h">
       <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MyLib\Graphics\Acceleration\Accerelation.h">
+      <Filter>Graphic\Acceleration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

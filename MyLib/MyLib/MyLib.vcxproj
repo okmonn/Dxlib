@@ -168,6 +168,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyLib\Compute\Compute.cpp" />
     <ClCompile Include="MyLib\Func\Func.cpp" />
+    <ClCompile Include="MyLib\Graphics\Acceleration\Accerelation.cpp" />
     <ClCompile Include="MyLib\Graphics\Allocator\Allocator.cpp" />
     <ClCompile Include="MyLib\Graphics\Descriptor\Descriptor.cpp" />
     <ClCompile Include="MyLib\Graphics\Device\Device.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="MyLib\etc\Vector2.h" />
     <ClInclude Include="MyLib\etc\Vector3.h" />
     <ClInclude Include="MyLib\Func\Func.h" />
+    <ClInclude Include="MyLib\Graphics\Acceleration\Accerelation.h" />
     <ClInclude Include="MyLib\Graphics\Allocator\Allocator.h" />
     <ClInclude Include="MyLib\Graphics\Descriptor\Descriptor.h" />
     <ClInclude Include="MyLib\Graphics\Device\Device.h" />
