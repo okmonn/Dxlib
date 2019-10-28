@@ -27,6 +27,9 @@ public:
 	// バリアセット
 	void Barrier(ID3D12Resource* rsc, const D3D12_RESOURCE_STATES& befor, const D3D12_RESOURCE_STATES& affter);
 
+	// UAVバリアセット
+	void Barrier(ID3D12Resource* rsc);
+
 	// グラフィックルートテーブルセット
 	void SetGraphicsTable(const unsigned int& id, ID3D12DescriptorHeap* heap, const size_t& index = 0);
 
