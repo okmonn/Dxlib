@@ -102,7 +102,7 @@ void Acceleration::CreateBottom(ID3D12Resource* vertex, const size_t& stride)
 {
 	D3D12_RAYTRACING_GEOMETRY_DESC desc{};
 	desc.Flags                                = D3D12_RAYTRACING_GEOMETRY_FLAGS::D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
-	desc.Triangles.VertexBuffer.StartAddress  = vertex->GetGPUVirtualAddress;
+	desc.Triangles.VertexBuffer.StartAddress  = vertex->GetGPUVirtualAddress();
 	desc.Triangles.VertexBuffer.StrideInBytes = stride;
 	desc.Triangles.VertexFormat               = DXGI_FORMAT_R32G32B32_FLOAT;
 	desc.Triangles.VertexCount                = 3;
